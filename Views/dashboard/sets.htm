@@ -1,0 +1,182 @@
+<!--{eval include $Response::systemView("components/header", "dashboard")}-->
+  <main class="page-main container">
+    <!--{eval include $Response::systemView("components/aside", "dashboard")}-->
+    <div class="page-content">
+      <form
+        method="POST"
+        action="{$DBURL}"
+        class="set-form"
+        enctype="multipart/form-data"
+      >
+        <input type="hidden" name="module" value="set" />
+        <input type="hidden" name="method" value="saveSet" />
+        <input type="hidden" name="DZHash" value="{FORMHASH}" />
+
+        <!--{loop $sets $setsItem}-->
+        <section class="set-item set-item-{$setsItem['set_mark']}">
+          <div class="set-title">{$setsItem['set_name']}</div>
+          <div class="set-content set-item-{$setsItem['set_mark']}-content">
+            <!--{if $setsItem['set_formtype']=="text"}-->
+            <input type="text" name="{$setsItem['set_id']}" value="{$setsItem['set_content']}" />
+            <!--{elseif $setsItem['set_formtype']=="textarea"}-->
+            <textarea type="text" name="{$setsItem['set_id']}" >{$setsItem['set_content']}</textarea>
+            <!--{elseif $setsItem['set_formtype']=="color"}-->
+            <div class="set-type-color">
+              <input type="color" value="{$setsItem['set_content']}" name="{$setsItem['set_id']}" onchange="changeColor('color','{$setsItem['set_mark']}',this.value)" ></input>
+              <input type="text" value="{$setsItem['set_content']}" placeholder="请输入16进制颜色值 例如 #AABBCC" onchange="changeColor('text','{$setsItem['set_mark']}',this.value)" ></input>
+            </div>
+            <!--{elseif $setsItem['set_formtype']=="html"}-->
+            <textarea onchange="changeHTML('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_content']}</textarea>
+            <textarea name="{$setsItem['set_id']}" class="set-encode-html"  >{$setsItem['set_content']}</textarea>
+             <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
+            <textarea name="{$setMergeItem['set_id']}" onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
+            <!--{elseif $setsItem['set_formtype']=="select"}-->
+            <select name="{$setsItem['set_id']}" >
+              <option disabled selected >请选择</option>
+              <!--{loop $setsItem['set_value'] $setValueKey $setValueItem}-->
+              <option value="{$setValueKey}" {if $setsItem['set_content']==$setValueKey}selected{/if}>{$setValueItem}</option>
+              <!--{/loop}-->
+            </select>
+            <!--{elseif $setsItem['set_formtype']=="image"}-->
+            <input type="file" name="{$setsItem['set_id']}" onchange="changeImage('{$setsItem['set_mark']}',this.files)"/>
+            <!--{elseif $setsItem['set_formtype']=="forum"}-->
+            <select class="set-content-forum" name="{$setsItem['set_id']}[]" multiple="multiple" >
+              <!--{loop $forums $forumsItem}-->
+              <option disabled value="{$forumsItem['fid']}">{$forumsItem['name']}</option>
+                <!--{loop $forumsItem['sub'] $forumsSubItem}-->
+                <option value="{$forumsSubItem['fid']}" {if in_array($forumsSubItem['fid'],$setsItem['set_content'])}selected{/if}>&nbsp;{$forumsSubItem['name']} </option>
+                <!--{/loop}-->
+              <!--{/loop}-->
+            </select>
+            <!--{/if}-->
+          </div>
+          <div class="set-tips">{$setsItem['set_tips']}</div>
+          <div class="set-preview">
+            <!--{if $setsItem['set_formtype']=='image'}-->
+              <img
+              class="set-preview-img"
+              src="{$_G['siteurl']}{$setsItem['set_content']}"
+            />
+            <!--{/if}-->
+          </div>
+          <div class="set-merge">
+            <!--{loop $setsItem['set_merge_sets'] $setMergeItem}-->
+            <section class="set-item set-item-{$setMergeItem['set_mark']}">
+              <div class="set-title">{$setMergeItem['set_name']}</div>
+              <div class="set-content set-item-{$setMergeItem['set_mark']}-content">
+                <!--{if $setMergeItem['set_formtype']=="text"}-->
+                <input type="text" name="{$setMergeItem['set_id']}" value="{$setMergeItem['set_content']}" />
+                <!--{elseif $setMergeItem['set_formtype']=="textarea"}-->
+                <textarea type="text" name="{$setMergeItem['set_id']}" >{$setMergeItem['set_content']}</textarea>
+                <!--{elseif $setMergeItem['set_formtype']=="color"}-->
+                <div class="set-type-color">
+                  <input type="color" value="{$setMergeItem['set_content']}" name="{$setMergeItem['set_id']}" onchange="changeColor('color','{$setMergeItem['set_mark']}',this.value)" ></input>
+                  <input type="text" value="{$setMergeItem['set_content']}" placeholder="请输入16进制颜色值 例如 #AABBCC" onchange="changeColor('text','{$setMergeItem['set_mark']}',this.value)" ></input>
+                </div>
+                <!--{elseif $setMergeItem['set_formtype']=="html"}-->
+                <textarea onchange="changeHTML('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
+                <!--{elseif $setMergeItem['set_formtype']=="bbcode"}-->
+                <textarea name="{$setMergeItem['set_id']}" onchange="changeBBCode('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
+                <!--{elseif $setMergeItem['set_formtype']=="select"}-->
+                <select name="{$setMergeItem['set_id']}" >
+                  <option disabled selected >请选择</option>
+                  <!--{loop $setMergeItem['set_value'] $setValueKey $setValueItem}-->
+                  <option value="{$setValueKey}" {if $setMergeItem['set_content']==$setValueKey}selected{/if}>{$setValueItem}</option>
+                  <!--{/loop}-->
+                </select>
+                <!--{elseif $setMergeItem['set_formtype']=="image"}-->
+                <input type="file" name="{$setMergeItem['set_id']}" onchange="changeImage('{$setMergeItem['set_mark']}',this.files)"/>
+                <!--{elseif $setMergeItem['set_formtype']=="forum"}-->
+                <select class="set-content-forum" name="{$setMergeItem['set_id']}[]" multiple="multiple" >
+                  <!--{loop $forums $forumsItem}-->
+                  <option disabled value="{$forumsItem['fid']}">{$forumsItem['name']}</option>
+                    <!--{loop $forumsItem['sub'] $forumsSubItem}-->
+                    <option value="{$forumsSubItem['fid']}" {if in_array($forumsSubItem['fid'],$setMergeItem['set_content'])}selected{/if}>&nbsp;{$forumsSubItem['name']} </option>
+                    <!--{/loop}-->
+                  <!--{/loop}-->
+                </select>
+                <!--{/if}-->
+              </div>
+              <div class="set-tips">
+                {$setMergeItem['set_tips']}
+              </div>
+              <div class="set-preview">
+                <!--{if $setMergeItem['set_formtype']=='image'}-->
+                  <img
+                  class="set-preview-img"
+                  src="{$_G['siteurl']}{$setMergeItem['set_content']}"
+                />
+                <!--{/if}-->
+              </div>
+            </section>
+            <!--{/loop}-->
+          </div>
+        </section>
+        <!--{/loop}-->
+        <!--{if $setCount>0}-->
+        <section class="form-operate" >
+          <button class="form-submit-button" type="submit">保存</button>
+        </section>
+        <!--{/if}-->
+      </form>
+    </div>
+  </main>
+  <script>
+    function changeColor(type,mark,value){
+      if(type=='text'){
+        let colorDom=document.querySelector(".set-item-"+mark+"-content .set-type-color>input[type='color']");
+      colorDom.value=value;
+      }else {
+        let textDom=document.querySelector(".set-item-"+mark+"-content .set-type-color>input[type='text']");
+        textDom.value=value;
+      }
+    }
+
+    function HTMLEncode(html) {
+        var temp = document.createElement("div");
+        (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+        var output = temp.innerHTML;
+        temp = null;
+        return output;
+    }
+
+    function changeHTML(mark,value){
+      let dom=document.querySelector(".set-item-"+mark+" .set-preview");
+      dom.innerHTML=value;
+      document.querySelector(".set-item-"+mark+" .set-encode-html").value=escape(value);
+    }
+
+    var allowbbcode=true;
+    var allowhtml=true;
+    var allowsmilies=false;
+    var allowimgcode=true;
+    function changeBBCode(mark,value){
+      let dom=document.querySelector(".set-item-"+mark+" .set-preview");
+      dom.innerHTML=bbcode2html(value);
+    }
+
+    function changeImage(mark,files){
+      if(files.length==0){
+        return;
+      }
+      let file=files[0];
+      let extension=file.name.slice(file.name.indexOf(".")+1);
+      let allowExtension=["jpg","jpeg","png"];
+      if(allowExtension.indexOf(extension)===-1){
+        alert("请选择png、jpg、jpeg 类型的文件");
+        return;
+      }
+
+      let reader=new FileReader();
+
+      reader.onload=function(){
+        let previewDom=document.querySelector(".set-item-"+mark+" .set-preview-img");
+        previewDom.src=this.result;
+      }
+      reader.readAsDataURL(file);
+
+    }
+  </script>
+  <script type="text/javascript" src="{$_G['setting']['jspath']}bbcode.js?{VERHASH}"></script>
+
+<!--{eval include $Response::systemView("components/footer", "dashboard")}-->

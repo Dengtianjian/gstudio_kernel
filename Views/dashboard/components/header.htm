@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CHS">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{if $pageTitle}{$pageTitle}{else}后台{/if}</title>
+    <script
+      type="text/javascript"
+      src="{$_G['setting']['jspath']}common.js?{VERHASH}"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="{$GLOBALS['gstudio_kernel']['dashboard']['viewPath']}/css/common.css"
+    />
+  </head>
+  <body>
+    <header class="page-header">
+      <div class="container page-header-contaner">
+        <div class="logo">插件管理后台</div>
+        <nav
+          class="page-nav {if $gstudio_kernel['dashboard']['mainNavCount']>14}page-nav-more{/if}"
+        >
+          <!--{loop $gstudio_kernel['dashboard']['mainNavs'] $nav}-->
+          <a
+            href="plugin.php?id={$gstudio_kernel['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
+            class="page-nav-link {if $gstudio_kernel['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}"
+          >
+            {$nav['nav_name']}
+          </a>
+          <!--{/loop}-->
+        </nav>
+        <div class="quick-nav">
+          <a
+            href="https://www.cooocc.com"
+            class="quick-nav-link"
+            target="_blank"
+            >COC</a
+          >
+          <a href="index.php" class="quick-nav-link" target="_blank"
+            >站点首页</a
+          >
+          <a
+            href="https://addon.dismall.com/?@19011.developer"
+            class="quick-nav-link"
+            target="_blank"
+          >
+            应用中心
+          </a>
+        </div>
+      </div>
+    </header>

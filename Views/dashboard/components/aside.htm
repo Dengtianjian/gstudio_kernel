@@ -1,0 +1,16 @@
+<aside class="page-aside">
+  <nav class="page-sub-nav">
+    <a
+      href="plugin.php?id={$gstudio_kernel['devingPluginId']}&uri=dashboard&mid={$gstudio_kernel['dashboard']['mainNavId']}"
+      class="page-sub-nav-link {if $gstudio_kernel['dashboard']['subNavId']==0}page-sub-nav-link-active{/if}"
+      >全部</a
+    >
+    <!--{loop $gstudio_kernel['dashboard']['subNavs'] $sub}-->
+    <a
+      href="plugin.php?id={$gstudio_kernel['devingPluginId']}&uri=dashboard&mid={$gstudio_kernel['dashboard']['mainNavId']}&sid={$sub['nav_id']}"
+      class="page-sub-nav-link {if $gstudio_kernel['dashboard']['subNavId']==$sub['nav_id']}page-sub-nav-link-active{/if}"
+      >{$sub['nav_name']}</a
+    >
+    <!--{/loop}-->
+  </nav>
+</aside>
