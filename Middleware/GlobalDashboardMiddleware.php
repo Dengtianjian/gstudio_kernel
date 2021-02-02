@@ -10,13 +10,13 @@ class GlobalDashboardMiddleware
   {
     $GLOBALS['gstudio_kernel']['dashboard']['viewPath'] = $GLOBALS['gstudio_kernel']['pluginPath'] . "/Views/dashboard";
     if (!$GLOBALS['gstudio_kernel']['dashboard']['navTableName']) {
-      $navTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_nav";
+      $navTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_dashboard_nav";
       $GLOBALS['gstudio_kernel']['dashboard']['navTableName'] = $navTableName;
     } else {
       $navTableName = $GLOBALS['gstudio_kernel']['dashboard']['navTableName'];
     }
     if (!$GLOBALS['gstudio_kernel']['dashboard']['setTableName']) {
-      $setTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_set";
+      $setTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_dashboard_set";
       $GLOBALS['gstudio_kernel']['dashboard']['setTableName'] = $setTableName;
     } else {
       $setTableName = $GLOBALS['gstudio_kernel']['dashboard']['setTableName'];
