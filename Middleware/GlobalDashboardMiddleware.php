@@ -2,11 +2,9 @@
 
 namespace gstudio_kernel\Middleware;
 
-use gstudio_kernel\Foundation\Request;
-
 class GlobalDashboardMiddleware
 {
-  public function handle(Request $request, $next)
+  public function handle($next)
   {
     $GLOBALS['gstudio_kernel']['dashboard']['viewPath'] = $GLOBALS['gstudio_kernel']['pluginPath'] . "/Views/dashboard";
     if (!$GLOBALS['gstudio_kernel']['dashboard']['navTableName']) {

@@ -18,12 +18,12 @@
       <div class="container page-header-contaner">
         <div class="logo">插件管理后台</div>
         <nav
-          class="page-nav {if $gstudio_kernel['dashboard']['mainNavCount']>14}page-nav-more{/if}"
+          class="page-nav {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount']>14}page-nav-more{/if}"
         >
-          <!--{loop $gstudio_kernel['dashboard']['mainNavs'] $nav}-->
+          <!--{loop $GLOBALS['gstudio_kernel']['dashboard']['mainNavs'] $nav}-->
           <a
-            href="plugin.php?id={$gstudio_kernel['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
-            class="page-nav-link {if $gstudio_kernel['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}"
+            href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
+            class="page-nav-link {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}"
           >
             {$nav['nav_name']}
           </a>

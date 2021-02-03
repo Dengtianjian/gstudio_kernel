@@ -7,23 +7,31 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use Exception;
+use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\App\Dashboard\Controller as DashboardController;
-use gstudio_kernel\Middleware\GlobalDashboardMiddleware;
+use gstudio_kernel\Exception\ErrorCode;
+use gstudio_kernel\Foundation\Auth;
 
 class App
 {
-  public $pluginId = null;
-  public $uri = null;
-  private $globalMiddlware = [];
-  private $router = null;
-  private $request = null;
-  private $mode = "production";
-  private $useDashboard = false;
+  private $pluginId = null; //* 当前插件ID
+  private $uri = null; //* 请求的URI
+  private $globalMiddlware = []; //*全局中间件
+  private $router = null; //* 路由相关
+  private $request = null; //* 请求相关
+  private $mode = "production"; //* 当前运行模式
+  private $useDashboard = false; //* 是否有后台功能
+  private $salt = "gstudio_kernel"; //* salt
+  public function __get($name)
+  {
+    return $this->$name;
+  }
   function __construct($pluginId = null)
   {
+    ErrorCode::load(); //* 加载错误码
     $GLOBALS["gstudio_kernel"] = [
       "mode" => $this->mode,
       "pluginId" => "gstudio_kernel",
@@ -39,6 +47,7 @@ class App
       "assets" => "source/plugin/$pluginId/Assets"
     ];
     $this->pluginId = $pluginId;
+    $this->uri = \addslashes($_GET['uri']);
     include_once(DISCUZ_ROOT . "$devingPlguinPath/routes.php");
   }
   function setMiddlware($middlwareNameOfFunction)
@@ -52,14 +61,14 @@ class App
   }
   function init()
   {
-    $uri = \addslashes($_GET['uri']);
-
     if ($this->useDashboard === true) {
-      $this->setMiddlware(GlobalDashboardMiddleware::class);
+      $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
       Router::view("dashboard", DashboardController\ContainerController::class);
+      Router::postView("_dashboard_save", DashboardController\SaveSetController::class);
     }
+    $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
-    $router = Router::match($uri);
+    $router = Router::match($this->uri);
     if (!$router) {
       Response::error("ROUTE_DOES_NOT_EXIST");
     }
@@ -99,6 +108,7 @@ class App
       }
       exit();
     }
+
     if ($executeMiddlewareResult === false) {
       return;
     }
@@ -148,6 +158,11 @@ class App
       return $controller($this->request);
     } else {
       $instance = new $controller();
+      if (\property_exists($controller, "Auth") && $instance::Auth) {
+        if (Auth::isVerified() === false) {
+          Auth::check();
+        }
+      }
       return $instance->data($this->request);
     }
   }
@@ -177,7 +192,7 @@ class App
       } else {
         $middlewareInstance = new $middlewareItem();
         $GLOBALS['ISNEXT'] = false;
-        $middlewareInstance->handle($this->request, function () {
+        $middlewareInstance->handle(function () {
           $GLOBALS['ISNEXT'] = true;
         });
         if ($GLOBALS['ISNEXT'] == false) {
@@ -187,6 +202,7 @@ class App
         }
       }
     }
+    unset($GLOBALS['ISNEXT']);
 
     return $executeCount === $middlewareCount;
   }
@@ -197,5 +213,13 @@ class App
   public function setDashboardTable($globalVarKey, $tableName)
   {
     $GLOBALS['gstudio_kernel']['dashboard'][$globalVarKey] = $tableName;
+  }
+  public function setTokenValidPeriod($count)
+  {
+    $this->tokenValidPeriod = $count;
+  }
+  public function setSalt($salt)
+  {
+    $this->salt = $salt;
   }
 }

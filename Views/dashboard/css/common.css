@@ -15,6 +15,11 @@ body {
 a {
   text-decoration-line: none;
 }
+ul {
+  list-style-type: none;
+  padding:0;
+  margin:0;
+}
 
 .container {
   width: 1200px;
@@ -125,7 +130,6 @@ a {
 }
 .page-content {
   display: inline-block;
-  float: left;
   margin-left: 15px;
 }
 
@@ -141,6 +145,14 @@ a {
 }
 
 /* 设置 */
+.set-panel {
+  margin-bottom: 30px;
+  padding: 20px;
+  width: 100%;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 5px 10px rgba(200, 200, 100, 0.08);
+}
 .set-item {
   margin-bottom: 30px;
   padding: 20px;
@@ -230,11 +242,11 @@ a {
   overflow: hidden;
   border: 1px solid #eee;
 }
-.set-merge {
+.set-subs {
   margin: 30px 0 0 20px;
   border-top: 1px solid #eee;
 }
-.set-merge .set-item {
+.set-subs .set-item {
   padding: 20px 0 0;
 }
 .form-submit-button {
@@ -255,4 +267,12 @@ a {
 }
 .form-submit-button:hover {
   opacity: 0.8;
+}
+.set-group .set-parent .set-title {
+  font-size:20px;
+  color:#000;
+}
+.set-group .set-subs {
+  margin:0 0 0 20px;
+  border:none;
 }

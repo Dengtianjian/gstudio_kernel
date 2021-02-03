@@ -4,17 +4,15 @@
     <div class="page-content">
       <form
         method="POST"
-        action="{$DBURL}"
+        action="/plugin.php?id={$gstudio_kernel['devingPluginId']}&uri=_dashboard_save"
         class="set-form"
         enctype="multipart/form-data"
       >
-        <input type="hidden" name="module" value="set" />
-        <input type="hidden" name="method" value="saveSet" />
         <input type="hidden" name="DZHash" value="{FORMHASH}" />
-
         <!--{loop $sets $setsItem}-->
-        <section class="set-item set-item-{$setsItem['set_mark']}">
-          <div class="set-title">{$setsItem['set_name']}</div>
+        <section class="set-item set-item-{$setsItem['set_mark']} {if $setsItem['set_formtype']=='empty'}set-group{/if}">
+          <div class="set-parent">
+            <div class="set-title">{$setsItem['set_name']}</div>
           <div class="set-content set-item-{$setsItem['set_mark']}-content">
             <!--{if $setsItem['set_formtype']=="text"}-->
             <input type="text" name="{$setsItem['set_id']}" value="{$setsItem['set_content']}" />
@@ -59,8 +57,9 @@
             />
             <!--{/if}-->
           </div>
-          <div class="set-merge">
-            <!--{loop $setsItem['set_merge_sets'] $setMergeItem}-->
+          </div>
+          <div class="set-subs">
+            <!--{loop $setsItem['set_sub_sets'] $setMergeItem}-->
             <section class="set-item set-item-{$setMergeItem['set_mark']}">
               <div class="set-title">{$setMergeItem['set_name']}</div>
               <div class="set-content set-item-{$setMergeItem['set_mark']}-content">
@@ -104,7 +103,7 @@
                 <!--{if $setMergeItem['set_formtype']=='image'}-->
                   <img
                   class="set-preview-img"
-                  src="{$_G['siteurl']}{$setMergeItem['set_content']}"
+                  src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"
                 />
                 <!--{/if}-->
               </div>

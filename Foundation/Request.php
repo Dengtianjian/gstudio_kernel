@@ -119,4 +119,8 @@ class Request
   {
     return $this->getArrayData($this->query, $key);
   }
+  public function uri()
+  {
+    return \addslashes($_GET['uri']);
+  }
 }

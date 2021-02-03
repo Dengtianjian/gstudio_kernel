@@ -2,29 +2,20 @@
 
 namespace gstudio_kernel\Foundation;
 
+use gstudio_kernel\Exception\ErrorCode;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
 class Response
 {
-  private static $errorCode = [];
-  static function setError($codeName, $statusCode, $code, $message)
-  {
-    if (self::$errorCode[$codeName]) {
-      throw new \Error("错误码已经存在", 500);
-    }
-    self::$errorCode[$codeName] = [
-      "statusCode" => $statusCode,
-      "code" => $code,
-      "message" => $message
-    ];
-  }
+  private static $resultData = [];
   static function error($statusCode, $code = null, $message = "", $data = [])
   {
     if (\is_string($statusCode)) {
-      $error = self::$errorCode[$statusCode];
-      self::result($error['statusCode'], $error['code'], $data, $error['message']);
+      $error = ErrorCode::match($statusCode);
+      self::result($error[0], $error[1], $data, $error[2]);
     } else {
       self::result($statusCode, $code, $data, $message);
     }
@@ -35,7 +26,12 @@ class Response
   }
   static function result($statusCode = 200, $code = 200000, $data = null, $message = "")
   {
+    header("Access-Control-Allow-Origin: *");
+    header('Access-Control-Allow-Methods: *');
     header("Content-Type:application/json", true, $statusCode);
+    if (!empty(self::$resultData)) {
+      $data = \array_merge($data, self::$resultData);
+    }
     $result = [
       "statusCode" => $statusCode,
       "code" => $code,
@@ -58,5 +54,10 @@ class Response
   {
     global $gstudio_kernel;
     return template($HTMLFileName, $gstudio_kernel['devingPluginId'], $gstudio_kernel['pluginPath'] . "/Views/$fileDir");
+  }
+  static function addData($data)
+  {
+    self::$resultData = \array_merge(self::$resultData, $data);
+    return self::$resultData;
   }
 }
