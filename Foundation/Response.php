@@ -11,6 +11,7 @@ if (!defined("IN_DISCUZ")) {
 class Response
 {
   private static $resultData = [];
+  private static $responseData = [];
   static function error($statusCode, $code = null, $message = "", $data = [])
   {
     if (\is_string($statusCode)) {
@@ -38,6 +39,9 @@ class Response
       "data" => $data,
       "message" => $message
     ];
+    if (!empty(self::$responseData)) {
+      $result = array_merge($result, self::$responseData);
+    }
     if (CHARSET === "gbk") {
       \print_r(\iconv("gbk", "utf-8", \json_encode($result)));
     } else {
@@ -59,5 +63,10 @@ class Response
   {
     self::$resultData = \array_merge(self::$resultData, $data);
     return self::$resultData;
+  }
+  static function add($data)
+  {
+    self::$responseData = \array_merge(self::$responseData, $data);
+    return self::$responseData;
   }
 }

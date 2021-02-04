@@ -147,9 +147,7 @@ class App
       }
       exit();
     }
-    if ($result) {
-      Response::success($result);
-    }
+    Response::success($result);
   }
   private function executiveController()
   {

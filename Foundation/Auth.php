@@ -46,7 +46,7 @@ class Auth
       ])->save();
     }
     self::$verified = true;
-    Response::addData([
+    Response::add([
       "user" => $user,
       "token" => $token
     ]);
