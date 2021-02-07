@@ -15,6 +15,7 @@
   display: flex;
   align-items:center;
   padding: 4px;
+  margin-bottom:2px;
   width:100%;
   box-sizing: border-box;
 }
@@ -49,6 +50,7 @@
 }
 .c-form-el[type='text'] {
   display:inline-block;
+  padding:8px;
   width:100%;
 }
 .c-form-el[type="file"],

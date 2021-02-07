@@ -6,10 +6,12 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Request;
 
-class SaveSetController
+class SaveSetController extends Controller
 {
+  protected $Admin = true;
   public function data(Request $request)
   {
     global $_G, $gstudio_kernel;

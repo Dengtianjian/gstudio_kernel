@@ -12,6 +12,16 @@
       rel="stylesheet"
       href="{$GLOBALS['gstudio_kernel']['dashboard']['viewPath']}/css/common.css"
     />
+    <link
+      rel="stylesheet"
+      href="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/c_ui.css"
+    />
+    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/jquery.js"></script>
+    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/http.js"></script>
+    <script>
+      var jQuery = $.noConflict();
+      CDZXHTTP.setRequestUrl("/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}");
+    </script>
   </head>
   <body>
     <header class="page-header">
@@ -49,3 +59,5 @@
         </div>
       </div>
     </header>
+  </body>
+</html>

@@ -17,12 +17,22 @@ class CDZXHTTP {
         }
       }
       fetch(url, config)
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.status === 204) {
+            return true;
+          }
+          return res.json();
+        })
         .then((res) => {
           if (res.statusCode > 299) {
             reject(res);
           } else {
-            resolve(res.data);
+            if (typeof res === "object") {
+              if (res.data) {
+                resolve(res.data);
+              }
+            }
+            resolve(res);
           }
         });
     });

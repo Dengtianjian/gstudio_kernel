@@ -27,6 +27,14 @@ class Response
   }
   static function result($statusCode = 200, $code = 200000, $data = null, $message = "")
   {
+    global $app;
+    $routerType = $app->router['type'];
+    if ($routerType === "view") {
+      \showmessage($message, $_SERVER['HTTP_REFERER'], [], [
+        "alert" => "error"
+      ]);
+      exit();
+    }
     header("Access-Control-Allow-Origin: *");
     header('Access-Control-Allow-Methods: *');
     header("Content-Type:application/json", true, $statusCode);

@@ -6,6 +6,7 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Model;
 use gstudio_kernel\Foundation\Response;
 
@@ -14,8 +15,9 @@ function filterHidden($item)
   $item['hidden'] == 0;
 }
 
-class ContainerController
+class ContainerController extends Controller
 {
+  protected $Admin = true;
   public function data($request)
   {
     global $_G, $gstudio_kernel;

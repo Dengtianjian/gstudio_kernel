@@ -32,13 +32,15 @@ class File
       } else {
         $upload->save();
         $saveFileName = explode("/", $upload->attach['attachment']);
+        $path = $saveDir . "/" . $upload->attach['attachment'];
         $fileInfo = [
-          "path" => $saveDir . "/" . $upload->attach['attachment'],
+          "path" => $path,
           "extension" => $upload->attach['extension'],
           "sourceFileName" => $upload->attach['name'],
           "saveFileName" => $saveFileName[count($saveFileName) - 1],
           "size" => $upload->attach['size'],
-          "type" => $upload->attach['type']
+          "type" => $upload->attach['type'],
+          "fullPath" => \getglobal("setting/attachurl") . $path
         ];
         if ($upload->attach['isimage']) {
           $fileInfo['width'] = $upload->attach['imageinfo'][0];

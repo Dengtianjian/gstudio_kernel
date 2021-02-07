@@ -11,9 +11,14 @@ use gstudio_kernel\Model\TokenModel;
 class Auth
 {
   private static $verified = false;
+  private static $verifiedAdmin = false;
   public static function check()
   {
-    global $app;
+    global $_G, $app;
+    if ($_G['uid']) {
+      self::$verified = true;
+      return true;
+    }
 
     if (!$app->request->params("_token")) {
       Response::error("NOT_AUTH");
@@ -50,6 +55,25 @@ class Auth
       "user" => $user,
       "token" => $token
     ]);
+    return true;
+  }
+  public static function checkAdmin($adminId)
+  {
+    $currentAdminId = \getglobal("adminid");
+    if (\is_array($adminId)) {
+      if (!in_array($currentAdminId, $adminId)) {
+        Response::error("UNAUTHORIZED_ACCESS");
+      }
+    } else if (\is_bool($adminId)) {
+      if ($currentAdminId == 0) {
+        Response::error("UNAUTHORIZED_ACCESS");
+      }
+    } else if (\is_int($adminId)) {
+      if ($currentAdminId != $adminId) {
+        Response::error("UNAUTHORIZED_ACCESS");
+      }
+    }
+    self::$verifiedAdmin = true;
   }
   public static function user()
   {
@@ -58,5 +82,9 @@ class Auth
   public static function isVerified()
   {
     return self::$verified;
+  }
+  public static function isVerifiedAdmin()
+  {
+    return self::$verifiedAdmin;
   }
 }

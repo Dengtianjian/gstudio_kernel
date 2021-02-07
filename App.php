@@ -7,6 +7,7 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use Exception;
+use gstudio_kernel\App\Api\GetGSetController;
 use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -24,7 +25,8 @@ class App
   private $request = null; //* 请求相关
   private $mode = "production"; //* 当前运行模式
   private $useDashboard = false; //* 是否有后台功能
-  private $salt = "gstudio_kernel"; //* salt
+  private $salt = "gstudio_kernel"; //* token用到的 salt
+  private $BigGKeyWhiteList = []; //* DZX大G key白名单。用于查询 大G 值时用到，一般是cache/plugin插件的变量
   public function __get($name)
   {
     return $this->$name;
@@ -61,10 +63,12 @@ class App
   }
   function init()
   {
+    Router::any("_gset", GetGSetController::class);
     if ($this->useDashboard === true) {
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
       Router::view("dashboard", DashboardController\ContainerController::class);
       Router::postView("_dashboard_save", DashboardController\SaveSetController::class);
+      Router::get("_set", DashboardController\GetSetController::class);
     }
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
@@ -147,18 +151,30 @@ class App
       }
       exit();
     }
-    Response::success($result);
+    if ($result !== NULL) {
+      Response::success($result);
+    }
   }
   private function executiveController()
   {
+    global $_G;
     $controller = $this->router['controller'];
     if (\is_callable($controller)) {
       return $controller($this->request);
     } else {
       $instance = new $controller();
-      if (\property_exists($controller, "Auth") && $instance::Auth) {
+      if ($instance->Auth === true) {
         if (Auth::isVerified() === false) {
           Auth::check();
+        }
+      }
+      if ($instance->Admin !== false) {
+        $adminId = $instance->Admin;
+        if (Auth::isVerified() == false) {
+          Auth::check();
+        }
+        if (Auth::isVerifiedAdmin() == false) {
+          Auth::checkAdmin($adminId);
         }
       }
       return $instance->data($this->request);
@@ -219,5 +235,9 @@ class App
   public function setSalt($salt)
   {
     $this->salt = $salt;
+  }
+  public function addBigGKey($key)
+  {
+    \array_push($this->BigGKeyWhiteList, $key);
   }
 }
