@@ -18,6 +18,7 @@ function filterHidden($item)
 class ContainerController extends Controller
 {
   protected $Admin = true;
+  private $serializeDataTypes = ["select", "radio", "checkbox"];
   public function data($request)
   {
     global $_G, $gstudio_kernel;
@@ -40,16 +41,18 @@ class ContainerController extends Controller
     include_once libfile("function/discuzcode");
     foreach ($setsData as &$setItem) {
       if ($setItem['set_value']) {
-        $setItem['set_value'] = json_decode($setItem['set_value'], true);
-        $values = [];
-        foreach ($setItem['set_value'] as $setValueItem) {
-          $setValueItem = explode("=", $setValueItem);
-          $values[$setValueItem[0]] = $setValueItem[1];
+        $setItem['set_value'] = unserialize($setItem['set_value']);
+        if (\in_array($setItem['set_formtype'], $this->serializeDataTypes)) {
+          $values = [];
+          foreach ($setItem['set_value'] as $setValueItem) {
+            $setValueItem = explode("=", $setValueItem);
+            $values[$setValueItem[0]] = $setValueItem[1];
+          }
+          $setItem['set_value'] = $values;
         }
-        $setItem['set_value'] = $values;
       }
       if ($setItem['set_subs'] != 0) {
-        $setItem['set_subs'] = explode("\n", $setItem['set_subs']);
+        $setItem['set_subs'] = explode(",", $setItem['set_subs']);
         $setItem['set_sub_sets'] = [];
       }
       if ($setItem['set_formtype'] == 'forum') {
