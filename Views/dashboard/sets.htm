@@ -162,7 +162,7 @@
       let extension=file.name.slice(file.name.indexOf(".")+1);
       let allowExtension=["jpg","jpeg","png"];
       if(allowExtension.indexOf(extension)===-1){
-        alert("{$GLOBALS['GLANG']['kernel']['choose_upload_img_type_png_jpg_jpeg']}");
+        alert(GLANG['kernel']['choose_upload_img_type_png_jpg_jpeg']);
         return;
       }
 
