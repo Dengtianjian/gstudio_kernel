@@ -40,18 +40,20 @@
 </style>
 
 <div class="error">
-  <h2 class="error-title">!SQL ERROR! CODE:{$code}</h2>
+  <h2 class="error-title">!ERROR! CODE:{$code}</h2>
   <div class="message {if $e->sql}message-details{/if}">{$message}</div>
   {if $e->sql}
   <div class="statement">{$e->sql}</div>
   {/if}
   <ul class="error-trace">
-    {loop $traceSimple $traceItem}
+    {loop $traceString $traceItem}
     <li class="error-trace-item">{$traceItem}</li>
     {/loop}
   </ul>
+  {if $trace}
   <details class="error-traces">
     <summary>Trace details</summary>
     {eval print_r($trace)}
   </details>
+  {/if}
 </div>

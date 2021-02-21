@@ -21,7 +21,7 @@
             <!--{elseif $setsItem['set_formtype']=="color"}-->
             <div class="set-type-color">
               <input type="color" value="{$setsItem['set_content']}" name="{$setsItem['set_id']}" onchange="changeColor('color','{$setsItem['set_mark']}',this.value)" ></input>
-              <input type="text" value="{$setsItem['set_content']}" placeholder="请输入16进制颜色值 例如 #AABBCC" onchange="changeColor('text','{$setsItem['set_mark']}',this.value)" ></input>
+              <input type="text" value="{$setsItem['set_content']}" placeholder="{$GLOBALS['GLANG']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setsItem['set_mark']}',this.value)" ></input>
             </div>
             <!--{elseif $setsItem['set_formtype']=="html"}-->
             <textarea onchange="changeHTML('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_content']}</textarea>
@@ -30,7 +30,7 @@
             <textarea name="{$setMergeItem['set_id']}" onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
             <!--{elseif $setsItem['set_formtype']=="select"}-->
             <select name="{$setsItem['set_id']}" >
-              <option disabled selected >请选择</option>
+              <option disabled selected >{$GLOBALS['GLANG']['kernel']['please_choose']}</option>
               <!--{loop $setsItem['set_value'] $setValueKey $setValueItem}-->
               <option value="{$setValueKey}" {if $setsItem['set_content']==$setValueKey}selected{/if}>{$setValueItem}</option>
               <!--{/loop}-->
@@ -70,7 +70,7 @@
                 <!--{elseif $setMergeItem['set_formtype']=="color"}-->
                 <div class="set-type-color">
                   <input type="color" value="{$setMergeItem['set_content']}" name="{$setMergeItem['set_id']}" onchange="changeColor('color','{$setMergeItem['set_mark']}',this.value)" ></input>
-                  <input type="text" value="{$setMergeItem['set_content']}" placeholder="请输入16进制颜色值 例如 #AABBCC" onchange="changeColor('text','{$setMergeItem['set_mark']}',this.value)" ></input>
+                  <input type="text" value="{$setMergeItem['set_content']}" placeholder="{$GLOBALS['GLANG']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setMergeItem['set_mark']}',this.value)" ></input>
                 </div>
                 <!--{elseif $setMergeItem['set_formtype']=="html"}-->
                 <textarea onchange="changeHTML('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
@@ -78,7 +78,7 @@
                 <textarea name="{$setMergeItem['set_id']}" onchange="changeBBCode('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="select"}-->
                 <select name="{$setMergeItem['set_id']}" >
-                  <option disabled selected >请选择</option>
+                  <option disabled selected >{$GLOBALS['GLANG']['kernel']['please_choose']}</option>
                   <!--{loop $setMergeItem['set_value'] $setValueKey $setValueItem}-->
                   <option value="{$setValueKey}" {if $setMergeItem['set_content']==$setValueKey}selected{/if}>{$setValueItem}</option>
                   <!--{/loop}-->
@@ -114,7 +114,7 @@
         <!--{/loop}-->
         <!--{if $setCount>0}-->
         <section class="form-operate" >
-          <button class="form-submit-button" type="submit">保存</button>
+          <button class="form-submit-button" type="submit">{$GLOBALS['GLANG']['kernel']['save']}</button>
         </section>
         <!--{/if}-->
       </form>
@@ -162,7 +162,7 @@
       let extension=file.name.slice(file.name.indexOf(".")+1);
       let allowExtension=["jpg","jpeg","png"];
       if(allowExtension.indexOf(extension)===-1){
-        alert("请选择png、jpg、jpeg 类型的文件");
+        alert("{$GLOBALS['GLANG']['kernel']['choose_upload_img_type_png_jpg_jpeg']}");
         return;
       }
 

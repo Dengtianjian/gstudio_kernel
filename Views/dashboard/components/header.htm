@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{if $pageTitle}{$pageTitle}{else}后台{/if}</title>
+    <title>{if $pageTitle}{$pageTitle}{else}{$GLOBALS['GLANG']['kernel']['backend']}{/if}</title>
     <script
       type="text/javascript"
       src="{$_G['setting']['jspath']}common.js?{VERHASH}"
@@ -26,7 +26,7 @@
   <body>
     <header class="page-header">
       <div class="container page-header-contaner">
-        <div class="logo">插件管理后台</div>
+        <div class="logo">{$GLOBALS['GLANG']['kernel']['logo_text']}</div>
         <nav
           class="page-nav {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount']>14}page-nav-more{/if}"
         >
@@ -47,14 +47,14 @@
             >COC</a
           >
           <a href="index.php" class="quick-nav-link" target="_blank"
-            >站点首页</a
+            >{$GLOBALS['GLANG']['kernel']['site_homepage']}</a
           >
           <a
             href="https://addon.dismall.com/?@19011.developer"
             class="quick-nav-link"
             target="_blank"
           >
-            应用中心
+          {$GLOBALS['GLANG']['kernel']['addon_center']}
           </a>
         </div>
       </div>

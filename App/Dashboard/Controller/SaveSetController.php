@@ -7,6 +7,7 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Controller;
+use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Request;
 
 class SaveSetController extends Controller
@@ -17,7 +18,7 @@ class SaveSetController extends Controller
     global $_G, $gstudio_kernel;
     $updateData = $_POST;
     if ($updateData['DZHash'] !== \FORMHASH) {
-      \showmessage("非法提交", $_SERVER['HTTP_REFERER'], [], [
+      \showmessage(Lang::value("kernel")['llleal_submission'], $_SERVER['HTTP_REFERER'], [], [
         "alert" => "error"
       ]);
       exit;
@@ -55,6 +56,6 @@ class SaveSetController extends Controller
 
     \DB::query($updateSql);
 
-    showmessage("保存成功", $_SERVER['HTTP_REFERER'], [], ["alert" => "right"]);
+    showmessage(Lang::value("kernel")['saved_successfully'], $_SERVER['HTTP_REFERER'], [], ["alert" => "right"]);
   }
 }

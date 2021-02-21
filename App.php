@@ -14,7 +14,9 @@ use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\App\Dashboard\Controller as DashboardController;
 use gstudio_kernel\Exception\ErrorCode;
+use gstudio_kernel\Exception\Excep;
 use gstudio_kernel\Foundation\Auth;
+use gstudio_kernel\Foundation\Lang;
 
 class App
 {
@@ -27,6 +29,7 @@ class App
   private $useDashboard = false; //* 是否有后台功能
   private $salt = "gstudio_kernel"; //* token用到的 salt
   private $BigGKeyWhiteList = []; //* DZX大G key白名单。用于查询 大G 值时用到，一般是cache/plugin插件的变量
+  private $isMultipleEncode = false; //* 多种编码
   public function __get($name)
   {
     return $this->$name;
@@ -71,6 +74,17 @@ class App
       Router::get("_set", DashboardController\GetSetController::class);
     }
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
+    include_once($GLOBALS['gstudio_kernel']['pluginPath'] . "/Langs/" . CHARSET . ".php");
+    $GLOBALS['GLANG'] = [];
+
+    if ($this->isMultipleEncode === true) {
+      $langFilePath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/" . CHARSET . ".php";
+      if (!\file_exists($langFilePath)) {
+        Excep::t(Lang::value('kernel')['dictionary_file_does_not_exist']);
+      }
+      include_once($langFilePath);
+      $GLOBALS['GLANG'] = Lang::all();
+    }
 
     $router = Router::match($this->uri);
     if (!$router) {
@@ -82,35 +96,7 @@ class App
     try {
       $executeMiddlewareResult = $this->executiveMiddleware();
     } catch (Exception $e) {
-      $code = $e->getCode();
-      $message = $e->getMessage();
-      $file = $e->getFile();
-      $line = $e->getLine();
-      $trace = $e->getTrace();
-      $previous = $e->getPrevious();
-      $traceSimple = $e->getTraceAsString();
-      $traceSimple = \explode("\n", $traceSimple);
-      if ($router['type'] === "view") {
-        if ($GLOBALS[$this->pluginId]['mode'] === "production") {
-          include Response::systemView("error");
-        } else {
-          include Response::systemView("error");
-        }
-      } else {
-        if ($GLOBALS[$this->pluginId]['mode'] === "production") {
-          Response::error(500, 500000, "SERVER ERROR");
-        } else {
-          Response::error(500, 500000, "SERVER ERROR", [
-            "code" => $code,
-            "message" => $message,
-            "file" => $file,
-            "line" => $line,
-            "trace" => $trace,
-            "previous" => $previous
-          ]);
-        }
-      }
-      exit();
+      Excep::exception($e);
     }
 
     if ($executeMiddlewareResult === false) {
@@ -121,35 +107,7 @@ class App
     try {
       $result = $this->executiveController();
     } catch (Exception $e) {
-      $code = $e->getCode();
-      $message = $e->getMessage();
-      $file = $e->getFile();
-      $line = $e->getLine();
-      $trace = $e->getTrace();
-      $previous = $e->getPrevious();
-      $traceSimple = $e->getTraceAsString();
-      $traceSimple = \explode("\n", $traceSimple);
-      if ($router['type'] === "view") {
-        if ($GLOBALS[$this->pluginId]['mode'] === "production") {
-          include Response::systemView("error");
-        } else {
-          include Response::systemView("error");
-        }
-      } else {
-        if ($GLOBALS[$this->pluginId]['mode'] === "production") {
-          Response::error(500, 500000, "SERVER ERROR");
-        } else {
-          Response::error(500, 500000, "SERVER ERROR", [
-            "code" => $code,
-            "message" => $message,
-            "file" => $file,
-            "line" => $line,
-            "trace" => $trace,
-            "previous" => $previous
-          ]);
-        }
-      }
-      exit();
+      Excep::exception($e);
     }
     if ($result !== NULL) {
       Response::success($result);
@@ -239,5 +197,9 @@ class App
   public function addBigGKey($key)
   {
     \array_push($this->BigGKeyWhiteList, $key);
+  }
+  public function multipleEncode($open = true)
+  {
+    $this->isMultipleEncode = $open;
   }
 }

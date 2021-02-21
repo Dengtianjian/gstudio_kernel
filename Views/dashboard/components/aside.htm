@@ -3,7 +3,7 @@
     <a
       href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$GLOBALS['gstudio_kernel']['dashboard']['mainNavId']}"
       class="page-sub-nav-link {if $GLOBALS['gstudio_kernel']['dashboard']['subNavId']==0}page-sub-nav-link-active{/if}"
-      >全部</a
+      >{$GLOBALS['GLANG']['kernel']['all']}</a
     >
     <!--{loop $GLOBALS['gstudio_kernel']['dashboard']['subNavs'] $sub}-->
     {if $sub['nav_uri']}
