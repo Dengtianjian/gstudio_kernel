@@ -17,20 +17,23 @@ class Lang
   {
     self::$langs[$key] = $value;
   }
-  public static function value($key)
+  public static function value($keys)
   {
-    return self::$langs[$key];
+    $string = "";
+    if (!\is_array($keys)) {
+      $keys = func_get_args();
+    }
+    if (count($keys) === 1) {
+      return self::$langs[$keys];
+    }
+    foreach ($keys as $key) {
+      $string .= self::$langs[$key];
+    }
+
+    return $string;
   }
   public static function all()
   {
     return self::$langs;
-  }
-  public static function multi($keys)
-  {
-    $string = "";
-    foreach ($keys as $key) {
-      $string .= self::$langs[$key];
-    }
-    return $string;
   }
 }
