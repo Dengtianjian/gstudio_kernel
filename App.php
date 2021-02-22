@@ -106,6 +106,16 @@ class App
     $result = null;
     try {
       $result = $this->executiveController();
+      if ($router['type'] === "view") {
+        $langJson = \json_encode($GLOBALS['GLANG']);
+        $multipleEncodeJSScript = "
+  <script>
+    const GLANG=JSON.parse('$langJson');
+    console.log(GLANG);
+  </script>
+  ";
+        print_r($multipleEncodeJSScript);
+      }
     } catch (Exception $e) {
       Excep::exception($e);
     }

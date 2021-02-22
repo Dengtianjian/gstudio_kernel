@@ -10,17 +10,4 @@ class Controller
   {
     return $this->$name;
   }
-  public function __construct()
-  {
-    if ($GLOBALS['app']->router['type'] === "view") {
-      $langJson = \json_encode($GLOBALS['GLANG']);
-      $multipleEncodeJSScript = <<<EOT
-<script>
-const GLANG=JSON.parse('$langJson');
-console.log(GLANG);
-</script>
-EOT;
-      print_r($multipleEncodeJSScript);
-    }
-  }
 }
