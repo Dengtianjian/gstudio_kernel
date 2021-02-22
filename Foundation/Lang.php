@@ -25,4 +25,12 @@ class Lang
   {
     return self::$langs;
   }
+  public static function multi($keys)
+  {
+    $string = "";
+    foreach ($keys as $key) {
+      $string .= self::$langs[$key];
+    }
+    return $string;
+  }
 }
