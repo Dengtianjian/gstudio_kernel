@@ -107,18 +107,31 @@ class App
     try {
       $result = $this->executiveController();
       if ($this->router['type'] === "view") {
-        $langJson = \serialize($GLOBALS['GLANG']);
-        if ($langJson === false) {
-          $langJson = \serialize([]);
+        $multipleEncodeJSScript = "";
+        if (CHARSET === "gbk") {
+          $langJson = \serialize($GLOBALS['GLANG']);
+          if ($langJson === false) {
+            $langJson = \serialize([]);
+          }
+          $multipleEncodeJSScript = "
+    <script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
+    <script>
+      const GLANG=unserialize('$langJson');
+      console.log(GLANG);
+    </script>
+    ";
+        } else {
+          $langJson = \json_encode($GLOBALS['GLANG']);
+          if ($langJson === false) {
+            $langJson = \json_encode([]);
+          }
+          $multipleEncodeJSScript = "
+    <script>
+      const GLANG=JSON.parse('$langJson');
+      console.log(GLANG);
+    </script>
+    ";
         }
-        // $langJson = \iconv("GB2312", "UTF-8", $langJson);
-        $multipleEncodeJSScript = "
-  <script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
-  <script>
-    const GLANG=unserialize('$langJson');
-    console.log(GLANG);
-  </script>
-  ";
         print_r($multipleEncodeJSScript);
       }
     } catch (Exception $e) {
