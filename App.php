@@ -106,11 +106,16 @@ class App
     $result = null;
     try {
       $result = $this->executiveController();
-      if ($router['type'] === "view") {
-        $langJson = \json_encode($GLOBALS['GLANG']);
+      if ($this->router['type'] === "view") {
+        $langJson = \serialize($GLOBALS['GLANG']);
+        if ($langJson === false) {
+          $langJson = \serialize([]);
+        }
+        // $langJson = \iconv("GB2312", "UTF-8", $langJson);
         $multipleEncodeJSScript = "
+  <script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
   <script>
-    const GLANG=JSON.parse('$langJson');
+    const GLANG=unserialize('$langJson');
     console.log(GLANG);
   </script>
   ";
@@ -145,7 +150,8 @@ class App
           Auth::checkAdmin($adminId);
         }
       }
-      return $instance->data($this->request);
+      $result = $instance->data($this->request);
+      return $result;
     }
   }
   private function executiveMiddleware()
