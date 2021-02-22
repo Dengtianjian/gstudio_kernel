@@ -12,13 +12,15 @@ class Controller
   }
   public function __construct()
   {
-    $langJson = \json_encode($GLOBALS['GLANG']);
-    $multipleEncodeJSScript = <<<EOT
-      <script>
-      const GLANG=JSON.parse('$langJson');
-      console.log(GLANG);
-      </script>
+    if ($GLOBALS['app']->router['type'] === "view") {
+      $langJson = \json_encode($GLOBALS['GLANG']);
+      $multipleEncodeJSScript = <<<EOT
+<script>
+const GLANG=JSON.parse('$langJson');
+console.log(GLANG);
+</script>
 EOT;
-    print_r($multipleEncodeJSScript);
+      print_r($multipleEncodeJSScript);
+    }
   }
 }
