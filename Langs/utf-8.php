@@ -24,7 +24,10 @@ $langs = [
     "not_logged_in" => "未登录",
     "authentication_failed_need_to_log_in_again" => "验证失败，请重新登录",
     "login_has_expired_please_log_in_again" => "登录已过期，请重新登录",
-    "unauthorized_access" => "非法访问"
+    "unauthorized_access" => "非法访问",
+    "need_to_install_the_core_plugin" => "请前往应用中心安装核心插件",
+    "route_does_not_exits" => "路由不存在",
+    "method_not_allowed" => "未允许的请求方法"
   ]
 ];
 
