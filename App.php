@@ -16,6 +16,7 @@ use gstudio_kernel\App\Dashboard\Controller as DashboardController;
 use gstudio_kernel\Exception\ErrorCode;
 use gstudio_kernel\Exception\Excep;
 use gstudio_kernel\Foundation\Auth;
+use gstudio_kernel\Foundation\Dashboard;
 use gstudio_kernel\Foundation\Lang;
 
 class App
@@ -30,6 +31,7 @@ class App
   private $salt = "gstudio_kernel"; //* token用到的 salt
   private $BigGKeyWhiteList = []; //* DZX大G key白名单。用于查询 大G 值时用到，一般是cache/plugin插件的变量
   private $isMultipleEncode = false; //* 多种编码
+  private $globalSetMarks = []; //* 全局设置项标记
   public function __get($name)
   {
     return $this->$name;
@@ -63,6 +65,15 @@ class App
   {
     $this->mode = $mode;
     $GLOBALS[$this->pluginId]['mode'] = $mode;
+  }
+  function globalSets($setMarks)
+  {
+    if (is_string($setMarks)) {
+      if (\func_num_args() > 1) {
+        $setMarks = func_get_args();
+      }
+    }
+    $this->globalSetMarks = $setMarks;
   }
   function init()
   {
@@ -102,6 +113,7 @@ class App
     if ($executeMiddlewareResult === false) {
       return;
     }
+    $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
 
     $result = null;
     try {

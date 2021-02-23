@@ -31,7 +31,7 @@ class Dashboard
     }
     return $sets;
   }
-  public static function getSet($setMark)
+  public static function getSet($setMark = null)
   {
     global $gstudio_kernel;
 
@@ -43,9 +43,12 @@ class Dashboard
         $setMark = func_get_args();
       }
     }
-    $sets = self::model()->where([
-      "set_mark" => $setMark
-    ]);
+    $sets = self::model();
+    if ($setMark !== null) {
+      $sets = $sets->where([
+        "set_mark" => $setMark
+      ]);
+    }
     if (is_string($setMark)) {
       $sets = $sets->getOne();
     } else {
