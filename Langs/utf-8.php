@@ -27,7 +27,9 @@ $langs = [
     "unauthorized_access" => "非法访问",
     "need_to_install_the_core_plugin" => "请前往应用中心安装核心插件",
     "route_does_not_exits" => "路由不存在",
-    "method_not_allowed" => "未允许的请求方法"
+    "method_not_allowed" => "未允许的请求方法",
+    "turn_on" => "开启",
+    "close" => "关闭"
   ]
 ];
 
