@@ -25,7 +25,7 @@ class Dashboard
           $set['set_content'] = \discuzcode(\urldecode($set['set_content']), false, false, 1, 1, 1, 1, 1, 1, "0", "0", "1", 0, 1, 0);
           break;
         case "html":
-          $set['set_view_content'] = urldecode(Str::unescape($set['set_content']));
+          $set['set_content'] = urldecode(Str::unescape($set['set_content']));
           break;
       }
     }
