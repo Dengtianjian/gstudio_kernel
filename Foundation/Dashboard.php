@@ -18,11 +18,14 @@ class Dashboard
   }
   public static function handelValue($sets)
   {
-    $BBCode = new bbcode();
+    include_once libfile("function/discuzcode");
     foreach ($sets as &$set) {
       switch ($set['set_formtype']) {
         case "bbcode":
-          $set['set_content'] = $BBCode->bbcode2html($set['set_content']);
+          $set['set_content'] = \discuzcode(\urldecode($set['set_content']), false, false, 1, 1, 1, 1, 1, 1, "0", "0", "1", 0, 1, 0);
+          break;
+        case "html":
+          $set['set_view_content'] = urldecode(Str::unescape($set['set_content']));
           break;
       }
     }
@@ -50,7 +53,6 @@ class Dashboard
       $sets = Arr::valueToKey($sets, "set_mark");
     }
     $sets = self::handelValue($sets);
-    // debug($sets);
     self::$setCache = array_merge(self::$setCache, $sets);
     return $sets;
   }

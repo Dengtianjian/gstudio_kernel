@@ -24,10 +24,11 @@
               <input type="text" value="{$setsItem['set_content']}" placeholder="{$GLOBALS['GLANG']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setsItem['set_mark']}',this.value)" ></input>
             </div>
             <!--{elseif $setsItem['set_formtype']=="html"}-->
-            <textarea onchange="changeHTML('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_content']}</textarea>
-            <textarea name="{$setsItem['set_id']}" class="set-encode-html"  >{$setsItem['set_content']}</textarea>
-             <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
-            <textarea name="{$setsItem['set_id']}" onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_content']}</textarea>
+            <textarea onchange="changeHTML('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_view_content']}</textarea>
+            <input type="hidden" name="{$setsItem['set_id']}" mark="{$setsItem['set_mark']}" ></input>
+            <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
+            <input type="hidden" name="{$setsItem['set_id']}" mark="{$setsItem['set_mark']}" value="{$setsItem['set_content']}" />
+            <textarea onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_view_content']}</textarea>
             <!--{elseif $setsItem['set_formtype']=="select"}-->
             <select name="{$setsItem['set_id']}" >
               <option disabled selected >{$GLOBALS['GLANG']['kernel']['please_choose']}</option>
@@ -55,6 +56,10 @@
               class="set-preview-img"
               src="{$_G['siteurl']}{$setsItem['set_content']}"
             />
+            <!--{elseif $setsItem['set_formtype']=='html'}-->
+            {$setsItem['set_view_content']}
+            <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
+            {$setsItem['set_preview_content']}
             <!--{/if}-->
           </div>
           </div>
@@ -73,9 +78,11 @@
                   <input type="text" value="{$setMergeItem['set_content']}" placeholder="{$GLOBALS['GLANG']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setMergeItem['set_mark']}',this.value)" ></input>
                 </div>
                 <!--{elseif $setMergeItem['set_formtype']=="html"}-->
-                <textarea onchange="changeHTML('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
+                <input type="hidden" name="{$setMergeItem['set_id']}" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
+                <textarea onchange="changeHTML('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_view_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="bbcode"}-->
-                <textarea name="{$setMergeItem['set_id']}" onchange="changeBBCode('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
+                <input type="hidden" name="{$setMergeItem['set_id']}" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
+                <textarea onchange="changeBBCode('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_view_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="select"}-->
                 <select name="{$setMergeItem['set_id']}" >
                   <option disabled selected >{$GLOBALS['GLANG']['kernel']['please_choose']}</option>
@@ -121,6 +128,9 @@
     </div>
   </main>
   <script>
+    function loadEl(){
+      console.log(this);
+    }
     function changeColor(type,mark,value){
       if(type=='text'){
         let colorDom=document.querySelector(".set-item-"+mark+"-content .set-type-color>input[type='color']");
@@ -131,18 +141,10 @@
       }
     }
 
-    function HTMLEncode(html) {
-        var temp = document.createElement("div");
-        (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
-        var output = temp.innerHTML;
-        temp = null;
-        return output;
-    }
-
     function changeHTML(mark,value){
       let dom=document.querySelector(".set-item-"+mark+" .set-preview");
       dom.innerHTML=value;
-      document.querySelector(".set-item-"+mark+" .set-encode-html").value=escape(value);
+      document.querySelector("input[mark='"+mark+"']").value=encodeURI(escape(value));
     }
 
     var allowbbcode=true;
@@ -152,6 +154,7 @@
     function changeBBCode(mark,value){
       let dom=document.querySelector(".set-item-"+mark+" .set-preview");
       dom.innerHTML=bbcode2html(value);
+      document.querySelector("input[mark='"+mark+"']").value=encodeURI(value);
     }
 
     function changeImage(mark,files){
