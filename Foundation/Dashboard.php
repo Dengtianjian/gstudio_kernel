@@ -38,4 +38,20 @@ class Dashboard
     self::$setCache = array_merge(self::$setCache, $sets);
     return $sets;
   }
+  public static function getSetValue($setMark)
+  {
+    if (is_string($setMark)) {
+      if (\func_num_args() > 1) {
+        $setMark = func_get_args();
+      }
+    }
+    $sets = self::getSet($setMark);
+    if (func_num_args() == 1 && is_string($setMark)) {
+      return $sets['set_content'];
+    }
+    foreach ($sets as &$set) {
+      $set = $set['set_content'];
+    }
+    return $sets;
+  }
 }
