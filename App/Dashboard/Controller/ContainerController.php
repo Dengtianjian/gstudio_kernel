@@ -6,6 +6,7 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use DB;
 use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Model;
 use gstudio_kernel\Foundation\Response;
@@ -39,6 +40,10 @@ class ContainerController extends Controller
     ])->order("set_sort", "ASC")->get();
 
     $sets = [];
+    $userGroup = DB::fetch_all("SELECT * FROM `%t`", [
+      "common_usergroup"
+    ]);
+    // debug($setsData);
     include_once libfile("function/discuzcode");
     foreach ($setsData as &$setItem) {
       switch ($setItem['set_formtype']) {
@@ -51,6 +56,9 @@ class ContainerController extends Controller
           break;
         case "html":
           $setItem['set_view_content'] = urldecode(Str::unescape($setItem['set_content']));
+          break;
+        case "groups":
+          $setItem['set_content'] = unserialize($setItem['set_content']);
           break;
       }
       if ($setItem['set_value']) {
@@ -84,7 +92,6 @@ class ContainerController extends Controller
     }
     $sets = \array_values($sets);
     // debug($sets);
-    // debug(\urldecode("%5Bcolor=#bbbbbb%5D%5Bbackcolor=rgb(243,%20243,%20243)%5D%5Bfont=Helvetica,%20Arial,%20&quot;%5D%5Bsize=12px%5DCopyright%20%C2%A9%202016-2019%20%E5%88%9B%E9%80%A0%E7%8B%AE%20%E5%88%9B%E6%84%8F%E5%B7%A5%E4%BD%9C%E8%80%85%E5%AF%BC%E8%88%AA%20%5B/size%5D%5B/font%5D%5B/backcolor%5D%5B/color%5D"));
     $setCount = count($sets);
 
     include_once Response::systemView("sets", "dashboard");

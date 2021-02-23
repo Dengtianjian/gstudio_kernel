@@ -27,6 +27,9 @@ class Dashboard
         case "html":
           $set['set_content'] = urldecode(Str::unescape($set['set_content']));
           break;
+        case "groups":
+          $set['set_content'] = unserialize($set['set_content']);
+          break;
       }
     }
     return $sets;

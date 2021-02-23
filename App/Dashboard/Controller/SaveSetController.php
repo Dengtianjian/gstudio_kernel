@@ -36,13 +36,14 @@ class SaveSetController extends Controller
 
     $updateSql = "UPDATE " . \DB::table($gstudio_kernel['dashboard']['setTableName']) . " SET `set_content` = CASE `set_id` ";
     $updateIds = [];
+    // debug($updateData);
     foreach ($updateData as $dataKey => $dataItem) {
       switch (gettype($dataItem)) {
         case "string":
           $dataItem = addslashes($dataItem);
           break;
         case "array":
-          $dataItem = json_encode($dataItem);
+          $dataItem = \serialize($dataItem);
           break;
       }
       if ($dataItem != null) {

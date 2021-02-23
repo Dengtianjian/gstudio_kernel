@@ -203,6 +203,10 @@ ul {
   border: 1px solid #eee;
   transition: all 0.2s linear;
 }
+.set-content select[multiple]{
+  width:250px;
+  height:300px;
+}
 .set-content input[type="file"] {
   padding: 7px;
   min-width: 150px;
