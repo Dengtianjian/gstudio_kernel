@@ -17,12 +17,24 @@ class Dashboard
   public static function getSet($setMark)
   {
     global $gstudio_kernel;
-    if (is_string($setMark) && self::$setCache[$setMark]) {
-      return self::$setCache[$setMark];
+
+    if (is_string($setMark)) {
+      if (self::$setCache[$setMark]) {
+        return self::$setCache[$setMark];
+      }
+      if (\func_num_args() > 1) {
+        $setMark = func_get_args();
+      }
     }
     $sets = self::model()->where([
       "set_mark" => $setMark
-    ])->get();
+    ]);
+    if (is_string($setMark)) {
+      $sets = $sets->getOne();
+    } else {
+      $sets = $sets->get();
+      $sets = Arr::valueToKey($sets, "set_mark");
+    }
     self::$setCache = array_merge(self::$setCache, $sets);
     return $sets;
   }
