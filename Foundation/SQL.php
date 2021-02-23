@@ -30,6 +30,11 @@ class SQL
           $fieldSql = DB::field($name, $value['value'], $glue);
           $sql .= " $operator $fieldSql";
         } else {
+          foreach ($value as &$v) {
+            if (is_string($v)) {
+              $v = "'$v'";
+            }
+          }
           $value = \implode(",", $value);
           $sql .= " AND `$name` IN($value)";
         }
