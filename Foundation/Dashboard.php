@@ -2,6 +2,8 @@
 
 namespace gstudio_kernel\Foundation;
 
+use bbcode;
+
 class Dashboard
 {
   private static $setCache = [];
@@ -13,6 +15,18 @@ class Dashboard
       self::$setModel = new Model($gstudio_kernel['dashboard']['setTableName']);
     }
     return self::$setModel;
+  }
+  public static function handelValue($sets)
+  {
+    $BBCode = new bbcode();
+    foreach ($sets as &$set) {
+      switch ($set['set_formtype']) {
+        case "bbcode":
+          $set['set_content'] = $BBCode->bbcode2html($set['set_content']);
+          break;
+      }
+    }
+    return $sets;
   }
   public static function getSet($setMark)
   {
@@ -35,6 +49,8 @@ class Dashboard
       $sets = $sets->get();
       $sets = Arr::valueToKey($sets, "set_mark");
     }
+    $sets = self::handelValue($sets);
+    // debug($sets);
     self::$setCache = array_merge(self::$setCache, $sets);
     return $sets;
   }
