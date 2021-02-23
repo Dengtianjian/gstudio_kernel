@@ -22,8 +22,9 @@ class Model
       $this->tableName = $tableName;
     }
   }
-  public function fetch($getObj)
+  public function sql()
   {
+    $getObj = $this->chainCallOfQuery;
     $field = "*";
     if ($getObj['field']) {
       $field = $getObj['field'];
@@ -51,6 +52,12 @@ class Model
     }
 
     $sql = "SELECT $field FROM `%t` $where $order $page";
+    return $sql;
+  }
+  public function fetch($getObj)
+  {
+    $this->chainCallOfQuery = $getObj;
+    $sql = $this->sql();
     $getResult = DB::fetch_all($sql, [
       $this->tableName
     ]);
