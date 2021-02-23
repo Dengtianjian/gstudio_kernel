@@ -7,18 +7,17 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Controller;
-use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Request;
 
 class SaveSetController extends Controller
 {
   protected $Admin = true;
-  public function data(Request $request)
+  public function data()
   {
-    global $_G, $gstudio_kernel;
+    global $_G, $gstudio_kernel, $GLANG;
     $updateData = $_POST;
     if ($updateData['DZHash'] !== \FORMHASH) {
-      \showmessage(Lang::value("kernel")['llleal_submission'], $_SERVER['HTTP_REFERER'], [], [
+      \showmessage($GLANG["kernel"]['llleal_submission'], $_SERVER['HTTP_REFERER'], [], [
         "alert" => "error"
       ]);
       exit;
@@ -56,6 +55,6 @@ class SaveSetController extends Controller
 
     \DB::query($updateSql);
 
-    showmessage(Lang::value("kernel")['saved_successfully'], $_SERVER['HTTP_REFERER'], [], ["alert" => "right"]);
+    showmessage($GLANG["kernel"]['saved_successfully'], $_SERVER['HTTP_REFERER'], [], ["alert" => "right"]);
   }
 }
