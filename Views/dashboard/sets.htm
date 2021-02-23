@@ -27,7 +27,7 @@
             <textarea onchange="changeHTML('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_content']}</textarea>
             <textarea name="{$setsItem['set_id']}" class="set-encode-html"  >{$setsItem['set_content']}</textarea>
              <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
-            <textarea name="{$setMergeItem['set_id']}" onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setMergeItem['set_content']}</textarea>
+            <textarea name="{$setsItem['set_id']}" onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_content']}</textarea>
             <!--{elseif $setsItem['set_formtype']=="select"}-->
             <select name="{$setsItem['set_id']}" >
               <option disabled selected >{$GLOBALS['GLANG']['kernel']['please_choose']}</option>
