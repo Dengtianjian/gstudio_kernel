@@ -38,6 +38,17 @@ class App
   }
   function __construct($pluginId = null)
   {
+    include_once($GLOBALS['gstudio_kernel']['pluginPath'] . "/Langs/" . CHARSET . ".php");
+    $GLOBALS['GLANG'] = [];
+
+    if ($this->isMultipleEncode === true) {
+      $langFilePath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/" . CHARSET . ".php";
+      if (!\file_exists($langFilePath)) {
+        Excep::t(Lang::value('kernel')['dictionary_file_does_not_exist']);
+      }
+      include_once($langFilePath);
+      $GLOBALS['GLANG'] = Lang::all();
+    }
     ErrorCode::load(); //* 加载错误码
     $GLOBALS["gstudio_kernel"] = [
       "mode" => $this->mode,
@@ -85,17 +96,6 @@ class App
       Router::get("_set", DashboardController\GetSetController::class);
     }
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
-    include_once($GLOBALS['gstudio_kernel']['pluginPath'] . "/Langs/" . CHARSET . ".php");
-    $GLOBALS['GLANG'] = [];
-
-    if ($this->isMultipleEncode === true) {
-      $langFilePath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/" . CHARSET . ".php";
-      if (!\file_exists($langFilePath)) {
-        Excep::t(Lang::value('kernel')['dictionary_file_does_not_exist']);
-      }
-      include_once($langFilePath);
-      $GLOBALS['GLANG'] = Lang::all();
-    }
 
     $router = Router::match($this->uri);
     if (!$router) {
@@ -116,7 +116,6 @@ class App
     if ($this->useDashboard === true) {
       $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
     }
-
 
     $result = null;
     try {
@@ -176,6 +175,14 @@ class App
         }
         if (Auth::isVerifiedAdmin() == false) {
           Auth::checkAdmin($adminId);
+        }
+      }
+      if ($instance->DZHash == true) {
+        if (!$this->request->params("DZHash")) {
+          Response::error("LLLEGAL_SUBMISSION");
+        }
+        if ($this->request->params("DZHash") != \FORMHASH) {
+          Response::error("LLLEGAL_SUBMISSION");
         }
       }
       $result = $instance->data($this->request);
