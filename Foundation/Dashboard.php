@@ -78,4 +78,13 @@ class Dashboard
     }
     return $sets;
   }
+  public static function updateSet($setMark, $setContent)
+  {
+    $sets = self::model();
+    return $sets->where([
+      "set_mark" => $setMark
+    ])->update([
+      "set_content" => $setContent
+    ])->save();
+  }
 }
