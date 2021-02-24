@@ -37,7 +37,6 @@ class App
   }
   function __construct($pluginId = null)
   {
-    include_once($GLOBALS['gstudio_kernel']['pluginPath'] . "/Langs/" . CHARSET . ".php");
     $GLOBALS['GLANG'] = [];
 
     $GLOBALS["gstudio_kernel"] = [
@@ -57,6 +56,7 @@ class App
     $this->pluginId = $pluginId;
     $this->uri = \addslashes($_GET['uri']);
 
+    include_once($GLOBALS['gstudio_kernel']['pluginPath'] . "/Langs/" . CHARSET . ".php");
     $langDirPath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/";
     if (\file_exists($langDirPath)) {
       $langFilePath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/" . CHARSET . ".php";
