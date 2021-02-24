@@ -104,18 +104,19 @@ class App
     }
     $this->router = $router;
     $this->request = new Request();
+
     $executeMiddlewareResult = true;
     try {
       $executeMiddlewareResult = $this->executiveMiddleware();
     } catch (Exception $e) {
       Excep::exception($e);
     }
+    // if ($this->useDashboard === true) {
+    //   $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
+    // }
 
     if ($executeMiddlewareResult === false) {
       return;
-    }
-    if ($this->useDashboard === true) {
-      $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
     }
 
     $result = null;
@@ -192,7 +193,7 @@ class App
   }
   private function executiveMiddleware()
   {
-    $middlewares = $this->globalMiddlware;
+    $middlewares = array_reverse($this->globalMiddlware);
     if ($this->router['middleware']) {
       if (\is_array($this->router['middleware'])) {
         $middlewares = \array_merge($this->router['middleware']);
