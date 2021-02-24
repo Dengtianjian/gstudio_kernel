@@ -113,7 +113,10 @@ class App
     if ($executeMiddlewareResult === false) {
       return;
     }
-    $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
+    if ($this->useDashboard === true) {
+      $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
+    }
+
 
     $result = null;
     try {
