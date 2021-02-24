@@ -20,7 +20,7 @@ class GlobalDashboardMiddleware
       $setTableName = $GLOBALS['gstudio_kernel']['dashboard']['setTableName'];
     }
 
-    $navsData = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=0", [
+    $navsData = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=0 ORDER BY `nav_sort` ASC", [
       $navTableName
     ]);
     $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount'] = count($navsData);
