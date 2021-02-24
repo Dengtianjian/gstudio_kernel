@@ -29,7 +29,8 @@ $langs = [
     "route_does_not_exits" => "路由不存在",
     "method_not_allowed" => "未允许的请求方法",
     "turn_on" => "开启",
-    "close" => "关闭"
+    "close" => "关闭",
+    "lllegal_submission" => "非法提交"
   ]
 ];
 

@@ -4,6 +4,10 @@ namespace gstudio_kernel\Exception;
 
 use gstudio_kernel\Foundation\Lang;
 
+$SubmitCodes = [
+  "LLLEGAL_SUBMISSION" => [403, "SUBMIT_403001", Lang::value("kernel")['lllegal_submission']]
+];
+
 $AuthCodes = [
   "NOT_AUTH" => [401, "Auth_401001", Lang::value("kernel")['not_logged_in']],
   "AUTH_FAILED" => [401, "Auth_401002",  Lang::value("kernel")['authentication_failed_need_to_log_in_again']],
@@ -16,4 +20,4 @@ $RouteCodes = [
   "METHOD_NOT_ALLOWED" => [400, "Route_400001", Lang::value("method_not_allowed")]
 ];
 
-$ErrorCodes = \array_merge($AuthCodes);
+$ErrorCodes = \array_merge($AuthCodes, $RouteCodes, $SubmitCodes);
