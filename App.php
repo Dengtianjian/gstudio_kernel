@@ -30,7 +30,6 @@ class App
   private $useDashboard = false; //* 是否有后台功能
   private $salt = "gstudio_kernel"; //* token用到的 salt
   private $BigGKeyWhiteList = []; //* DZX大G key白名单。用于查询 大G 值时用到，一般是cache/plugin插件的变量
-  private $isMultipleEncode = false; //* 多种编码
   private $globalSetMarks = []; //* 全局设置项标记
   public function __get($name)
   {
@@ -41,15 +40,6 @@ class App
     include_once($GLOBALS['gstudio_kernel']['pluginPath'] . "/Langs/" . CHARSET . ".php");
     $GLOBALS['GLANG'] = [];
 
-    if ($this->isMultipleEncode === true) {
-      $langFilePath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/" . CHARSET . ".php";
-      if (!\file_exists($langFilePath)) {
-        Excep::t(Lang::value('kernel')['dictionary_file_does_not_exist']);
-      }
-      include_once($langFilePath);
-      $GLOBALS['GLANG'] = Lang::all();
-    }
-    ErrorCode::load(); //* 加载错误码
     $GLOBALS["gstudio_kernel"] = [
       "mode" => $this->mode,
       "pluginId" => "gstudio_kernel",
@@ -66,6 +56,17 @@ class App
     ];
     $this->pluginId = $pluginId;
     $this->uri = \addslashes($_GET['uri']);
+
+    $langDirPath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/";
+    if (\file_exists($langDirPath)) {
+      $langFilePath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/" . CHARSET . ".php";
+      if (\file_exists($langFilePath)) {
+        include_once($langFilePath);
+      }
+    }
+    $GLOBALS['GLANG'] = Lang::all();
+    ErrorCode::load(); //* 加载错误码
+
     include_once(DISCUZ_ROOT . "$devingPlguinPath/routes.php");
   }
   function setMiddlware($middlwareNameOfFunction)
@@ -248,9 +249,5 @@ class App
   public function addBigGKey($key)
   {
     \array_push($this->BigGKeyWhiteList, $key);
-  }
-  public function multipleEncode($open = true)
-  {
-    $this->isMultipleEncode = $open;
   }
 }
