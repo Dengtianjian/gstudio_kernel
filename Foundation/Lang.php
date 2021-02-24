@@ -24,7 +24,7 @@ class Lang
       $keys = func_get_args();
     }
     if (count($keys) === 1) {
-      return self::$langs[$keys];
+      return self::$langs[$keys[0]];
     }
     foreach ($keys as $key) {
       $string .= self::$langs[$key];
