@@ -6,18 +6,18 @@
     <title>{if $pageTitle}{$pageTitle}{else}{$GLOBALS['GLANG']['kernel']['backend']}{/if}</title>
     <script
       type="text/javascript"
-      src="{$_G['setting']['jspath']}common.js?{VERHASH}"
+      src="/{$_G['setting']['jspath']}common.js?{VERHASH}"
     ></script>
     <link
       rel="stylesheet"
-      href="{$GLOBALS['gstudio_kernel']['dashboard']['viewPath']}/css/common.css"
+      href="/{$GLOBALS['gstudio_kernel']['dashboard']['viewPath']}/css/common.css"
     />
     <link
       rel="stylesheet"
-      href="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/c_ui.css"
+      href="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/c_ui.css"
     />
-    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/jquery.js"></script>
-    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/http.js"></script>
+    <script src="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/jquery.js"></script>
+    <script src="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/http.js"></script>
     <script>
       var jQuery = $.noConflict();
       CDZXHTTP.setRequestUrl("/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}");
@@ -32,7 +32,7 @@
         >
           <!--{loop $GLOBALS['gstudio_kernel']['dashboard']['mainNavs'] $nav}-->
           <a
-            href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
+            href="/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
             class="page-nav-link {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}"
           >
             {$nav['nav_name']}
