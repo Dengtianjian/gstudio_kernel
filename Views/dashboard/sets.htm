@@ -12,7 +12,7 @@
         <!--{loop $sets $setsItem}-->
         <section class="set-item set-item-{$setsItem['set_mark']} {if $setsItem['set_formtype']=='empty'}set-group{/if}">
           <div class="set-parent">
-            <div class="set-title">{$setsItem['set_name']}</div>
+            <div class="set-title">{$setsItem['set_name']}{if $GLOBALS[$GLOBALS['app']->pluginId]['mode']!="production"} {$setsItem['set_mark']}{/if}</div>
           <div class="set-content set-item-{$setsItem['set_mark']}-content">
             <!--{if $setsItem['set_formtype']=="text"}-->
             <input type="text" name="{$setsItem['set_id']}" value="{$setsItem['set_content']}" />
