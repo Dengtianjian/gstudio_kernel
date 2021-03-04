@@ -95,6 +95,7 @@ class App
       Router::view("dashboard", DashboardController\ContainerController::class);
       Router::postView("_dashboard_save", DashboardController\SaveSetController::class);
       Router::get("_set", DashboardController\GetSetController::class);
+      Router::put("_dashboard_cleansetimg", DashboardController\CleanSetImageController::class);
     }
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 

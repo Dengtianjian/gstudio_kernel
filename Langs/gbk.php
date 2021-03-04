@@ -30,7 +30,8 @@ $langs = [
     "method_not_allowed" => "未允许的请求方法",
     "turn_on" => "开启",
     "close" => "关闭",
-    "lllegal_submission" => "非法提交"
+    "lllegal_submission" => "非法提交",
+    "clean_set_image" => "清除图片"
   ]
 ];
 

@@ -10,7 +10,7 @@
       >
         <input type="hidden" name="DZHash" value="{FORMHASH}" />
         <!--{loop $sets $setsItem}-->
-        <section class="set-item set-item-{$setsItem['set_mark']} {if $setsItem['set_formtype']=='empty'}set-group{/if}">
+        <section class="set-item set-item-{$setsItem['set_mark']} set-item-{$setsItem['set_id']} {if $setsItem['set_formtype']=='empty'}set-group{/if}">
           <div class="set-parent">
             <div class="set-title">{$setsItem['set_name']}{if $GLOBALS[$GLOBALS['app']->pluginId]['mode']!="production"} {$setsItem['set_mark']}{/if}</div>
           <div class="set-content set-item-{$setsItem['set_mark']}-content">
@@ -71,6 +71,7 @@
               class="set-preview-img"
               src="{$_G['siteurl']}{$setsItem['set_content']}"
             />
+            <p><button type="button" onclick="cleanSetImage({$setsItem['set_id']})">{$GLOBALS['GLANG']['kernel']['clean_set_image']}</button></p>
             <!--{elseif $setsItem['set_formtype']=='html'}-->
             {$setsItem['set_view_content']}
             <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
@@ -80,7 +81,7 @@
           </div>
           <div class="set-subs">
             <!--{loop $setsItem['set_sub_sets'] $setMergeItem}-->
-            <section class="set-item set-item-{$setMergeItem['set_mark']}">
+            <section class="set-item set-item-{$setMergeItem['set_mark']} set-item-{$setMergeItem['set_id']}">
               <div class="set-title">{$setMergeItem['set_name']}</div>
               <div class="set-content set-item-{$setMergeItem['set_mark']}-content">
                 <!--{if $setMergeItem['set_formtype']=="text"}-->
@@ -127,6 +128,7 @@
                   class="set-preview-img"
                   src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"
                 />
+                <p><button type="button" onclick="cleanSetImage({$setMergeItem['set_id']})">{$GLOBALS['GLANG']['kernel']['clean_set_image']}</button></p>
                 <!--{/if}-->
               </div>
             </section>
@@ -143,9 +145,6 @@
     </div>
   </main>
   <script>
-    function loadEl(){
-      console.log(this);
-    }
     function changeColor(type,mark,value){
       if(type=='text'){
         let colorDom=document.querySelector(".set-item-"+mark+"-content .set-type-color>input[type='color']");
@@ -191,7 +190,14 @@
         previewDom.src=this.result;
       }
       reader.readAsDataURL(file);
+    }
 
+    function cleanSetImage(setId){
+      CDZXHTTP.put("_dashboard_cleansetimg",{
+        set_id:setId
+      }).then(res=>{
+        jQuery(".set-item-"+setId+" .set-preview-img").attr("src","");
+      });
     }
   </script>
   <script type="text/javascript" src="/{$_G['setting']['jspath']}bbcode.js?{VERHASH}"></script>
