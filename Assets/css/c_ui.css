@@ -6,6 +6,12 @@
   --danger-color: #f56c6c;
 }
 
+.ellipse1 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .c-inline-form .c-form-item {
   display: inline-flex;
   align-items: center;
