@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{if $pageTitle}{$pageTitle}{else}{$GLOBALS['GLANG']['kernel']['backend']}{/if}</title>
+    <title>
+      {if
+      $pageTitle}{$pageTitle}{else}{$GLOBALS['GLANG']['kernel']['backend']}{/if}
+    </title>
     <script
       type="text/javascript"
       src="/{$_G['setting']['jspath']}common.js?{VERHASH}"
@@ -21,7 +24,9 @@
     <script src="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/utils.js"></script>
     <script>
       var jQuery = $.noConflict();
-      CDZXHTTP.setRequestUrl("/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}");
+      CDZXHTTP.setRequestUrl(
+        "/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}"
+      );
     </script>
   </head>
   <body>
@@ -55,7 +60,7 @@
             class="quick-nav-link"
             target="_blank"
           >
-          {$GLOBALS['GLANG']['kernel']['addon_center']}
+            {$GLOBALS['GLANG']['kernel']['addon_center']}
           </a>
         </div>
       </div>
