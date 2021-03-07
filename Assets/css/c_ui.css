@@ -19,10 +19,10 @@
 
 .c-form-item {
   display: flex;
-  align-items:center;
+  align-items: center;
   padding: 4px;
-  margin-bottom:2px;
-  width:100%;
+  margin-bottom: 2px;
+  width: 100%;
   box-sizing: border-box;
 }
 .c-form-label-text {
@@ -35,12 +35,12 @@
   margin-right: 10px;
 }
 .c-form-label-text + * {
-  margin-left:10px;
+  margin-left: 10px;
 }
 
 .c-form-el {
-  flex-grow:1;
-  padding:5px 8px;
+  flex-grow: 1;
+  padding: 5px 8px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -49,46 +49,50 @@
   border: 1px solid #666 !important;
 }
 .c-form-el + .c-form-el {
-  margin-left:10px;
+  margin-left: 10px;
 }
 .c-inline-form .c-form-el {
   flex-shrink: 1;
 }
-.c-form-el[type='text'] {
-  display:inline-block;
-  padding:8px;
-  width:100%;
+.c-form-el[type="text"],
+.c-form-el[type="number"] {
+  display: inline-block;
+  padding: 8px;
+  width: 100%;
 }
 .c-form-el[type="file"],
-input[type="file" ]::-webkit-file-upload-button {
+input[type="file"]::-webkit-file-upload-button {
   cursor: pointer;
 }
 .c-form-item select {
   cursor: pointer;
 }
 .c-form-el[type="checkbox"] {
-  flex-grow:0;
+  flex-grow: 0;
 }
 .c-form-el[type="radio"] {
-  flex-grow:0;
+  flex-grow: 0;
+}
+textarea.c-form-el {
+  font-family: 微软雅黑, "Microsoft Yahei", 黑体;
 }
 .c-form-button-right {
-  display:flex;
-  justify-content:flex-end;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
 }
 .c-form-button-center {
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
 /* 按钮样式 */
 .c-button {
   display: inline-block;
-  padding:10px 36px;
-  font-size:14px;
-  text-decoration:none;
+  padding: 10px 36px;
+  font-size: 14px;
+  text-decoration: none;
   background: white;
   border: 1px solid #dcdfe6;
   cursor: pointer;
@@ -98,27 +102,27 @@ input[type="file" ]::-webkit-file-upload-button {
 }
 .c-button[size="mini"] {
   padding: 5px 20px;
-  font-size:12px;
+  font-size: 12px;
 }
 .c-button[size="small"] {
   padding: 9px 25px;
-  font-size:12px;
+  font-size: 12px;
 }
 .c-button[size="medium"] {
   padding: 10px 32px;
-  font-size:12px;
+  font-size: 12px;
 }
 .c-button + .c-button {
   margin-left: 5px;
 }
 .c-button:hover {
   color: var(--primary-color);
-  text-decoration:none;
+  text-decoration: none;
   border-color: #c6e2ff;
   background: #ecf5ff;
 }
 .c-button[circle] {
-  border-radius:42px;
+  border-radius: 42px;
 }
 .c-button[primary] {
   color: white;
