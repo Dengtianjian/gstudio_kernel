@@ -123,7 +123,7 @@ class App
     $result = null;
     try {
       $result = $this->executiveController();
-      if ($this->router['type'] === "view") {
+      if ($this->router['type'] === "view" && $GLOBALS['app']->mode === "devlogment") {
         $multipleEncodeJSScript = "";
         if (CHARSET === "gbk") {
           $langJson = \serialize($GLOBALS['GLANG']);
