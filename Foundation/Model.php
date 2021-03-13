@@ -125,10 +125,24 @@ class Model
     $this->chainCallOfSave['fv'] = $fieldAndValues;
     return $this;
   }
+  public function batchInsertByMS($assocData)
+  {
+    $this->chainCallOfSave['type'] = "batchInsertByMultiSql";
+    $this->chainCallOfSave['fv'] = $assocData;
+    return $this;
+  }
   public function update($fieldAndValues = [])
   {
     $this->chainCallOfSave['type'] = "update";
     $this->chainCallOfSave['fv'] = $fieldAndValues;
+    return $this;
+  }
+  public function batchUpdateByMS($assocData, $conditions)
+  {
+    //* UPDATE TABLE SET
+    $this->chainCallOfSave['type'] = "batchUpdateByMultiSql";
+    $this->chainCallOfSave['fv'] = $assocData;
+    $this->chainCallOfSave['MSBatchUpdateConditions'] = $conditions;
     return $this;
   }
   public function delete()
@@ -174,10 +188,63 @@ class Model
         ]);
         return $result;
         break;
+      case "batchUpdateByMultiSql":
+        $sqls = [];
+        $data = $this->chainCallOfSave['fv'];
+        $data = \array_values($data);
+        $conditions = $this->chainCallOfSave['MSBatchUpdateConditions'];
+        $conditionValues = \array_keys($conditions);
+        $conditionFields = \array_values($conditions);
+        $tableName = DB::table($this->tableName);
+        foreach ($data as $dataItemIndex => $dataItem) {
+          $sets = [];
+          foreach ($dataItem as $field => $value) {
+            if (\is_string($value)) {
+              $value = "'$value'";
+            }
+            $sets[] = "`$field`=" . $value;
+          }
+          $sets = \implode(",", $sets);
+          $conditionSql = "";
+          $conditionField = $conditionFields[$dataItemIndex];
+          $conditionValue = $conditionValues[$dataItemIndex];
+          if (\is_string($conditionField) && !\is_array($conditionValue)) {
+            $conditionSql = "WHERE `$conditionField` = $conditionValue";
+          } else {
+            $conditionSql = SQL::where($conditionValue);
+          }
+          $sqls[] = "UPDATE $tableName SET $sets $conditionSql;\n";
+        }
+        $sqls = \implode("", $sqls);
+        include_once libfile("function/plugin");
+        \runquery($sqls);
+        break;
+      case "batchInsertByMultiSql":
+        $data = $this->chainCallOfSave['fv'];
+        $data = \array_values($data);
+        $sql = [];
+        $tableName = DB::table($this->tableName);
+        $valueString = [];
+        foreach ($data as $dataItem) {
+          $values = array_values($dataItem);
+          foreach ($values as &$valueItem) {
+            if (\is_string($valueItem)) {
+              $valueItem = "'$valueItem'";
+            }
+          }
+          $valueString[] = "(" . \implode(",", $values) . ")";
+        }
+        $valueString = \implode(",", $valueString);
+        $fields = array_keys($data[0]);
+        foreach ($fields as &$fieldItem) {
+          $fieldItem = "`$fieldItem`";
+        }
+        $fields = \implode(",", $fields);
+        $sql = "INSERT INTO `$tableName`($fields) VALUES$valueString;";
+        $result = DB::query($sql);
+        return $result;
+        break;
     }
     $this->chainCallOfSave = [];
-  }
-  public function hasOne($modelClass, $localKey, $foreignKey)
-  {
   }
 }
