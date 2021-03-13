@@ -20,4 +20,27 @@ class Arr
     }
     return $result;
   }
+  static function sortByParentChild($arr, $dataPrimaryKey, $relatedParentKey, $childArrayKeys = "childs")
+  {
+    $returnData = [];
+    foreach ($arr as $arrItem) {
+      if ($arrItem[$relatedParentKey] == 0) {
+        if ($returnData[$arrItem[$dataPrimaryKey]]) {
+          $returnData[$arrItem[$dataPrimaryKey]] = \array_merge($returnData[$arrItem[$dataPrimaryKey]], $arrItem);
+        } else {
+          $arrItem[$childArrayKeys] = [];
+          $returnData[$arrItem[$dataPrimaryKey]] = $arrItem;
+        }
+      } else {
+        if ($returnData[$arrItem[$relatedParentKey]]) {
+          \array_push($returnData[$arrItem[$relatedParentKey]][$childArrayKeys], $arrItem);
+        } else {
+          $returnData[$arrItem[$relatedParentKey]] = [
+            $childArrayKeys => [$arrItem]
+          ];
+        }
+      }
+    }
+    return \array_values($returnData);
+  }
 }
