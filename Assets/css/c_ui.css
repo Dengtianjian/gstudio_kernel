@@ -55,7 +55,8 @@
   flex-shrink: 1;
 }
 .c-form-el[type="text"],
-.c-form-el[type="number"] {
+.c-form-el[type="number"],
+.c-form-el[type="url"] {
   display: inline-block;
   padding: 8px;
   width: 100%;
