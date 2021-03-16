@@ -68,6 +68,9 @@ input[type="file"]::-webkit-file-upload-button {
 .c-form-item select {
   cursor: pointer;
 }
+.c-form-item select[multiple]{
+  resize:vertical;
+}
 .c-form-el[type="checkbox"] {
   flex-grow: 0;
 }
