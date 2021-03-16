@@ -247,4 +247,11 @@ class Model
     }
     $this->chainCallOfSave = [];
   }
+  public function count($field = "*")
+  {
+    $sql = "SELECT COUNT($field) FROM %t";
+    return DB::result(DB::query($sql, [
+      $this->tableName
+    ]));
+  }
 }
