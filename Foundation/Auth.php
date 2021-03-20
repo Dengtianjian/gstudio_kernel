@@ -75,10 +75,6 @@ class Auth
     }
     self::$verifiedAdmin = true;
   }
-  public static function user()
-  {
-    return \getglobal("member");
-  }
   public static function isVerified()
   {
     return self::$verified;
