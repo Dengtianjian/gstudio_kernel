@@ -6,6 +6,8 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 use Exception;
 use gstudio_kernel\App\Api\GetGSetController;
 use gstudio_kernel\Middleware as Middleware;
@@ -16,7 +18,6 @@ use gstudio_kernel\App\Dashboard\Controller as DashboardController;
 use gstudio_kernel\Exception\ErrorCode;
 use gstudio_kernel\Exception\Excep;
 use gstudio_kernel\Foundation\Auth;
-use gstudio_kernel\Foundation\Dashboard;
 use gstudio_kernel\Foundation\Lang;
 
 class App
