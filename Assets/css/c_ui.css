@@ -12,6 +12,28 @@
   overflow: hidden;
 }
 
+.ellipsis1 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ellipsis2 {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.ellipsis3 {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
 .c-inline-form .c-form-item {
   display: inline-flex;
   align-items: center;
@@ -68,8 +90,8 @@ input[type="file"]::-webkit-file-upload-button {
 .c-form-item select {
   cursor: pointer;
 }
-.c-form-item select[multiple]{
-  resize:vertical;
+.c-form-item select[multiple] {
+  resize: vertical;
 }
 .c-form-el[type="checkbox"] {
   flex-grow: 0;
