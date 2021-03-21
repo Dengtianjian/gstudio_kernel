@@ -54,6 +54,8 @@ class GlobalDashboardMiddleware
     $GLOBALS['gstudio_kernel']['dashboard']['subNavs'] = $subNavs;
     if ($this->globalSetMarks) {
       $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
+    } else {
+      $GLOBALS['GSETS'] = [];
     }
 
     $next();
