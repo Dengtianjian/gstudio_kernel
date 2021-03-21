@@ -2,6 +2,7 @@
 
 namespace gstudio_kernel\Foundation;
 
+use Attribute;
 use bbcode;
 
 class Dashboard
@@ -18,12 +19,17 @@ class Dashboard
   }
   public static function handelValue($setData)
   {
-    if (Arr::isAssoc($setData)) {
-      $sets = [$setData];
+    include_once libfile("function/discuzcode");
+    $onlyOne = null;
+
+    if (isset($setData['set_id']) && Arr::isAssoc($setData)) {
+      $sets = [$setData['set_mark'] => $setData];
+      $onlyOne = $setData['set_mark'];
     } else {
       $sets = $setData;
     }
-    include_once libfile("function/discuzcode");
+
+    unset($setData);
     foreach ($sets as &$set) {
       switch ($set['set_formtype']) {
         case "bbcode":
@@ -40,8 +46,9 @@ class Dashboard
           break;
       }
     }
-    if (Arr::isAssoc($setData)) {
-      return $sets[0];
+
+    if ($onlyOne !== null) {
+      return $sets[$onlyOne];
     }
     return $sets;
   }
@@ -68,7 +75,12 @@ class Dashboard
       $sets = Arr::valueToKey($sets, "set_mark");
     }
     $sets = self::handelValue($sets);
-    self::$setCache = array_merge(self::$setCache, $sets);
+
+    if (is_string($setMark)) {
+      self::$setCache[$setMark] = $sets;
+    } else {
+      self::$setCache = array_merge(self::$setCache, $sets);
+    }
     return $sets;
   }
   public static function getSetValue($setMark)
