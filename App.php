@@ -117,9 +117,6 @@ class App
     } catch (Exception $e) {
       Excep::exception($e);
     }
-    // if ($this->useDashboard === true) {
-    //   $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
-    // }
 
     if ($executeMiddlewareResult === false) {
       return;
@@ -186,10 +183,10 @@ class App
         }
       }
       if ($instance->DZHash == true) {
-        if (!$this->request->params("DZHash")) {
+        if (!$this->request->params("DZHash") || !$this->request->params("formhash")) {
           Response::error("LLLEGAL_SUBMISSION");
         }
-        if ($this->request->params("DZHash") != \FORMHASH) {
+        if ($this->request->params("DZHash") != \FORMHASH || $this->request->params("formhash") != \FORMHASH) {
           Response::error("LLLEGAL_SUBMISSION");
         }
       }
