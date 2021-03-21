@@ -8,6 +8,7 @@ class GlobalDashboardMiddleware
 {
   public function handle($next)
   {
+    global $app;
     $GLOBALS['gstudio_kernel']['dashboard']['viewPath'] = $GLOBALS['gstudio_kernel']['pluginPath'] . "/Views/dashboard";
     if (!$GLOBALS['gstudio_kernel']['dashboard']['navTableName']) {
       $navTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_dashboard_nav";
@@ -52,8 +53,8 @@ class GlobalDashboardMiddleware
       $subNavs[$sub['nav_id']] = $sub;
     }
     $GLOBALS['gstudio_kernel']['dashboard']['subNavs'] = $subNavs;
-    if ($this->globalSetMarks) {
-      $GLOBALS['GSETS'] = Dashboard::getSetValue($this->globalSetMarks);
+    if (count($app->globalSetMarks) > 0) {
+      $GLOBALS['GSETS'] = Dashboard::getSetValue($app->globalSetMarks);
     } else {
       $GLOBALS['GSETS'] = [];
     }
