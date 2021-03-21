@@ -2,8 +2,6 @@
 
 namespace gstudio_kernel\Foundation;
 
-use discuz_upload;
-
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
@@ -12,10 +10,11 @@ class File
 {
   public static function upload($files, $saveDir = "common", $extid = 0, $forcename = "")
   {
-    $upload = new discuz_upload();
+    include_once \libfile("discuz/upload", "class");
+    $upload = new \discuz_upload();
     $uploadResult = [];
     $one = false;
-    if (Arr::isAssoc($files['name'])) {
+    if (Arr::isAssoc($files)) {
       $one = true;
       $files = [$files];
     } else {
