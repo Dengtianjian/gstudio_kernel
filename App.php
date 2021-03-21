@@ -86,7 +86,11 @@ class App
         $setMarks = func_get_args();
       }
     }
-    $this->globalSetMarks = $setMarks;
+    if (\is_array($setMarks)) {
+      $this->globalSetMarks = \array_merge($this->globalSetMarks, $setMarks);
+    } else {
+      array_push($this->globalSetMarks, $setMarks);
+    }
   }
   function init()
   {
