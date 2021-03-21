@@ -16,8 +16,13 @@ class Dashboard
     }
     return self::$setModel;
   }
-  public static function handelValue($sets)
+  public static function handelValue($setData)
   {
+    if (Arr::isAssoc($setData)) {
+      $sets = [$setData];
+    } else {
+      $sets = $setData;
+    }
     include_once libfile("function/discuzcode");
     foreach ($sets as &$set) {
       switch ($set['set_formtype']) {
@@ -30,14 +35,18 @@ class Dashboard
         case "groups":
           $set['set_content'] = unserialize($set['set_content']);
           break;
+        case "serialize":
+          $set['set_content'] = unserialize(stripslashes($set['set_content']));
+          break;
       }
+    }
+    if (Arr::isAssoc($setData)) {
+      return $sets[0];
     }
     return $sets;
   }
   public static function getSet($setMark = null)
   {
-    global $gstudio_kernel;
-
     if (is_string($setMark)) {
       if (self::$setCache[$setMark]) {
         return self::$setCache[$setMark];
