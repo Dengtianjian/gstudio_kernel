@@ -29,7 +29,7 @@ class File
         ];
         continue;
       } else {
-        $upload->save();
+        $upload->save(true);
         $saveFileName = explode("/", $upload->attach['attachment']);
         $path = $saveDir . "/" . $upload->attach['attachment'];
         $fileInfo = [
