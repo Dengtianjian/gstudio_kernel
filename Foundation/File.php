@@ -8,6 +8,7 @@ if (!defined("IN_DISCUZ")) {
 
 class File
 {
+  //! 准废弃
   public static function upload($files, $saveDir = "common", $extid = 0, $forcename = "")
   {
     include_once \libfile("discuz/upload", "class");
