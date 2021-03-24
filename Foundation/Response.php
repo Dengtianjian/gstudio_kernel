@@ -51,7 +51,7 @@ class Response
       $result = array_merge($result, self::$responseData);
     }
     if (CHARSET === "gbk") {
-      \print_r(\iconv("gbk", "utf-8", \json_encode($result)));
+      \print_r(GJson::encode($result));
     } else {
       \print_r(\json_encode($result));
     }
