@@ -6,7 +6,7 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
-error_reporting(E_ALL ^ E_NOTICE);
+// error_reporting(E_ALL ^ E_NOTICE);
 
 use Exception;
 use gstudio_kernel\App\Api\GetGSetController;
