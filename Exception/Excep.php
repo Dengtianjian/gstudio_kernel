@@ -6,7 +6,7 @@ use gstudio_kernel\Foundation\Response;
 
 class Excep
 {
-  public static function handle($code = 0, $message = "", $file = "", $line = null, $traceString = "", $trace = NULL, $previous = null)
+  public static function handle($code = 0, $message = "", $file = "", $line = null, $trace = "", $traceString = NULL, $previous = null)
   {
     $traceString = \explode(\PHP_EOL, $traceString);
     if ($GLOBALS['app']->router === NULL || $GLOBALS['app']->router['type'] === "view") {
