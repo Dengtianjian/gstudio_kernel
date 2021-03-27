@@ -82,7 +82,7 @@
           <div class="set-subs">
             <!--{loop $setsItem['set_sub_sets'] $setMergeItem}-->
             <section class="set-item set-item-{$setMergeItem['set_mark']} set-item-{$setMergeItem['set_id']}">
-              <div class="set-title">{$setMergeItem['set_name']}</div>
+              <div class="set-title">{$setMergeItem['set_name']} {if $GLOBALS[$GLOBALS['app']->pluginId]['mode']!="production"} {$setMergeItem['set_mark']}{/if}</div>
               <div class="set-content set-item-{$setMergeItem['set_mark']}-content">
                 <!--{if $setMergeItem['set_formtype']=="text"}-->
                 <input type="text" name="{$setMergeItem['set_id']}" value="{$setMergeItem['set_content']}" />
