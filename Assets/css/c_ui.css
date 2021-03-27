@@ -6,6 +6,10 @@
   --danger-color: #f56c6c;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .ellipse1 {
   white-space: nowrap;
   text-overflow: ellipsis;
