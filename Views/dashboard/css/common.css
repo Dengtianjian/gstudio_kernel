@@ -250,6 +250,9 @@ ul {
 .set-subs .set-item {
   padding: 20px 0 0;
 }
+.sets-empty {
+  margin-top:100px;
+}
 .form-submit-button {
   width: 140px;
   height: 40px;
