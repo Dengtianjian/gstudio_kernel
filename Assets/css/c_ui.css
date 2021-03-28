@@ -208,6 +208,7 @@ textarea.c-form-el {
 /* 空页面 */
 .c-empty {
   text-align: center;
+  user-select: none;
 }
 .c-empty-description {
   margin: 1em;
