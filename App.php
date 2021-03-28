@@ -125,7 +125,7 @@ class App
     $result = null;
     try {
       $result = $this->executiveController();
-      if ($this->router['type'] === "view" && $GLOBALS['app']->mode === "devlogment") {
+      if ($this->router['type'] === "view") {
         $multipleEncodeJSScript = "";
         if (CHARSET === "gbk") {
           $langJson = \serialize($GLOBALS['GLANG']);
@@ -136,7 +136,6 @@ class App
     <script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
     <script>
       const GLANG=unserialize('$langJson');
-      console.log(GLANG);
     </script>
     ";
         } else {
@@ -147,9 +146,15 @@ class App
           $multipleEncodeJSScript = "
     <script>
       const GLANG=JSON.parse('$langJson');
-      console.log(GLANG);
     </script>
     ";
+        }
+        if ($this->mode === "development") {
+          $multipleEncodeJSScript .= "
+          <script>
+          console.log(GLANG);
+        </script>
+          ";
         }
         print_r($multipleEncodeJSScript);
       }
