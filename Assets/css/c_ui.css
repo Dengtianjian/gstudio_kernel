@@ -204,3 +204,16 @@ textarea.c-form-el {
   background-color: #f78989;
   border: none;
 }
+
+/* 空页面 */
+.c-empty {
+  text-align: center;
+}
+.c-empty-description {
+  margin: 1em;
+  padding: 0;
+  font-size:16px;
+}
+.c-empty-footer {
+  margin-top: 2em;
+}
