@@ -34,6 +34,7 @@ class ContainerController extends Controller
     } else {
       $navId = \array_keys($DASHBOARD['subNavs']);
     }
+
     $setsData = $SetModel->where([
       "set_nav" => $navId,
       "set_hidden" => 0
@@ -43,7 +44,6 @@ class ContainerController extends Controller
     $userGroup = DB::fetch_all("SELECT * FROM `%t`", [
       "common_usergroup"
     ]);
-    // debug($setsData);
     include_once libfile("function/discuzcode");
     foreach ($setsData as &$setItem) {
       switch ($setItem['set_formtype']) {
@@ -91,7 +91,7 @@ class ContainerController extends Controller
       }
     }
     $sets = \array_values($sets);
-    // debug($sets);
+
     $setCount = count($sets);
 
     include_once Response::systemView("sets", "dashboard");
