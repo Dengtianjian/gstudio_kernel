@@ -16,6 +16,8 @@ class Model
   ];
   private $chainCallOfSave = [];
   public $tableName = null;
+  private $queryParams = [];
+  private $relatedQuerySQL = [];
   public function __construct($tableName = null)
   {
     if ($tableName) {
@@ -43,6 +45,18 @@ class Model
 
     $where = "";
     if ($getObj['filters']) {
+      // $filters = $getObj['filters'];
+      // // foreach ($filters as $key => &$item) {
+      // //   if(is_array($item)&&$item['glue']){
+      // //     $item['glue']=\strtolower($item['glue']);
+      // //     if($item['glue']==="like"){
+
+      // //     }
+      // //   }
+      // // }
+      // // if ($getObj['filters']['content_title']) {
+      // //   debug();
+      // // }
       $where = SQL::where($getObj['filters']);
     }
 
@@ -50,17 +64,24 @@ class Model
     if ($getObj['order']) {
       $order = SQL::order($getObj['order']);
     }
+    $relatedSQL = "";
+    $relatedQuerySQL = $this->relatedQuerySQL;
 
-    $sql = "SELECT $field FROM `%t` $where $order $page";
+    foreach ($relatedQuerySQL as $sql) {
+      $relatedSQL .= " " . $sql;
+    }
+
+    $sql = "SELECT $field FROM `%t` $relatedSQL $where $order $page";
     return $sql;
   }
-  public function fetch($getObj)
+  public function fetch($getObj, $params = [])
   {
     $this->chainCallOfQuery = $getObj;
     $sql = $this->sql();
-    $getResult = DB::fetch_all($sql, [
+    $params = \array_merge([
       $this->tableName
-    ]);
+    ], $this->queryParams);
+    $getResult = DB::fetch_all($sql, $params);
     return $getResult;
   }
   public function field($fields)
@@ -105,8 +126,9 @@ class Model
     ]);
     return $this;
   }
-  public function get()
+  public function get($queryParams = [])
   {
+    $this->queryParams = $queryParams;
     $fetchResult = $this->fetch($this->chainCallOfQuery);
     $this->chainCallOfQuery = [
       "page" => [],

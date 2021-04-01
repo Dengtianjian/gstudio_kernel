@@ -19,4 +19,7 @@ class Service
 
     return self::$ModelInstance;
   }
+  protected static function related($primaryTable, $relateds)
+  {
+  }
 }
