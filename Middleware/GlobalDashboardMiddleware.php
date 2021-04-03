@@ -2,13 +2,21 @@
 
 namespace gstudio_kernel\Middleware;
 
+use DB;
 use gstudio_kernel\Foundation\Dashboard;
 
 class GlobalDashboardMiddleware
 {
+  //! 临时使用，后面必须用别的方法判断是否是拥有后台的
+  private $hasDashboardPlugins = [
+    "gstudio_c20210203",
+    "gstudio_sitenav_bak",
+    "gstudio_20210303",
+    "gstudio_kernel"
+  ];
   public function handle($next)
   {
-    global $app;
+    global $app, $_G;
     $GLOBALS['gstudio_kernel']['dashboard']['viewPath'] = $GLOBALS['gstudio_kernel']['pluginPath'] . "/Views/dashboard";
     if (!$GLOBALS['gstudio_kernel']['dashboard']['navTableName']) {
       $navTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_dashboard_nav";
@@ -58,6 +66,17 @@ class GlobalDashboardMiddleware
     } else {
       $GLOBALS['GSETS'] = [];
     }
+
+    $pluginData = DB::fetch_all("SELECT * FROM `%t` WHERE `identifier` LIKE (%i)", [
+      "common_plugin", "'%gstudio_%'"
+    ]);
+    $plugins = [];
+    foreach ($pluginData as $plugin) {
+      if (\in_array($plugin['identifier'], $this->hasDashboardPlugins)) {
+        $plugins[$plugin['identifier']] = $plugin['name'];
+      }
+    }
+    $GLOBALS['gstudio_kernel']['plugins'] = $plugins;
 
     $next();
   }

@@ -3,7 +3,9 @@
 }
 
 :root {
+  --primary-color:#3370ff;
   --main-color: #3370ff;
+  --border-radius: 10px;
 }
 
 body {
@@ -17,8 +19,8 @@ a {
 }
 ul {
   list-style-type: none;
-  padding:0;
-  margin:0;
+  padding: 0;
+  margin: 0;
 }
 
 .container {
@@ -33,7 +35,7 @@ ul {
 }
 .page-header-contaner {
   display: grid;
-  grid-template-columns: 140px auto 250px;
+  grid-template-columns: 140px auto 300px;
   height: 60px;
 }
 .page-header .logo {
@@ -72,7 +74,7 @@ ul {
   border-bottom-color: var(--main-color);
 }
 .page-header .quick-nav {
-  display:flex;
+  display: flex;
   justify-content: flex-end;
   font-size: 14px;
 }
@@ -82,11 +84,62 @@ ul {
   height: 58px;
   line-height: 58px;
   color: #ccc;
-  text-align:center;
+  text-align: center;
   user-select: none;
+  cursor: pointer;
 }
 .page-header .quick-nav-link:hover {
   color: var(--main-color);
+}
+/* 选择应用弹窗 */
+.addons-popup {
+  display: none;
+  position: fixed;
+  z-index:10;
+  top: 0;
+  right: 0;
+  left:0;
+  bottom:0;
+  margin:auto;
+  padding: 8px;
+  width:700px;
+  height: 60vh;
+  overflow: hidden auto;
+  box-shadow: 0 3px 5px 2px rgb(100 100 50 / 5%);
+  background-color: white;
+  border-radius:var(--border-radius);
+}
+.addons-popup-mask {
+  display: none;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:9;
+  width:100vw;
+  height:100vh;
+  background-color:rgba(0,0,0,0.2);
+}
+.addon-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom:10px;
+  height: 45px;
+  color: #333;
+}
+.addon-item .addon-switch{
+  color:#ccc;
+  cursor: pointer;
+}
+.addon-item .addon-switch:hover{
+  color:var(--primary-color);
+}
+.addon-icon {
+  vertical-align: middle;
+  width:40px;
+  height:40px;
+  border-radius:var(--border-radius);
 }
 
 .page-main {
@@ -203,9 +256,9 @@ ul {
   border: 1px solid #eee;
   transition: all 0.2s linear;
 }
-.set-content select[multiple]{
-  width:250px;
-  height:300px;
+.set-content select[multiple] {
+  width: 250px;
+  height: 300px;
 }
 .set-content input[type="file"] {
   padding: 7px;
@@ -221,7 +274,7 @@ ul {
   font-size: 14px;
 }
 .set-content .set-content-forum option {
-  padding:5px;
+  padding: 5px;
   line-height: 30px;
 }
 .set-tips {
@@ -251,7 +304,7 @@ ul {
   padding: 20px 0 0;
 }
 .sets-empty {
-  margin-top:100px;
+  margin-top: 100px;
 }
 .form-submit-button {
   width: 140px;
@@ -273,10 +326,10 @@ ul {
   opacity: 0.8;
 }
 .set-group .set-parent .set-title {
-  font-size:20px;
-  color:#000;
+  font-size: 20px;
+  color: #000;
 }
 .set-group .set-subs {
-  margin:0 0 0 20px;
-  border:none;
+  margin: 0 0 0 20px;
+  border: none;
 }

@@ -46,6 +46,7 @@
           <!--{/loop}-->
         </nav>
         <div class="quick-nav">
+          <div class="quick-nav-link" onclick="showAddonPopup()">切换应用</div>
           <a
             href="https://www.cooocc.com"
             class="quick-nav-link"
@@ -63,6 +64,24 @@
             {$GLOBALS['GLANG']['kernel']['addon_center']}
           </a>
         </div>
+        <div class="addons-popup">
+          <div class="addons-list">
+            {loop $GLOBALS['gstudio_kernel']['plugins'] $pluginId $pluginName}
+            <div class="addon-item">
+              <div>
+                <img
+                  src="https://addon.dismall.com/?_{$pluginId}"
+                  alt="{$pluginName}"
+                  class="addon-icon"
+                />
+                <span class="addon-name">{$pluginName}</span>
+              </div>
+              <a class="addon-switch" href="/plugin.php?id={$pluginId}&uri=dashboard">切换</a>
+            </div>
+            {/loop}
+          </div>
+        </div>
+        <div class="addons-popup-mask" onclick="hideAddonPopup()"></div>
       </div>
     </header>
   </body>
