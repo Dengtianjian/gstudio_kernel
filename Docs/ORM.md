@@ -336,12 +336,12 @@ $M->where([
 
 
 ## 相关查询 related
-> related($primaryTableName,$tables)
+> related($tables)
 * $primaryTableName:string 主表，先查出改表指定的数据，再查其它表，非SQL的关联查询
 * $tables:array[ $tableName:[$localKey,$foreignKey,$saveArrayKey?]... ]
    * $tableName:关联的数据表名
-   * $localKey:关联的数据表的与主表关联的键名
    * $foreignKey:主表与localKey关联的键名
+   * $relatedKey:关联的数据表的与主表关联的键名
    * $saveArrayKey:保存在主表查询到的数据的数组名称，如果没传，就用关联表名的分割连接符 ( _ ) 后的最后一个字符串作为数组键名。例如：common_member_profile -> profile
 传入参数格式：
 ```php

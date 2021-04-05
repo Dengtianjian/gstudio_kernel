@@ -149,6 +149,16 @@ class SQL
     }
     return $pageString;
   }
+  static function limit($startOrNumbers, $numbers = null)
+  {
+    $sql = "LIMIT ";
+    if ($numbers) {
+      $sql .= "$startOrNumbers,$numbers";
+    } else {
+      $sql .= "$startOrNumbers";
+    }
+    return $sql;
+  }
   static function insert($data, $isReplaceInto = false)
   {
     $fields = \array_keys($data);
@@ -180,9 +190,9 @@ class SQL
     }
     return "$startSql `%t`($fields) VALUES$valueSql";
   }
-  static function delete()
+  static function delete($condition)
   {
-    return "DELETE FROM %t";
+    return "DELETE FROM %t $condition";
   }
   static function update($data, $extraStatement = "")
   {
@@ -193,5 +203,20 @@ class SQL
     $data = implode(",", $data);
     $sql = "UPDATE `%t` SET $data $extraStatement";
     return $sql;
+  }
+  static function batchUpdate($fields, $datas, $extraStatement = "")
+  {
+    $sql = self::batchInsert($fields, $datas, true);
+    $sql .= " $extraStatement";
+    return $sql;
+  }
+  static function select($fields = "*", $extraStatement = "")
+  {
+    if (is_array($fields)) {
+      $fields = implode(",", $fields);
+    } else {
+      $fields = "*";
+    }
+    return "SELECT $fields FROM `%t` $extraStatement";
   }
 }
