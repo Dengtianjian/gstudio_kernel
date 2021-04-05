@@ -10,6 +10,21 @@ if (!defined("IN_DISCUZ")) {
 
 class SQL
 {
+  static function addQuote($strings, $quote = "`", $judgeType = false)
+  {
+    foreach ($strings as &$item) {
+      if ($judgeType) {
+        if (!is_string($item)) {
+          continue;
+        }
+      }
+      if (\is_bool($item)) {
+        $item = $item ? 1 : 0;
+      }
+      $item = $quote . $item . $quote;
+    }
+    return $strings;
+  }
   static function where($fieldValues)
   {
     if (count($fieldValues) === 0) {
@@ -48,6 +63,64 @@ class SQL
     }
     return "WHERE " . $sql;
   }
+  static function condition($field, $value, $operator = null, $glue = null)
+  {
+    $count = func_num_args();
+    $sql = "";
+    if ($count == 3) {
+      $sql = DB::field($field, $value, \strtolower($operator));
+      if ($glue) {
+        $sql .= " $glue ";
+      }
+    } else if ($count == 4) {
+      $sql = DB::field($field, $value, \strtolower($operator)) . " " . $glue . " ";
+    } else {
+      $sql = DB::field($field, $value);
+      if ($glue) {
+        $sql .= " $glue ";
+      }
+    }
+    return $sql;
+  }
+  static function conditions($params)
+  {
+    $sql = "WHERE ";
+    $lastIndex = count($params) - 1;
+    $last = &$params[$lastIndex];
+    if (is_array($last) && count($last) == 4) {
+      \array_splice($last, 3);
+    }
+    foreach ($params as $itemIndex => $paramItem) {
+      if (is_string($paramItem)) {
+        $sql .= $paramItem;
+      } else if (is_array($paramItem) && Arr::isAssoc($paramItem)) {
+        $condition = [];
+        $paramItem = self::addQuote($paramItem, "'", true);
+        foreach ($paramItem as $field => $value) {
+          $condition[] = "`$field` = $value";
+        }
+        $sql .= implode("AND", $condition);
+      } else {
+        $count = count($paramItem);
+        if ($count == 3) {
+          $itemSql = SQL::condition($paramItem[0], $paramItem[1], $paramItem[2]);
+          if ($itemIndex != $lastIndex) {
+            $itemSql .= " AND ";
+          }
+          $sql .= $itemSql;
+        } else if ($count == 4) {
+          $sql = SQL::condition($paramItem[0], $paramItem[1], $paramItem[2], $paramItem[3]);
+        } else {
+          $itemSql = SQL::condition($paramItem[0], $paramItem[1]);
+          if ($itemIndex != $lastIndex) {
+            $itemSql .= " AND ";
+          }
+          $sql .= $itemSql;
+        }
+      }
+    }
+    return $sql;
+  }
   static function order($orders)
   {
     if (empty($orders)) {
@@ -75,5 +148,50 @@ class SQL
       }
     }
     return $pageString;
+  }
+  static function insert($data, $isReplaceInto = false)
+  {
+    $fields = \array_keys($data);
+    $fields = self::addQuote($fields);
+    $fields = \implode(",", $fields);
+    $values = array_values($data);
+    $values = self::addQuote($values, "'", true);
+    $values = \implode(",", $values);
+
+    $startSql = "INSERT INTO";
+    if ($isReplaceInto) {
+      $startSql = "REPLACE INTO";
+    }
+    return "$startSql `%t`($fields) VALUES($values);";
+  }
+  static function batchInsert($fields, $datas, $isReplaceInto = false)
+  {
+    $fields = self::addQuote($fields);
+    $fields = \implode(",", $fields);
+    $valueSql = [];
+    foreach ($datas as $dataItem) {
+      $dataItem = self::addQuote($dataItem, "'", true);
+      $valueSql[] = "(" . \implode(",", $dataItem) . ")";
+    }
+    $valueSql = \implode(",", $valueSql);
+    $startSql = "INSERT INTO";
+    if ($isReplaceInto) {
+      $startSql = "REPLACE INTO";
+    }
+    return "$startSql `%t`($fields) VALUES$valueSql";
+  }
+  static function delete()
+  {
+    return "DELETE FROM %t";
+  }
+  static function update($data, $extraStatement = "")
+  {
+    $data = self::addQuote($data, "'", true);
+    foreach ($data as $field => &$value) {
+      $value = "`$field` = $value";
+    }
+    $data = implode(",", $data);
+    $sql = "UPDATE `%t` SET $data $extraStatement";
+    return $sql;
   }
 }

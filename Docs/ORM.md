@@ -7,7 +7,8 @@
 ```
 
 ## 增加数据 insert
-
+> insert($data)
+* $data 插入的数据
 ```php
   $newId=$M->insert([
     "name"=>"Ming",
@@ -16,7 +17,6 @@
 ```
 
 ### 批量增加 batchInsert
-
 > batchInsert($fields:index Array,$insertDatas[[values],[values]...]:index array[index array])
 
 ```php
@@ -294,6 +294,46 @@ $M->count("group");
 
 $M->count("DISTINCT group"); //* 计算不重复的
 ```
+
+## 参数 params
+> params($params|$param,[$params]...)
+* $params:array 参数。调用一次就累加一次
+用于替换DiscuzX的 %参数。需要按照顺序传入
+默认带一个参数就是表名，%t，后面传入的会push进数组里
+```php
+$M->where([
+  "name"=>"%s"
+])->params([
+  "Jack"
+]);
+
+$M->insert([
+  "age"=>"%i"
+  "name"=>"%s"
+])->params([
+  18,
+  "Mike"
+]);
+
+$M->insert([
+  "age"=>"%i"
+  "name"=>"%s",
+  "school"=>"%s"
+])->params([
+  18,
+  "Mike"
+])->params([
+  "Qinghua"
+]);
+
+$M->where("name","like","%s")->params("%gstudio_%");
+
+$M->where([
+  "age"=>"%n",
+  "name"=>"%s"
+])->params([18,19],"Flower");
+```
+
 
 ## 相关查询 related
 > related($primaryTableName,$tables)
