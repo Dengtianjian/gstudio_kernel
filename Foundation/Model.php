@@ -88,6 +88,8 @@ class Model
   {
     if (\is_array($fields)) {
       $fields = \implode(",", $fields);
+    } else if (func_num_args() > 1) {
+      $fields = \func_get_args();
     }
     $fields = \addslashes($fields);
     $this->chainCallOfQuery['field'] = $fields;

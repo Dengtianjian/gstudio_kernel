@@ -4,11 +4,11 @@ namespace gstudio_kernel\Foundation;
 
 use DB;
 use gstudio_kernel\Exception\Excep;
-use PDO;
+use gstudio_kernel\Foundation\Database\Related;
 
 class ORM
 {
-  protected $tableName = "";
+  public $tableName = "";
   private $querySql = "";
   private $executeType = "";
   private $returnSql = false;
@@ -17,6 +17,7 @@ class ORM
   private $conditions = [];
   private $extra = [];
   private $relatedTables = [];
+  private $realteds = [];
   function __construct($tableName = null)
   {
     if ($tableName) {
@@ -133,8 +134,10 @@ class ORM
     $fields = [];
     if (\func_num_args() > 1) {
       $fields = \func_get_args();
-    } else {
+    } else if (\is_string($fieldNames)) {
       $fields = \explode(",", $fieldNames);
+    } else {
+      $fields = $fieldNames;
     }
     if (!$this->extra['fields']) {
       $this->extra['fields'] = $fields;
@@ -257,43 +260,6 @@ class ORM
       return  $this->querySql;
     }
     $fetchData = DB::fetch_all($this->querySql, $this->params);
-    if (count($fetchData) > 0) {
-      $relatedTables = $this->relatedTables;
-      if (count($relatedTables) > 0) {
-        $relatedKeys = [];
-        $relatedKeyValue = [];
-        foreach ($relatedTables as $tableItem) {
-          array_push($relatedKeys, $tableItem['relatedKey']);
-          $relatedKeyValue[$tableItem['relatedKey']] = [];
-        }
-        foreach ($fetchData as $dataItem) {
-          foreach ($relatedKeys as $keyItem) {
-            if ($dataItem[$keyItem] !== null) {
-              array_push($relatedKeyValue[$keyItem], $dataItem[$keyItem]);
-            }
-          }
-        }
-        foreach ($relatedTables as &$tableItem) {
-          $M = new ORM($tableItem['tableName']);
-          $data = $M->where([
-            $tableItem['foreignKey'], $relatedKeyValue[$tableItem['relatedKey']]
-          ])->get();
-          $data = Arr::valueToKey($data, $tableItem['foreignKey']);
-          $tableItem['data'] = $data;
-        }
-        foreach ($fetchData as &$dataItem) {
-          foreach ($relatedTables as $relatedItem) {
-            if ($dataItem[$relatedItem['relatedKey']] !== null) {
-              // debug($relatedItem['data']);
-              $dataItem[$relatedItem['saveArrayKey']] = $relatedItem['data'][$dataItem[$relatedItem['relatedKey']]];
-            } else {
-              $dataItem[$relatedItem['saveArrayKey']] = null;
-            }
-          }
-        }
-        debug($fetchData);
-      }
-    }
 
     return $fetchData;
   }
@@ -313,14 +279,16 @@ class ORM
     }
     return 0;
   }
-  function related($relatedTableName, $foreignKey, $relatedKey, $saveArrayKey = null)
+  function related(ORM $modelInstance, $foreignKey, $relatedKey, $saveArrayKey = null)
   {
+    $relatedTableName = $modelInstance->tableName;
     if (!$saveArrayKey) {
       $tableName = \explode("_", $relatedTableName);
       $lastIndex = count($tableName) - 1;
       $saveArrayKey = $tableName[$lastIndex];
     }
-    $this->relatedTables[$relatedTableName] = [
+    $this->relateds[$relatedTableName] = [
+      "model" => $modelInstance,
       "tableName" => $relatedTableName,
       "foreignKey" => $foreignKey,
       "relatedKey" => $relatedKey,
