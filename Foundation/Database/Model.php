@@ -74,6 +74,16 @@ class Model
     $this->returnSql = $yes;
     return $this;
   }
+  function restoreDefaultMemberValues()
+  {
+    $this->querySql = "";
+    $this->executeType = "";
+    $this->returnSql = false;
+    $this->data = null;
+    $this->params = [];
+    $this->conditions = [];
+    $this->extra = [];
+  }
   function params($params)
   {
     if (!is_array($params)) {
@@ -223,9 +233,11 @@ class Model
     $this->generateSql();
     $sql = $this->querySql;
     if ($this->returnSql) {
+      $this->restoreDefaultMemberValues();
       return $sql;
     }
-    $result = \DB::result(\DB::query($this->querySql, $this->params));
+    $result = \DB::result(\DB::query($sql, $this->params));
+    $this->restoreDefaultMemberValues();
     switch ($this->executeType) {
       case "insert":
         $result = \DB::insert_id();
@@ -246,20 +258,26 @@ class Model
       $this->executeType = "softDelete";
     }
     $this->generateSql();
+    $sql = $this->querySql;
     if ($this->returnSql) {
-      return  $this->querySql;
+      $this->restoreDefaultMemberValues();
+      return $sql;
     }
     \DB::result(\DB::query($this->querySql, $this->params));
+    $this->restoreDefaultMemberValues();
     return \DB::affected_rows();
   }
   function get()
   {
     $this->executeType = "get";
     $this->generateSql();
+    $sql = $this->querySql;
     if ($this->returnSql) {
-      return  $this->querySql;
+      $this->restoreDefaultMemberValues();
+      return $sql;
     }
     $fetchData = \DB::fetch_all($this->querySql, $this->params);
+    $this->restoreDefaultMemberValues();
 
     return $fetchData;
   }
