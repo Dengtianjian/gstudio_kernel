@@ -95,9 +95,9 @@ class SQL
         $sql .= $paramItem;
       } else if (is_array($paramItem) && Arr::isAssoc($paramItem)) {
         $condition = [];
-        $paramItem = self::addQuote($paramItem, "'", true);
+        // $paramItem = self::addQuote($paramItem, "'", true);
         foreach ($paramItem as $field => $value) {
-          $condition[] = "`$field` = $value";
+          $condition[] = DB::field($field, $value);
         }
         $sql .= implode("AND", $condition);
       } else {

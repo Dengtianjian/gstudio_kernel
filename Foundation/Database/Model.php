@@ -80,7 +80,9 @@ class Model
     $this->executeType = "";
     $this->returnSql = false;
     $this->data = null;
-    $this->params = [];
+    $this->params = [
+      $this->tableName
+    ];
     $this->conditions = [];
     $this->extra = [];
   }
