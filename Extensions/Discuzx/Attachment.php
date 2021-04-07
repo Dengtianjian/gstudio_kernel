@@ -103,7 +103,6 @@ class Attachment
       $attachmenModel = new Model($tableName);
       $attachmenModel->batchInsertByMS($insertData)->save();
     }
-    debug($insertDatas);
 
     if ($onlyOny) {
       return $uploadResult[0];

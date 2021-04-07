@@ -35,7 +35,6 @@ class Related
       foreach ($sourceData as $dataItem) {
         array_push($relatedKeyValues, $dataItem[$relatedItem['relatedKey']]);
       }
-      debug($relatedItem['model']->get());
       $data = $relatedItem['model']->get();
       if (count($data) > 0) {
         $data = Arr::valueToKey($data, $relatedItem['foreignKey']);

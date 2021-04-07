@@ -45,18 +45,6 @@ class Model
 
     $where = "";
     if ($getObj['filters']) {
-      // $filters = $getObj['filters'];
-      // // foreach ($filters as $key => &$item) {
-      // //   if(is_array($item)&&$item['glue']){
-      // //     $item['glue']=\strtolower($item['glue']);
-      // //     if($item['glue']==="like"){
-
-      // //     }
-      // //   }
-      // // }
-      // // if ($getObj['filters']['content_title']) {
-      // //   debug();
-      // // }
       $where = SQL::where($getObj['filters']);
     }
 
