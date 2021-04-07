@@ -3,12 +3,11 @@
 namespace gstudio_kernel\Foundation\Database;
 
 use gstudio_kernel\Foundation\Arr;
-use gstudio_kernel\Foundation\ORM;
 
 class Related
 {
   public $relateds = [];
-  public function set(ORM $modelInstance, $foreignKey, $relatedKey, $saveArrayKey = null)
+  public function set($modelInstance, $foreignKey, $relatedKey, $saveArrayKey = null)
   {
     $relatedTableName = $modelInstance->tableName;
     if (!$saveArrayKey) {
@@ -36,6 +35,7 @@ class Related
       foreach ($sourceData as $dataItem) {
         array_push($relatedKeyValues, $dataItem[$relatedItem['relatedKey']]);
       }
+      debug($relatedItem['model']->get());
       $data = $relatedItem['model']->get();
       if (count($data) > 0) {
         $data = Arr::valueToKey($data, $relatedItem['foreignKey']);

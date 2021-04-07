@@ -1,12 +1,12 @@
 <?php
 
-namespace gstudio_kernel\Foundation;
+namespace gstudio_kernel\Foundation\Database;
 
 use DB;
 use gstudio_kernel\Exception\Excep;
-use gstudio_kernel\Foundation\Database\Related;
+use gstudio_kernel\Foundation\SQL;
 
-class ORM
+class Model
 {
   public $tableName = "";
   private $querySql = "";
@@ -16,12 +16,12 @@ class ORM
   private $params = [];
   private $conditions = [];
   private $extra = [];
-  private $relatedTables = [];
-  private $realteds = [];
   function __construct($tableName = null)
   {
     if ($tableName) {
       $this->tableName = $tableName;
+      $this->params[] = $this->tableName;
+    } else {
       $this->params[] = $this->tableName;
     }
     return $this;
@@ -225,15 +225,15 @@ class ORM
     if ($this->returnSql) {
       return $sql;
     }
-    $result = DB::result(\DB::query($this->querySql, $this->params));
+    $result = \DB::result(\DB::query($this->querySql, $this->params));
     switch ($this->executeType) {
       case "insert":
-        $result = DB::insert_id();
+        $result = \DB::insert_id();
         break;
       case "batchInsert":
       case "update":
       case "batchUpdate";
-        $result = DB::affected_rows();
+        $result = \DB::affected_rows();
         break;
     }
     return $result;
@@ -249,8 +249,8 @@ class ORM
     if ($this->returnSql) {
       return  $this->querySql;
     }
-    DB::result(DB::query($this->querySql, $this->params));
-    return DB::affected_rows();
+    \DB::result(\DB::query($this->querySql, $this->params));
+    return \DB::affected_rows();
   }
   function get()
   {
@@ -259,7 +259,7 @@ class ORM
     if ($this->returnSql) {
       return  $this->querySql;
     }
-    $fetchData = DB::fetch_all($this->querySql, $this->params);
+    $fetchData = \DB::fetch_all($this->querySql, $this->params);
 
     return $fetchData;
   }
@@ -278,22 +278,5 @@ class ORM
       return $result[0]["COUNT($field)"];
     }
     return 0;
-  }
-  function related(ORM $modelInstance, $foreignKey, $relatedKey, $saveArrayKey = null)
-  {
-    $relatedTableName = $modelInstance->tableName;
-    if (!$saveArrayKey) {
-      $tableName = \explode("_", $relatedTableName);
-      $lastIndex = count($tableName) - 1;
-      $saveArrayKey = $tableName[$lastIndex];
-    }
-    $this->relateds[$relatedTableName] = [
-      "model" => $modelInstance,
-      "tableName" => $relatedTableName,
-      "foreignKey" => $foreignKey,
-      "relatedKey" => $relatedKey,
-      "saveArrayKey" => $saveArrayKey
-    ];
-    return $this;
   }
 }
