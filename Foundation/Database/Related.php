@@ -30,6 +30,11 @@ class Related
     if (count($sourceData) == 0) {
       return [];
     }
+    $onlyOne = false;
+    if (Arr::isAssoc($sourceData)) {
+      $onlyOne = true;
+      $sourceData = [$sourceData];
+    }
     foreach ($relateds as $relatedItem) {
       $relatedKeyValues = [];
       foreach ($sourceData as $dataItem) {
@@ -46,6 +51,9 @@ class Related
       }
     }
 
+    if ($onlyOne) {
+      return $sourceData[0];
+    }
     return $sourceData;
   }
 }

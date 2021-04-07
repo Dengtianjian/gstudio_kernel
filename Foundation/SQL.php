@@ -213,8 +213,9 @@ class SQL
   static function select($fields = "*", $extraStatement = "")
   {
     if (is_array($fields)) {
+      $fields = self::addQuote($fields, "`");
       $fields = implode(",", $fields);
-    } else {
+    } else if ($fields === null) {
       $fields = "*";
     }
     return "SELECT $fields FROM `%t` $extraStatement";
