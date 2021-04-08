@@ -187,11 +187,11 @@ class App
           Auth::checkAdmin($adminId);
         }
       }
-      if ($instance->DZHash == true) {
-        if (!$this->request->params("DZHash") || !$this->request->params("formhash")) {
+      if ($instance->DZHash === true) {
+        if (!$this->request->params("DZHash") || (!$this->request->params("DZHash") && !$this->request->params("formhash"))) {
           Response::error("LLLEGAL_SUBMISSION");
         }
-        if ($this->request->params("DZHash") != \FORMHASH || $this->request->params("formhash") != \FORMHASH) {
+        if ($this->request->params("DZHash") != \FORMHASH || (!$this->request->params("DZHash") && $this->request->params("formhash") != \FORMHASH)) {
           Response::error("LLLEGAL_SUBMISSION");
         }
       }
