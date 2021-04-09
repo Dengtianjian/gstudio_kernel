@@ -220,4 +220,8 @@ class SQL
     }
     return "SELECT $fields FROM `%t` $extraStatement";
   }
+  static function count($field = "*", $extraStatement = "")
+  {
+    return "SELECT COUNT($field) FROM `%t` $extraStatement";
+  }
 }

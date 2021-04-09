@@ -50,6 +50,9 @@ class Model
       case "get":
         $sql = SQL::select($this->extra['fields'], $this->querySql);
         break;
+      case "count":
+        $sql = SQL::count($this->extra['field'], $this->querySql);
+        break;
     }
 
     if ($this->extra['order']) {
@@ -293,10 +296,15 @@ class Model
   }
   function count($field = "*")
   {
-    $result = $this->field("COUNT($field)")->get();
-    if (!empty($result)) {
-      return $result[0]["COUNT($field)"];
+    $this->executeType = "count";
+    $this->extra['field'] = $field;
+    $this->generateSql();
+    $sql = $this->querySql;
+    if ($this->returnSql) {
+      return $sql;
     }
-    return 0;
+    $result = DB::result(DB::query($sql, $this->params));
+    $this->restoreDefaultMemberValues();
+    return $result;
   }
 }
