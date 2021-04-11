@@ -3,6 +3,7 @@
 namespace gstudio_kernel\Extensions\Discuzx;
 
 use gstudio_kernel\Foundation\Arr;
+use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
 use gstudio_kernel\Foundation\Model;
 
 class Attachment
@@ -22,7 +23,7 @@ class Attachment
     $uid = \getglobal("uid");
     $timestamp = \getglobal("timestamp");
     $insertDatas = [];
-    $updateDatas = []; //TODO 更新 form_attachment 表的新增数据
+    $updateDatas = [];
     if ($tableName) {
       $insertDatas[$tableName] = [];
     }
@@ -94,20 +95,37 @@ class Attachment
           "aid" => $aid,
           "tableId" => $tableId,
           "tableName" => $tableName,
-          "aidencode" => \aidencode($aid, 0, $tid)
+          "dzAidEncode" => \aidencode($aid, 0, $tid),
+          "downloadEncode" => self::aidencode($aid)
         ];
         $uploadResult[] = $fileInfo;
+        $updateDatas[] = [
+          $aid,
+          $tableId,
+          $uid
+        ];
       }
     }
     foreach ($insertDatas as $tableName => $insertData) {
       $attachmenModel = new Model($tableName);
       $attachmenModel->batchInsertByMS($insertData)->save();
     }
+    $ForumAttachmentModel = new DatabaseModel("forum_attachment");
+    $ForumAttachmentModel->batchUpdate([
+      "aid", "tableid", "uid"
+    ], $updateDatas)->save();
 
     if ($onlyOny) {
       return $uploadResult[0];
     }
 
     return $uploadResult;
+  }
+  public static function aidencode($aid, $dir = "common", $type = 0, $tid = 0)
+  {
+    global $_G;
+    $s = !$type ? $aid . '|' . substr(md5($aid . md5($_G['config']['security']['authkey']) . TIMESTAMP . $_G['uid']), 0, 8) . '|' . TIMESTAMP . '|' . $_G['uid'] . '|' . $tid : $aid . '|' . md5($aid . md5($_G['config']['security']['authkey']) . TIMESTAMP) . '|' . TIMESTAMP;
+    $s .= "|" . $dir;
+    return rawurlencode(base64_encode($s));
   }
 }
