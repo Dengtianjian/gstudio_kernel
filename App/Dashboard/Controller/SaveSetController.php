@@ -7,7 +7,6 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Controller;
-use gstudio_kernel\Foundation\Request;
 
 class SaveSetController extends Controller
 {

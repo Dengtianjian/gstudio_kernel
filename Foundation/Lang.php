@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 class Lang
 {
   private static $langs = [];

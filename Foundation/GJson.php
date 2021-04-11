@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined("IN_DISCUZ")) {
+	exit('Access Denied');
+}
+
 //* 100%源自DiscuzX json.class.php。收录于框架中，便于开发调用，减少依赖。
 
 class GJson

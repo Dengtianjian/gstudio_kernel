@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Extensions\Discuzx;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Arr;
 use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
 use gstudio_kernel\Foundation\Model;

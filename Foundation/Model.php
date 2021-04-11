@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 use DB;
 
 if (!defined("IN_DISCUZ")) {

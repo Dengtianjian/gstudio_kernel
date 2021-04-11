@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Exception;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Response;
 
 class Excep

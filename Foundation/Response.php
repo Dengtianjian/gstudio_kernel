@@ -2,11 +2,11 @@
 
 namespace gstudio_kernel\Foundation;
 
-use gstudio_kernel\Exception\ErrorCode;
-
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
+
+use gstudio_kernel\Exception\ErrorCode;
 
 class Response
 {

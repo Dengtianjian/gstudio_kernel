@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\App\Dashboard\Controller;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Model;
 use gstudio_kernel\Foundation\Request;

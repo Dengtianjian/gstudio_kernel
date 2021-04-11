@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Model;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Model;
 
 class TokenModel extends Model

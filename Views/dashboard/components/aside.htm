@@ -1,20 +1,20 @@
 <aside class="page-aside">
   <nav class="page-sub-nav">
     <a
-      href="/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$GLOBALS['gstudio_kernel']['dashboard']['mainNavId']}"
+      href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$GLOBALS['gstudio_kernel']['dashboard']['mainNavId']}"
       class="page-sub-nav-link {if $GLOBALS['gstudio_kernel']['dashboard']['subNavId']==0}page-sub-nav-link-active{/if}"
       >{$GLOBALS['GLANG']['kernel']['all']}</a
     >
     <!--{loop $GLOBALS['gstudio_kernel']['dashboard']['subNavs'] $sub}-->
     {if $sub['nav_uri']}
     <a
-      href="/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri={$sub['nav_uri']}&mid={$GLOBALS['gstudio_kernel']['dashboard']['mainNavId']}&sid={$sub['nav_id']}"
+      href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri={$sub['nav_uri']}&mid={$GLOBALS['gstudio_kernel']['dashboard']['mainNavId']}&sid={$sub['nav_id']}"
       class="page-sub-nav-link {if $_GET['uri']==$sub['nav_uri']}page-sub-nav-link-active{/if}"
       >{$sub['nav_name']}</a
     >
     {else}
     <a
-      href="/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$GLOBALS['gstudio_kernel']['dashboard']['mainNavId']}&sid={$sub['nav_id']}"
+      href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$GLOBALS['gstudio_kernel']['dashboard']['mainNavId']}&sid={$sub['nav_id']}"
       class="page-sub-nav-link {if $_GET['sid']==$sub['nav_id']}page-sub-nav-link-active{/if}"
       >{$sub['nav_name']}</a
     >

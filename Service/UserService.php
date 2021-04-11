@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Service;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Arr;
 use gstudio_kernel\Foundation\Model;
 use gstudio_kernel\Foundation\Service;

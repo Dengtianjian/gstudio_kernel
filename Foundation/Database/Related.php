@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation\Database;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Arr;
 
 class Related

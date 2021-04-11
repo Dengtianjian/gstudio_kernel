@@ -2,8 +2,9 @@
 
 namespace gstudio_kernel\Foundation;
 
-use Attribute;
-use bbcode;
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
 
 class Dashboard
 {

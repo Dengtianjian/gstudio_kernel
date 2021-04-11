@@ -2,6 +2,11 @@
 
 namespace gstudio_kernel\Middleware;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
+
 use gstudio_kernel\Foundation\Auth;
 
 class GlobalAuthMiddleware

@@ -9,23 +9,23 @@
     </title>
     <script
       type="text/javascript"
-      src="/{$_G['setting']['jspath']}common.js?{VERHASH}"
+      src="{$_G['setting']['jspath']}common.js?{VERHASH}"
     ></script>
     <link
       rel="stylesheet"
-      href="/{$GLOBALS['gstudio_kernel']['dashboard']['viewPath']}/css/common.css"
+      href="{$GLOBALS['gstudio_kernel']['dashboard']['viewPath']}/css/common.css"
     />
     <link
       rel="stylesheet"
-      href="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/c_ui.css"
+      href="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/c_ui.css"
     />
-    <script src="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/jquery.js"></script>
-    <script src="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/http.js"></script>
-    <script src="/{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/utils.js"></script>
+    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/jquery.js"></script>
+    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/http.js"></script>
+    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/utils.js"></script>
     <script>
       var jQuery = $.noConflict();
       CDZXHTTP.setRequestUrl(
-        "/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}"
+        "plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}"
       );
     </script>
   </head>
@@ -38,7 +38,7 @@
         >
           <!--{loop $GLOBALS['gstudio_kernel']['dashboard']['mainNavs'] $nav}-->
           <a
-            href="/plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
+            href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
             class="page-nav-link {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}"
           >
             {$nav['nav_name']}
@@ -76,7 +76,11 @@
                 />
                 <span class="addon-name">{$pluginName}</span>
               </div>
-              <a class="addon-switch" href="/plugin.php?id={$pluginId}&uri=dashboard">切换</a>
+              <a
+                class="addon-switch"
+                href="plugin.php?id={$pluginId}&uri=dashboard"
+                >切换</a
+              >
             </div>
             {/loop}
           </div>

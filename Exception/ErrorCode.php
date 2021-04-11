@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Exception;
 
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
+
 class ErrorCode
 {
   private static $errorCodes = [];

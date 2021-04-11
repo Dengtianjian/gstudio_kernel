@@ -2,11 +2,11 @@
 
 namespace gstudio_kernel\Foundation;
 
-use DB;
-
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
+
+use DB;
 
 class SQL
 {
