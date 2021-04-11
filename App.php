@@ -19,6 +19,7 @@ use gstudio_kernel\Exception\ErrorCode;
 use gstudio_kernel\Exception\Excep;
 use gstudio_kernel\Foundation\Auth;
 use gstudio_kernel\Foundation\Lang;
+use gstudio_kernel\App\Main as Main;
 
 class App
 {
@@ -102,6 +103,9 @@ class App
       Router::get("_set", DashboardController\GetSetController::class);
       Router::put("_dashboard_cleansetimg", DashboardController\CleanSetImageController::class);
     }
+
+    Router::view("_download", Main\DownloadAttachmentView::class);
+
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
     $router = Router::match($this->uri);
