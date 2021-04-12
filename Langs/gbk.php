@@ -31,7 +31,12 @@ $langs = [
     "turn_on" => "开启",
     "close" => "关闭",
     "lllegal_submission" => "非法提交",
-    "clean_set_image" => "清除图片"
+    "clean_set_image" => "清除图片",
+    "service_tablename_empty" => "Service的TableName未填写",
+    "insert_data_must_an_assoc_array" => "insert方法传入的参数必须是关联数组",
+    "no_settings" => "暂无设置项",
+    "switch_app" => "切换应用",
+    "switch" => "切换"
   ]
 ];
 

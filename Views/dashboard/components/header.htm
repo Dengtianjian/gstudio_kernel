@@ -46,7 +46,9 @@
           <!--{/loop}-->
         </nav>
         <div class="quick-nav">
-          <div class="quick-nav-link" onclick="showAddonPopup()">切换应用</div>
+          <div class="quick-nav-link" onclick="showAddonPopup()">
+            {$GLOBALS['GLANG']['kernel']['switch_app']}
+          </div>
           <a
             href="https://www.cooocc.com"
             class="quick-nav-link"
@@ -79,7 +81,7 @@
               <a
                 class="addon-switch"
                 href="plugin.php?id={$pluginId}&uri=dashboard"
-                >切换</a
+                >{$GLOBALS['GLANG']['kernel']['switch']}</a
               >
             </div>
             {/loop}

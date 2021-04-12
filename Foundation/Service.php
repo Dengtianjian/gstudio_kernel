@@ -14,7 +14,7 @@ class Service
   {
     $callClass = \get_called_class();
     if (!$callClass::$tableName) {
-      Response::error(500, 500001, "Service的TableName未填写");
+      Response::error(500, 500001, Lang::value("service_tablename_empty"));
     }
     self::$tableName = $callClass::$tableName;
     if (self::$ModelInstance === null) {

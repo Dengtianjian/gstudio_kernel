@@ -8,6 +8,8 @@ if (!defined("IN_DISCUZ")) {
 
 use DB;
 use gstudio_kernel\Exception\Excep;
+use gstudio_kernel\Foundation\Arr;
+use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\SQL;
 
 class Model
@@ -184,8 +186,8 @@ class Model
   }
   function insert($data, $isReplaceInto = false)
   {
-    if (!is_array($data)) {
-      Excep::t("insert方法传入的参数必须是关联数组");
+    if (!is_array($data) || !Arr::isAssoc($data)) {
+      Excep::t(Lang::value("insert_data_must_an_assoc_array"));
     }
     if ($isReplaceInto) {
       $this->executeType = "replace";
