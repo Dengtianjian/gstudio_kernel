@@ -57,9 +57,42 @@ class Response
     }
     exit();
   }
-  static function view($HTMLFileName, $fileDir = "/")
+  private static $renderParams = [
+    "fileName" => "",
+    "fileDir" => "/",
+    "params" => []
+  ];
+  static function render()
+  {
+    global $_G, $gstudio_kernel, $GSETS, $GLANGS;
+    $Response = self::class;
+    foreach (self::$renderParams['params'] as $key => $value) {
+      global ${$key};
+    }
+    include_once template(self::$renderParams['fileName'], $gstudio_kernel['devingPluginId'], $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/" . self::$renderParams['fileDir']);
+    return true;
+  }
+  static function view($HTMLFileName, $fileDir = "/", $params = null)
   {
     global $gstudio_kernel;
+    if (is_array($fileDir) || $params !== null) {
+      $dir = "";
+      if (\is_string($fileDir)) {
+        $dir = $fileDir;
+      } else {
+        $params = $fileDir;
+      }
+      self::$renderParams['fileName'] = $HTMLFileName;
+      self::$renderParams['fileDir'] = $fileDir;
+      self::$renderParams['params'] = $params;
+      if (count($params) > 0) {
+        foreach ($params as $key => $value) {
+          $GLOBALS[$key] = $value;
+        }
+      }
+      self::render();
+      return true;
+    }
     return template($HTMLFileName, $gstudio_kernel['devingPluginId'], $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$fileDir");
   }
   static function systemView($HTMLFileName, $fileDir = "/")
