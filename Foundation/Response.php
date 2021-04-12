@@ -57,19 +57,17 @@ class Response
     }
     exit();
   }
-  private static $renderParams = [
-    "fileName" => "",
-    "fileDir" => "/",
-    "params" => []
-  ];
-  static function render()
+  static function render($fileName, $fileDir = "", $params = [])
   {
     global $_G, $gstudio_kernel, $GSETS, $GLANGS;
     $Response = self::class;
-    foreach (self::$renderParams['params'] as $key => $value) {
+    foreach ($params as $key => $value) {
       global ${$key};
     }
-    include_once template(self::$renderParams['fileName'], $gstudio_kernel['devingPluginId'], $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/" . self::$renderParams['fileDir']);
+    include_once template($fileName, $gstudio_kernel['devingPluginId'], $fileDir);
+    foreach ($params as $key => $value) {
+      unset($GLOBALS[$key]);
+    }
     return true;
   }
   static function view($HTMLFileName, $fileDir = "/", $params = null)
@@ -82,22 +80,34 @@ class Response
       } else {
         $params = $fileDir;
       }
-      self::$renderParams['fileName'] = $HTMLFileName;
-      self::$renderParams['fileDir'] = $fileDir;
-      self::$renderParams['params'] = $params;
       if (count($params) > 0) {
         foreach ($params as $key => $value) {
           $GLOBALS[$key] = $value;
         }
       }
-      self::render();
-      return true;
+      $fileDir = $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$dir";
+      return self::render($HTMLFileName, $fileDir, $params);
     }
     return template($HTMLFileName, $gstudio_kernel['devingPluginId'], $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$fileDir");
   }
-  static function systemView($HTMLFileName, $fileDir = "/")
+  static function systemView($HTMLFileName, $fileDir = "/", $params = null)
   {
     global $gstudio_kernel;
+    if (is_array($fileDir) || $params !== null) {
+      $dir = "";
+      if (\is_string($fileDir)) {
+        $dir = $fileDir;
+      } else {
+        $params = $fileDir;
+      }
+      if (count($params) > 0) {
+        foreach ($params as $key => $value) {
+          $GLOBALS[$key] = $value;
+        }
+      }
+      $fileDir = $gstudio_kernel['pluginPath'] . "/Views/$dir";
+      return self::render($HTMLFileName, $fileDir, $params);
+    }
     return template($HTMLFileName, $gstudio_kernel['devingPluginId'], $gstudio_kernel['pluginPath'] . "/Views/$fileDir");
   }
   static function addData($data)

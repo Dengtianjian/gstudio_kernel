@@ -23,8 +23,7 @@ class ContainerController extends Controller
   private $serializeDataTypes = ["select", "radio", "checkbox"];
   public function data($request)
   {
-    global $_G, $gstudio_kernel;
-    $Response = Response::class;
+    global $gstudio_kernel;
 
     $DASHBOARD = $gstudio_kernel['dashboard'];
     $SetModel = new Model($DASHBOARD['setTableName']);
@@ -94,6 +93,10 @@ class ContainerController extends Controller
 
     $setCount = count($sets);
 
-    include_once Response::systemView("sets", "dashboard");
+    include_once Response::systemView("sets", "dashboard", [
+      "setCount" => $setCount,
+      "sets" => $sets,
+      "userGroup" => $userGroup
+    ]);
   }
 }
