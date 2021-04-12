@@ -59,7 +59,7 @@ class Response
   }
   static function render($fileName, $fileDir = "", $params = [])
   {
-    global $_G, $gstudio_kernel, $GSETS, $GLANGS;
+    global $_G, $gstudio_kernel, $GSETS, $GLANG;
     $Response = self::class;
     foreach ($params as $key => $value) {
       global ${$key};
