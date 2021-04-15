@@ -21,20 +21,39 @@ class Lang
   {
     self::$langs[$key] = $value;
   }
+  private static function getValue($keys)
+  {
+    //* all || [ kernel,view_template ]
+    if (\is_string($keys)) {
+      return self::$langs[$keys];
+    } else {
+      $value = self::$langs;
+      foreach ($keys as $key) {
+        $value = $value[$key];
+      }
+      return $value;
+    }
+  }
+  public static function connect()
+  {
+    $keys = \func_get_args();
+    foreach ($keys as &$keyItem) {
+      $keyItem = \explode("/", $keyItem);
+      $keyItem = self::getValue($keyItem);
+    }
+    return implode("", $keys);
+  }
   public static function value($keys)
   {
-    $string = "";
-    if (!\is_array($keys)) {
-      $keys = func_get_args();
+    //* all | all,save,...
+    $keys = func_get_args();
+    foreach ($keys as &$keyItem) {
+      $keyItem = self::getValue(\explode("/", $keyItem));
     }
-    if (count($keys) === 1) {
-      return self::$langs[$keys[0]];
+    if (\count($keys) === 1) {
+      return $keys[0];
     }
-    foreach ($keys as $key) {
-      $string .= self::$langs[$key];
-    }
-
-    return $string;
+    return $keys;
   }
   public static function all()
   {
