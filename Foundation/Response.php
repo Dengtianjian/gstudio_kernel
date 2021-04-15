@@ -57,6 +57,7 @@ class Response
     }
     exit();
   }
+  //! 准废弃
   static function render($fileName, $fileDir = "", $params = [])
   {
     global $_G, $gstudio_kernel, $GSETS, $GLANG;
@@ -70,6 +71,7 @@ class Response
     }
     return true;
   }
+  //! 准废弃
   static function view($HTMLFileName, $fileDir = "/", $params = null)
   {
     global $gstudio_kernel;
@@ -90,6 +92,7 @@ class Response
     }
     return template($HTMLFileName, $gstudio_kernel['devingPluginId'], $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$fileDir");
   }
+  //! 准废弃
   static function systemView($HTMLFileName, $fileDir = "/", $params = null)
   {
     global $gstudio_kernel;
