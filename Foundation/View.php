@@ -69,14 +69,14 @@ class View
   }
   static function title($titleSourceString, $params = [])
   {
-    self::$page['pageTitle'] = $titleSourceString;
+    self::$page['pageTitle'] = Str::replaceParams($titleSourceString, $params);
   }
   static function keyword($keywordSourceString, $params = [])
   {
-    self::$page['pageKeyword'] = $keywordSourceString;
+    self::$page['pageKeyword'] = Str::replaceParams($keywordSourceString, $params);
   }
   static function description($descriptionSourceString, $params = [])
   {
-    self::$page['pageDescription'] = $descriptionSourceString;
+    self::$page['pageDescription'] = Str::replaceParams($descriptionSourceString, $params);
   }
 }

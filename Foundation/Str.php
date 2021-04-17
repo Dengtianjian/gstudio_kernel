@@ -24,4 +24,16 @@ class Str
     }
     return join("", $ar);
   }
+  static function replaceParams($string, $params = [])
+  {
+    \preg_match_all("/(?<=\{)\w+(?=\})/i", $string, $paramKeys);
+    if (count($paramKeys) > 0) {
+      $paramKeys = $paramKeys[0];
+      foreach ($paramKeys as &$item) {
+        $item = "{" . $item . "}";
+      }
+      $string = \str_replace($paramKeys, $params, $string);
+    }
+    return $string;
+  }
 }
