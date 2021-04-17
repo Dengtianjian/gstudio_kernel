@@ -1,6 +1,6 @@
 <?php
 
-namespace gstudio_kernel\Extensions\Discuzx;
+namespace gstudio_kernel\Platform\Discuzx;
 
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
