@@ -67,11 +67,11 @@
           <div class="set-tips">{$setsItem['set_tips']}</div>
           <div class="set-preview">
             <!--{if $setsItem['set_formtype']=='image'}-->
-              <img
-              class="set-preview-img"
-              src="{$_G['siteurl']}{$setsItem['set_content']}"
-            />
-            <p><button type="button" onclick="cleanSetImage({$setsItem['set_id']})">{$GLOBALS['GLANG']['kernel']['clean_set_image']}</button></p>
+                <img
+                class="set-preview-img"
+                {if $setsItem['set_content']}src="{$_G['siteurl']}{$setsItem['set_content']}" {/if}
+              />
+              <p><button type="button" onclick="cleanSetImage({$setsItem['set_id']})">{$GLOBALS['GLANG']['kernel']['clean_set_image']}</button></p>
             <!--{elseif $setsItem['set_formtype']=='html'}-->
             {$setsItem['set_view_content']}
             <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
@@ -126,9 +126,10 @@
                 <!--{if $setMergeItem['set_formtype']=='image'}-->
                   <img
                   class="set-preview-img"
-                  src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"
+                  {if $setsItem['set_content']}src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"{/if}
                 />
                 <p><button type="button" onclick="cleanSetImage({$setMergeItem['set_id']})">{$GLOBALS['GLANG']['kernel']['clean_set_image']}</button></p>
+
                 <!--{/if}-->
               </div>
             </section>
