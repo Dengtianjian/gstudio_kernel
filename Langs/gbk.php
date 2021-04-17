@@ -7,6 +7,7 @@ if (!defined("IN_DISCUZ")) {
 }
 
 $langs = [
+  "common" => [],
   "kernel" => [
     "all" => "全部",
     "footer_copyright" => "COOOCC 版权所有",
@@ -36,7 +37,10 @@ $langs = [
     "insert_data_must_an_assoc_array" => "insert方法传入的参数必须是关联数组",
     "no_settings" => "暂无设置项",
     "switch_app" => "切换应用",
-    "switch" => "切换"
+    "switch" => "切换",
+    "view_template_file_not_exist" => "视图模板文件不存在",
+    "experimenttal_feature_not_turned_on" => "实验性功能，暂不开放",
+    "function_under_development_not_yet_open" => "开发中的功能，暂不开放",
   ]
 ];
 
