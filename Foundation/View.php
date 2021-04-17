@@ -57,7 +57,7 @@ class View
     $viewDirOfViewData = $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
-  static function dashboard($viewFile, $viewDirOfViewData = "/", $viewData = [])
+  static function systemPage($viewFile, $viewDirOfViewData = "/", $viewData = [])
   {
     global $gstudio_kernel;
     if (is_array($viewDirOfViewData)) {
