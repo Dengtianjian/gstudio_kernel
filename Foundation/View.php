@@ -18,9 +18,9 @@ class View
     $Response = Response::class;
     $View = self::class;
 
-    $pageTitle = self::$page['pageTitle'];
-    $pageKeyword = self::$page['pageKeyword'];
-    $pageDescription = self::$page['pageDescription'];
+    $navtitle = $pageTitle = self::$page['pageTitle'];
+    $metakeywords = $pageKeyword = self::$page['pageKeyword'];
+    $metadescription = $pageDescription = self::$page['pageDescription'];
     foreach ($viewData as $key => $value) {
       global ${$key};
     }
