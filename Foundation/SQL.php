@@ -109,7 +109,7 @@ class SQL
           }
           $sql .= $itemSql;
         } else if ($count == 4) {
-          $sql = SQL::condition($paramItem[0], $paramItem[1], $paramItem[2], $paramItem[3]);
+          $sql .= SQL::condition($paramItem[0], $paramItem[1], $paramItem[2], $paramItem[3]);
         } else {
           $itemSql = SQL::condition($paramItem[0], $paramItem[1]);
           if ($itemIndex != $lastIndex) {
