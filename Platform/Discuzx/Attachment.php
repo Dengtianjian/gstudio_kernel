@@ -12,6 +12,52 @@ use gstudio_kernel\Foundation\Model;
 
 class Attachment
 {
+  public static function save($files, $saveDir = "common")
+  {
+    include_once \libfile("discuz/upload", "class");
+    $upload = new \discuz_upload();
+    $uploadResult = [];
+    $onlyOne = false;
+    if (Arr::isAssoc($files)) {
+      $onlyOne = true;
+      $files = [$files];
+    } else {
+      $files = array_values($files);
+    }
+    foreach ($files as $fileItem) {
+      $upload->init($fileItem, $saveDir, $extid, $forcename);
+      if ($upload->error()) {
+        $uploadResult[] =  [
+          "error" => $upload->error(),
+          "message" => $upload->errormessage()
+        ];
+        continue;
+      } else {
+        $upload->save(true);
+        $saveFileName = explode("/", $upload->attach['attachment']);
+        $path = $saveDir . "/" . $upload->attach['attachment'];
+        $fileInfo = [
+          "path" => $path,
+          "extension" => $upload->attach['extension'],
+          "sourceFileName" => $upload->attach['name'],
+          "saveFileName" => $saveFileName[count($saveFileName) - 1],
+          "size" => $upload->attach['size'],
+          "type" => $upload->attach['type'],
+          "fullPath" => \getglobal("setting/attachurl") . $path
+        ];
+        if ($upload->attach['isimage']) {
+          $fileInfo['width'] = $upload->attach['imageinfo'][0];
+          $fileInfo['height'] = $upload->attach['imageinfo'][1];
+        }
+        $uploadResult[] = $fileInfo;
+      }
+    }
+    if ($onlyOne) {
+      return $uploadResult[0];
+    }
+
+    return $uploadResult;
+  }
   public static function upload($files, $tableName = "", $tid = 0, $pid = 0, $price = 0, $remote = 0, $saveDir = "common", $extid = 0, $forcename = "")
   {
     include_once \libfile("discuz/upload", "class");
