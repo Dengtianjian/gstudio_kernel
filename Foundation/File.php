@@ -55,7 +55,14 @@ class File
 
     return $uploadResult;
   }
-  public static function copyFolder($sourcePath, $destPath)
+  /**
+   * 克隆目录。把指定目录下的文件和文件夹复制到指定目录
+   *
+   * @param string $sourcePath 被克隆的目录
+   * @param string $destPath 克隆到的目标目录
+   * @return void
+   */
+  public static function cloneDirectory($sourcePath, $destPath)
   {
     if (is_dir($sourcePath) && \is_dir($destPath)) {
       $source = \opendir($sourcePath);
@@ -68,20 +75,62 @@ class File
           if (!is_dir($targetDir)) {
             mkdir($targetDir);
           }
-          self::copyFolder($sourcePath . "/" . $handle, $targetDir);
+          self::cloneDirectory($sourcePath . "/" . $handle, $targetDir);
         } else {
           copy($sourcePath . "/" . $handle, $destPath . "/" . $handle);
         }
       }
     }
   }
-  public static function createFile($filePath, $fileContent = "")
+  /**
+   * 创建文件
+   *
+   * @param string $filePath 文件完整路径(包含创建的文件名称和扩展名)
+   * @param string $fileContent 写入的文件内容
+   * @param boolean $overwrite 是否覆盖式创建。true=如果文件已经存在就不创建
+   * @return boolean 创建结果
+   */
+  public static function createFile($filePath, $fileContent = "", $overwrite = false)
   {
+    if ($overwrite === false) {
+      if (\file_exists($overwrite)) {
+        return true;
+      }
+    }
     $touchResult = \touch($filePath);
     if ($touchResult) {
       $file = \fopen($filePath, "w+");
       \fwrite($file, $fileContent);
       \fclose($file);
+      return true;
+    } else {
+      return false;
+    }
+  }
+  /**
+   * 删除目录和目录下的文件
+   *! 该方法谨慎使用，删除后无法在回收站恢复&无法撤销
+   *
+   * @param string $path 目录
+   * @return boolean 删除结果
+   */
+  public static function deleteDirectory($path)
+  {
+    if (is_dir($path)) {
+      $directorys = @\scandir($path);
+      foreach ($directorys as $directoryItem) {
+        if ($directoryItem === "." || $directoryItem === "..") {
+          continue;
+        }
+        $directoryItem = $path . "/" . $directoryItem;
+        if (is_dir($directoryItem)) {
+          self::deleteDirectory($directoryItem);
+          @rmdir($directoryItem);
+        } else {
+          @unlink($directoryItem);
+        }
+      }
+      @rmdir($path);
       return true;
     } else {
       return false;
