@@ -248,7 +248,6 @@ class Model
       return $sql;
     }
     $result = \DB::result(\DB::query($sql, $this->params));
-    $this->restoreDefaultMemberValues();
     switch ($this->executeType) {
       case "insert":
         $result = \DB::insert_id();
@@ -256,9 +255,10 @@ class Model
       case "batchInsert":
       case "update":
       case "batchUpdate";
-        $result = \DB::affected_rows();
+        $result = \DB::affected_rows() || 1;
         break;
     }
+    $this->restoreDefaultMemberValues();
     return $result;
   }
   function delete($directly = false)
@@ -298,7 +298,7 @@ class Model
     if (count($resultData) > 0) {
       return $resultData[0];
     }
-    return [];
+    return NULL;
   }
   function count($field = "*")
   {
