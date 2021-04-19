@@ -8,58 +8,20 @@ if (!defined("IN_DISCUZ")) {
 
 use gstudio_kernel\Foundation\Arr;
 use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
+use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Foundation\Model;
 
 class Attachment
 {
-  public static function save($files, $saveDir = "common")
+  public static function save($files, $saveDir = "")
   {
-    include_once \libfile("discuz/upload", "class");
-    $upload = new \discuz_upload();
-    $uploadResult = [];
-    $onlyOne = false;
-    if (Arr::isAssoc($files)) {
-      $onlyOne = true;
-      $files = [$files];
-    } else {
-      $files = array_values($files);
-    }
-    foreach ($files as $fileItem) {
-      $upload->init($fileItem, $saveDir, $extid, $forcename);
-      if ($upload->error()) {
-        $uploadResult[] =  [
-          "error" => $upload->error(),
-          "message" => $upload->errormessage()
-        ];
-        continue;
-      } else {
-        $upload->save(true);
-        $saveFileName = explode("/", $upload->attach['attachment']);
-        $path = $saveDir . "/" . $upload->attach['attachment'];
-        $fileInfo = [
-          "path" => $path,
-          "extension" => $upload->attach['extension'],
-          "sourceFileName" => $upload->attach['name'],
-          "saveFileName" => $saveFileName[count($saveFileName) - 1],
-          "size" => $upload->attach['size'],
-          "type" => $upload->attach['type'],
-          "fullPath" => \getglobal("setting/attachurl") . $path
-        ];
-        if ($upload->attach['isimage']) {
-          $fileInfo['width'] = $upload->attach['imageinfo'][0];
-          $fileInfo['height'] = $upload->attach['imageinfo'][1];
-        }
-        $uploadResult[] = $fileInfo;
-      }
-    }
-    if ($onlyOne) {
-      return $uploadResult[0];
-    }
-
-    return $uploadResult;
+    global $app;
+    $savePath = $app->attachmentPath . "/$saveDir";
+    return File::upload($files, $savePath);
   }
-  public static function upload($files, $tableName = "", $tid = 0, $pid = 0, $price = 0, $remote = 0, $saveDir = "common", $extid = 0, $forcename = "")
+  public static function upload($files, $tableName = "", $tid = 0, $pid = 0, $price = 0, $remote = 0, $saveDir = "", $extid = 0, $forcename = "")
   {
+    global $app;
     include_once \libfile("discuz/upload", "class");
     $upload = new \discuz_upload();
     $uploadResult = [];
@@ -89,7 +51,7 @@ class Attachment
       } else {
         $upload->save(true);
         $saveFileName = explode("/", $upload->attach['attachment']);
-        $path = $saveDir . "/" . $upload->attach['attachment'];
+        $path = $app->attachmentPath . "/$saveDir/" . $upload->attach['attachment'];
         $aid = getattachnewaid($uid);
         $width = 0;
         $fileInfo = [];
@@ -141,7 +103,7 @@ class Attachment
           "saveFileName" => $saveFileName[count($saveFileName) - 1],
           "size" => $upload->attach['size'],
           "type" => $upload->attach['type'],
-          "fullPath" => \getglobal("setting/attachurl") . $path,
+          "fullPath" => $path,
           "aid" => $aid,
           "tableId" => $tableId,
           "tableName" => $tableName,
@@ -171,7 +133,7 @@ class Attachment
 
     return $uploadResult;
   }
-  public static function aidencode($aid, $dir = "common", $type = 0, $tid = 0)
+  public static function aidencode($aid, $dir = "plugin", $type = 0, $tid = 0)
   {
     global $_G;
     $s = !$type ? $aid . '|' . substr(md5($aid . md5($_G['config']['security']['authkey']) . TIMESTAMP . $_G['uid']), 0, 8) . '|' . TIMESTAMP . '|' . $_G['uid'] . '|' . $tid : $aid . '|' . md5($aid . md5($_G['config']['security']['authkey']) . TIMESTAMP) . '|' . TIMESTAMP;
