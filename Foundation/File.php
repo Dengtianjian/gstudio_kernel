@@ -8,48 +8,94 @@ if (!defined("IN_DISCUZ")) {
 
 class File
 {
-  //! 准废弃
-  public static function upload($files, $saveDir = "common", $extid = 0, $forcename = "")
+  /**
+   * 判断文件是不是视频文件
+   *
+   * @param string $fileName 文件路径(包含文件名和扩展名) root/path/show.mp4
+   * @param array|string $extensions? 校验的扩展名。如果传入了就会校验文件是否是指定的扩展名
+   * @return boolean 是视频返回true，否则返回false
+   */
+  public static function isVideo($fileName, $extensions = null)
   {
-    include_once \libfile("discuz/upload", "class");
-    $upload = new \discuz_upload();
+    if ($extensions === null) {
+      $extensions = ["mp4"];
+    }
+    $fileExtension = \pathinfo($fileName, \PATHINFO_EXTENSION);
+    if (is_array($extensions)) {
+      return \in_array($fileExtension, $extensions);
+    } else {
+      $extensions = \strtolower($extensions);
+      return \strpos($fileName, $extensions) !== false;
+    }
+  }
+  /**
+   * 判断文件是否是图片文件
+   *
+   * @param string $fileName 文件路径(包含文件名和扩展名) root/path/image.png
+   * @param array|string $extensions? 校验的扩展名。如果传入了就会校验文件是否是指定的扩展名
+   * @return boolean 是图片返回true，否则返回false
+   */
+  public static function isImage($fileName, $extensions = null)
+  {
+    if ($extensions !== null) {
+      $fileExtension = \pathinfo($fileName, \PATHINFO_EXTENSION);
+      if (is_array($extensions)) {
+        return \in_array($fileExtension, $extensions);
+      } else {
+        $fileExtension = \strtolower($fileExtension);
+        return \strpos($fileName, $fileExtension) !== false;
+      }
+    } else {
+      $info = \exif_imagetype($fileName);
+      if ($info === false) {
+        return false;
+      }
+      return true;
+    }
+  }
+  /**
+   * 上传文件，并且保存在服务器
+   *
+   * @param array|file $files 文件或者多个文件数组
+   * @param string $savePath 保存的完整路径
+   * @return array
+   */
+  public static function upload($files, $savePath)
+  {
     $uploadResult = [];
-    $one = false;
+    $onlyOne = false;
     if (Arr::isAssoc($files)) {
-      $one = true;
+      $onlyOne = true;
       $files = [$files];
     } else {
       $files = array_values($files);
     }
     foreach ($files as $fileItem) {
-      $upload->init($fileItem, $saveDir, $extid, $forcename);
-      if ($upload->error()) {
-        $uploadResult[] =  [
-          "error" => $upload->error(),
-          "message" => $upload->errormessage()
-        ];
+      if ($fileItem['error'] > 0) {
+        $uploadResult[] = $fileItem['error'];
         continue;
-      } else {
-        $upload->save(true);
-        $saveFileName = explode("/", $upload->attach['attachment']);
-        $path = $saveDir . "/" . $upload->attach['attachment'];
-        $fileInfo = [
-          "path" => $path,
-          "extension" => $upload->attach['extension'],
-          "sourceFileName" => $upload->attach['name'],
-          "saveFileName" => $saveFileName[count($saveFileName) - 1],
-          "size" => $upload->attach['size'],
-          "type" => $upload->attach['type'],
-          "fullPath" => \getglobal("setting/attachurl") . $path
-        ];
-        if ($upload->attach['isimage']) {
-          $fileInfo['width'] = $upload->attach['imageinfo'][0];
-          $fileInfo['height'] = $upload->attach['imageinfo'][1];
-        }
-        $uploadResult[] = $fileInfo;
       }
+      $fileExtension = \pathinfo($fileItem['name'], \PATHINFO_EXTENSION);
+      $fileCode = \random(4, 1) . time();
+      $saveFullFileName = $fileCode . "." . $fileExtension;
+      $saveFullPath = $savePath . "/" . $saveFullFileName;
+      @\move_uploaded_file($fileItem['tmp_name'], $saveFullPath);
+      $fileInfo = [
+        "path" => $savePath,
+        "extension" => $fileExtension,
+        "sourceFileName" => $fileItem['name'],
+        "saveFileName" => $saveFullFileName,
+        "size" => $fileItem['size'],
+        "fullPath" => $saveFullPath
+      ];
+      if (self::isImage($saveFullPath)) {
+        $imageInfo = \getimagesize($saveFullPath);
+        $fileInfo['width'] = $imageInfo[0];
+        $fileInfo['height'] = $imageInfo[1];
+      }
+      $uploadResult[] = $fileInfo;
     }
-    if ($one) {
+    if ($onlyOne) {
       return $uploadResult[0];
     }
 
