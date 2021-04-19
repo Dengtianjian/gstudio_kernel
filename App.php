@@ -33,6 +33,7 @@ class App
   private $salt = "gstudio_kernel"; //* token用到的 salt
   private $BigGKeyWhiteList = []; //* DZX大G key白名单。用于查询 大G 值时用到，一般是cache/plugin插件的变量
   private $globalSetMarks = []; //* 全局设置项标记
+  private $attachmentPath = ""; //* 附件目录
   public function __get($name)
   {
     return $this->$name;
@@ -57,6 +58,7 @@ class App
     ];
     $this->pluginId = $pluginId;
     $this->uri = \addslashes($_GET['uri']);
+    $this->attachmentPath =  \getglobal("setting/attachurl") . "plugin/" . $pluginId;
 
     include_once($GLOBALS['gstudio_kernel']['pluginPath'] . "/Langs/" . CHARSET . ".php");
     $langDirPath = $GLOBALS[$this->pluginId]['pluginPath'] . "/Langs/";
