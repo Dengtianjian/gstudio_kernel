@@ -2,9 +2,9 @@
 
 namespace gstudio_kernel\Foundation;
 
-// if (!defined("IN_DISCUZ") || !defined('IN_ADMINCP')) {
-//   exit('Access Denied');
-// }
+if (!defined("IN_DISCUZ") || !defined('IN_ADMINCP')) {
+  exit('Access Denied');
+}
 
 /** Install Upgrade Uninstall */
 class Iuu
@@ -33,7 +33,7 @@ class Iuu
   }
   public function runInstallSql()
   {
-    $multipleEncode = Config::get("multipleEncode");
+    $multipleEncode = Config::get("multipleEncode", $this->pluginId);
     $sqlPath = DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install";
     if ($multipleEncode) {
       $sqlPath .= "/" . \CHARSET . "/install.sql";
@@ -77,16 +77,19 @@ class Iuu
   public function upgrade()
   {
     $this->scanDirAndVersionCompare($this->pluginPath . "/Iuu/Upgrade/Files", function ($version, $fileName) {
-      $className = $this->pluginId . "\Iuu\Upgrade\Files\\$fileName";
-      $upgradeItemInstance = new $className();
-      $upgradeItemInstance->handle();
+      $filePath = $this->pluginPath . "/Iuu/Upgrade/Files/$fileName.php";
+      if (\file_exists($filePath)) {
+        $className = $this->pluginId . "\Iuu\Upgrade\Files\\$fileName";
+        $upgradeItemInstance = new $className();
+        $upgradeItemInstance->handle();
+      }
     });
     return $this;
   }
   public function runUpgradeSql()
   {
     $sqlFileDirPath = $this->pluginPath . "/Iuu/Upgrade";
-    $multipleEncode = Config::get("multipleEncode");
+    $multipleEncode = Config::get("multipleEncode", $this->pluginId);
     if ($multipleEncode) {
       $sqlFileDirPath .= "/" . \CHARSET;
       if (!is_dir($sqlFileDirPath)) {
@@ -96,6 +99,9 @@ class Iuu
 
     $this->scanDirAndVersionCompare($sqlFileDirPath, function ($version, $fileName) use ($sqlFileDirPath) {
       $sqlFilePath = $sqlFileDirPath .= "/$fileName.sql";
+      if (!\file_exists($sqlFilePath)) {
+        return;
+      }
       $sqlContent = \file_get_contents($sqlFilePath);
       \runquery($sqlContent);
     });
@@ -105,6 +111,7 @@ class Iuu
   {
     $this->cleanInstall();
     $this->cleanUpgrade();
+    return File::deleteDirectory($this->pluginPath . "/Iuu");
   }
   public function cleanInstall()
   {
