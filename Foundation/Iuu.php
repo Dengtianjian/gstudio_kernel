@@ -88,7 +88,7 @@ class Iuu
   }
   public function runUpgradeSql()
   {
-    $sqlFileDirPath = $this->pluginPath . "/Iuu/Upgrade";
+    $sqlFileDirPath = $this->pluginPath . "/Iuu/Upgrade/SQL";
     $multipleEncode = Config::get("multipleEncode", $this->pluginId);
     if ($multipleEncode) {
       $sqlFileDirPath .= "/" . \CHARSET;
