@@ -15,6 +15,7 @@
   background-color: #edf2fc;
   border: 1px solid #ebeef5;
   animation: CTopIn 0.3s;
+  box-sizing: border-box;
 }
 .c-message i {
   margin-right: 10px;
