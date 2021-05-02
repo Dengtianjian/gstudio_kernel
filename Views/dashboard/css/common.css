@@ -13,6 +13,16 @@ body {
   margin: 0;
   background-color: #f5f6fa;
 }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #bfbfbf;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
 
 a {
   text-decoration-line: none;
