@@ -2,6 +2,7 @@
   <main class="page-main container">
     <!--{eval include $Response::systemView("components/aside", "dashboard")}-->
     <div class="page-content">
+      <!--{eval include $Response::systemView("components/thirdNav", "dashboard")}-->
       <form
         method="POST"
         action="plugin.php?id={$gstudio_kernel['devingPluginId']}&uri=_dashboard_save"

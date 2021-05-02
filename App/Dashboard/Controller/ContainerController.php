@@ -9,8 +9,9 @@ if (!defined("IN_DISCUZ")) {
 use DB;
 use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Model;
-use gstudio_kernel\Foundation\Response;
+use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Str;
+use gstudio_kernel\Foundation\View;
 
 function filterHidden($item)
 {
@@ -21,15 +22,20 @@ class ContainerController extends Controller
 {
   protected $Admin = true;
   private $serializeDataTypes = ["select", "radio", "checkbox"];
-  public function data($request)
+  public function data(Request $request)
   {
     global $gstudio_kernel;
 
     $DASHBOARD = $gstudio_kernel['dashboard'];
     $SetModel = new Model($DASHBOARD['setTableName']);
+    $mainId = \intval($request->params("mid"));
+    $subId = \intval($request->params("sid"));
+    $thirdNavId = \intval($request->params("tid"));
     $navId = [];
-    if ($DASHBOARD['subNavId']) {
-      $navId = $DASHBOARD['subNavId'];
+    if ($thirdNavId) {
+      $navId = $thirdNavId;
+    } else if ($subId) {
+      $navId = $subId;
     } else {
       $navId = \array_keys($DASHBOARD['subNavs']);
     }
@@ -93,7 +99,7 @@ class ContainerController extends Controller
 
     $setCount = count($sets);
 
-    include_once Response::systemView("sets", "dashboard", [
+    View::systemPage("sets", "dashboard", [
       "setCount" => $setCount,
       "sets" => $sets,
       "userGroup" => $userGroup

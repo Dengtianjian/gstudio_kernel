@@ -3,7 +3,7 @@
 }
 
 :root {
-  --primary-color:#3370ff;
+  --primary-color: #3370ff;
   --main-color: #3370ff;
   --border-radius: 10px;
 }
@@ -95,51 +95,51 @@ ul {
 .addons-popup {
   display: none;
   position: fixed;
-  z-index:10;
+  z-index: 10;
   top: 0;
   right: 0;
-  left:0;
-  bottom:0;
-  margin:auto;
+  left: 0;
+  bottom: 0;
+  margin: auto;
   padding: 8px;
-  width:700px;
+  width: 700px;
   height: 60vh;
   overflow: hidden auto;
   box-shadow: 0 3px 5px 2px rgb(100 100 50 / 5%);
   background-color: white;
-  border-radius:var(--border-radius);
+  border-radius: var(--border-radius);
 }
 .addons-popup-mask {
   display: none;
-  position:fixed;
-  top:0;
-  left:0;
-  z-index:9;
-  width:100vw;
-  height:100vh;
-  background-color:rgba(0,0,0,0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 .addon-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   height: 45px;
   color: #333;
 }
-.addon-item .addon-switch{
-  color:#ccc;
+.addon-item .addon-switch {
+  color: #ccc;
   cursor: pointer;
 }
-.addon-item .addon-switch:hover{
-  color:var(--primary-color);
+.addon-item .addon-switch:hover {
+  color: var(--primary-color);
 }
 .addon-icon {
   vertical-align: middle;
-  width:40px;
-  height:40px;
-  border-radius:var(--border-radius);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius);
 }
 
 .page-main {
@@ -332,4 +332,32 @@ ul {
 .set-group .set-subs {
   margin: 0 0 0 20px;
   border: none;
+}
+
+/* 三级分类 */
+.third-navs {
+  display: flex;
+  margin-bottom: 24px;
+  width: 100%;
+  line-height: 32px;
+  font-size: 16px;
+  user-select: none;
+  border-bottom: 1px solid #e0e1e2;
+}
+.third-nav-item {
+  margin-right: 24px;
+  min-width: 10px;
+  cursor: pointer;
+  color: #333;
+}
+.third-nav-item:first-child {
+  flex-shrink: 0;
+}
+.third-nav-item:hover {
+  color: var(--primary-color);
+}
+.third-nav-item_active {
+  margin-bottom: -1px;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
 }
