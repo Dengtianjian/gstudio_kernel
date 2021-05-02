@@ -6,21 +6,14 @@ use gstudio_kernel\Foundation\Response;
 
 class View
 {
-  static private $page = [
-    "pageTitle" => "",
-    "pageKeyword" => "",
-    "pageDescription" => ""
-  ];
+  private static $viewData = [];
   static private function renderPage($fileName, $fileDir = "", $viewData = [])
   {
-    global $_G, $gstudio_kernel, $GSETS, $GLANG;
-    global ${$gstudio_kernel['devingPluginId']};
+    global $_G, $gstudio_kernel, $GSETS, $GLANG, ${$gstudio_kernel['devingPluginId']};
     $Response = Response::class;
     $View = self::class;
 
-    $navtitle = $pageTitle = self::$page['pageTitle'];
-    $metakeywords = $pageKeyword = self::$page['pageKeyword'];
-    $metadescription = $pageDescription = self::$page['pageDescription'];
+    $viewData = \array_merge(self::$viewData, $viewData);
     foreach ($viewData as $key => $value) {
       global ${$key};
     }
@@ -37,6 +30,7 @@ class View
       $viewData = $viewDirOfViewData;
       $viewDirOfViewData = "/";
     }
+    $viewData = \array_merge(self::$viewData, $viewData);
     if (count($viewData) > 0) {
       foreach ($viewData as $key => $value) {
         $GLOBALS[$key] = $value;
@@ -67,16 +61,29 @@ class View
     $viewDirOfViewData = $gstudio_kernel['pluginPath'] . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
+  static function addData($data)
+  {
+    self::$viewData = \array_merge(self::$viewData, $data);
+  }
   static function title($titleSourceString, $params = [])
   {
-    self::$page['pageTitle'] = Str::replaceParams($titleSourceString, $params);
+    self::addData([
+      "navtitle" => Str::replaceParams($titleSourceString, $params),
+      "pageTitle" => Str::replaceParams($titleSourceString, $params),
+    ]);
   }
   static function keyword($keywordSourceString, $params = [])
   {
-    self::$page['pageKeyword'] = Str::replaceParams($keywordSourceString, $params);
+    self::addData([
+      "metakeywords" => Str::replaceParams($keywordSourceString, $params),
+      "pageKeyword" => Str::replaceParams($keywordSourceString, $params),
+    ]);
   }
   static function description($descriptionSourceString, $params = [])
   {
-    self::$page['pageDescription'] = Str::replaceParams($descriptionSourceString, $params);
+    self::addData([
+      "metadescription" => Str::replaceParams($descriptionSourceString, $params),
+      "pageDescription" => Str::replaceParams($descriptionSourceString, $params),
+    ]);
   }
 }
