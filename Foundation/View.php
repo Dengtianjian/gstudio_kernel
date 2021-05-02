@@ -7,6 +7,15 @@ use gstudio_kernel\Foundation\Response;
 class View
 {
   private static $viewData = [];
+  /**
+   * 渲染模板文件
+   * global渲染的数据，载入渲染的模板文件，并且删除掉$GLOBALS中渲染的数据
+   *
+   * @param string|array $fileName 模板的文件名称。可数组或单一字符串
+   * @param string $fileDir 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。
+   * @param array $viewData渲染的数据
+   * @return boolean 一直都是 true
+   */
   static private function renderPage($fileName, $fileDir = "", $viewData = [])
   {
     global $_G, $gstudio_kernel, $GSETS, $GLANG, ${$gstudio_kernel['devingPluginId']};
@@ -37,6 +46,15 @@ class View
 
     return true;
   }
+  /**
+   * 渲染前做的事情
+   * 主要是检查模板文件是否存在以及把渲染的数据加入到全局($GLOBALS)里
+   *
+   * @param string|array $viewFile 模板的文件名称。可数组或单一字符串
+   * @param string $viewDirOfViewData? 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。
+   * @param array $viewData? 渲染的数据
+   * @return void
+   */
   static function render($viewFile, $viewDirOfViewData = "/", $viewData = [])
   {
     if (is_array($viewDirOfViewData)) {
@@ -72,6 +90,14 @@ class View
 
     return self::renderPage($viewFile, $viewDirOfViewData, $viewData);
   }
+  /**
+   * 渲染页面
+   *
+   * @param [type] $viewFile $viewFile 模板的文件名称。可数组或单一字符串
+   * @param string $viewDirOfViewData? 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。基于根路径也就是当前插件的根目录下的Views文件夹
+   * @param array $viewData? 渲染的数据
+   * @return void
+   */
   static function page($viewFile, $viewDirOfViewData = "/", $viewData = [])
   {
     global $gstudio_kernel;
@@ -82,6 +108,38 @@ class View
     $viewDirOfViewData = $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
+  /**
+   * 渲染后台模板页面
+   *
+   * @param string|array $viewFile 模板的文件名称。可数组或单一字符串
+   * @param string $viewDirOfViewData? 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。基于根路径也就是当前插件的根目录的Views文件夹
+   * @param array $viewData? 渲染模板的数据
+   * @return void
+   */
+  static function dashboard($viewFile, $viewDirOfViewData = "/", $viewData = [])
+  {
+    global $gstudio_kernel;
+    if (is_array($viewDirOfViewData)) {
+      $viewData = $viewDirOfViewData;
+      $viewDirOfViewData = "/";
+    }
+    $realTemplateDir = $viewDirOfViewData;
+    $viewDirOfViewData = $gstudio_kernel['pluginPath'] . "/Views/$viewDirOfViewData";
+    return self::render("container", $viewDirOfViewData, [
+      "_fileName" => $viewFile,
+      "_templateDir" => $realTemplateDir,
+      "_viewData" => $viewData
+    ]);
+  }
+
+  /**
+   * 渲染系统(kernel)页面
+   *
+   * @param string|array $viewFile 模板的文件名称。可数组或单一字符串
+   * @param string $viewDirOfViewData? 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。基于根路径也就是核心插件的根目录下的Views文件夹
+   * @param array $viewData? 渲染的数据
+   * @return void
+   */
   static function systemPage($viewFile, $viewDirOfViewData = "/", $viewData = [])
   {
     global $gstudio_kernel;
@@ -92,10 +150,23 @@ class View
     $viewDirOfViewData = $gstudio_kernel['pluginPath'] . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
+  /**
+   * 添加渲染的数据到渲染的模板中
+   *
+   * @param array $data 关联索引的数组
+   * @return void
+   */
   static function addData($data)
   {
     self::$viewData = \array_merge(self::$viewData, $data);
   }
+  /**
+   * 设置页面标题
+   *
+   * @param string $titleSourceString 页面标题字符串。例如：{bbname}- - 首页 - {$keyword}
+   * @param array $params? 替换字符串中的参数
+   * @return void
+   */
   static function title($titleSourceString, $params = [])
   {
     self::addData([
@@ -103,6 +174,13 @@ class View
       "pageTitle" => Str::replaceParams($titleSourceString, $params),
     ]);
   }
+  /**
+   * 设置页面的keywords
+   *
+   * @param string $keywordSourceString 页面mate关键词值。例如：{bbname},Discuzx,{$keyword1}
+   * @param array $params 替换字符串中的参数
+   * @return void
+   */
   static function keyword($keywordSourceString, $params = [])
   {
     self::addData([
@@ -110,6 +188,13 @@ class View
       "pageKeyword" => Str::replaceParams($keywordSourceString, $params),
     ]);
   }
+  /**
+   * 设置页面的描述
+   *
+   * @param string $descriptionSourceString 描述字符串。例如：{bbname}是专业的DZX应用开发者，应用列表：{addonsUrl}
+   * @param array $params 替换字符串中的参数
+   * @return void
+   */
   static function description($descriptionSourceString, $params = [])
   {
     self::addData([
