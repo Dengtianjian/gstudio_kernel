@@ -17,7 +17,20 @@ class View
     foreach ($viewData as $key => $value) {
       global ${$key};
     }
-    include_once template($fileName, $gstudio_kernel['devingPluginId'], $fileDir);
+    if (\is_array($fileName)) {
+      if (Arr::isAssoc($fileName)) {
+        foreach ($fileName as $name => $dir) {
+          include_once template($name, $gstudio_kernel['devingPluginId'], $dir);
+        }
+      } else {
+        foreach ($fileName as $name) {
+          include_once template($name, $gstudio_kernel['devingPluginId'], $fileDir);
+        }
+      }
+    } else {
+      include_once template($fileName, $gstudio_kernel['devingPluginId'], $fileDir);
+    }
+
     foreach ($viewData as $key => $value) {
       unset($GLOBALS[$key]);
     }
@@ -36,9 +49,27 @@ class View
         $GLOBALS[$key] = $value;
       }
     }
-    if (!\file_exists($viewDirOfViewData . "/$viewFile.htm")) {
-      Response::error("VIEW_TEMPLATE_NOT_EXIST");
+
+    if (\is_array($viewFile)) {
+      if (Arr::isAssoc($viewFile)) {
+        foreach ($viewFile as $name => $dir) {
+          if (!\file_exists($dir . "/$name.htm")) {
+            Response::error("VIEW_TEMPLATE_NOT_EXIST");
+          }
+        }
+      } else {
+        foreach ($viewFile as $name) {
+          if (!\file_exists($viewDirOfViewData . "/$name.htm")) {
+            Response::error("VIEW_TEMPLATE_NOT_EXIST");
+          }
+        }
+      }
+    } else {
+      if (!\file_exists($viewDirOfViewData . "/$viewFile.htm")) {
+        Response::error("VIEW_TEMPLATE_NOT_EXIST");
+      }
     }
+
     return self::renderPage($viewFile, $viewDirOfViewData, $viewData);
   }
   static function page($viewFile, $viewDirOfViewData = "/", $viewData = [])
