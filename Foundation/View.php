@@ -18,7 +18,7 @@ class View
    */
   static private function renderPage($fileName, $fileDir = "", $viewData = [])
   {
-    global $_G, $gstudio_kernel, $GSETS, $GLANG, ${$gstudio_kernel['devingPluginId']};
+    global $_G, $gstudio_kernel, $GSETS, $GLANG, $GURLS, ${$gstudio_kernel['devingPluginId']};
     $Response = Response::class;
     $View = self::class;
 
