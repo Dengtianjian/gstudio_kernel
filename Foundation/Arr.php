@@ -33,7 +33,7 @@ class Arr
     }
     return $result;
   }
-  //! grade替换
+  //! tree替换
   static function sortByParentChild($arr, $dataPrimaryKey, $relatedParentKey, $childArrayKeys = "childs")
   {
     $returnData = [];
@@ -85,5 +85,37 @@ class Arr
       }
     }
     return $result;
+  }
+  /**
+   * 合并数组。支持多维数组合并
+   *
+   * @param array ...$arrs 要合并的数组
+   * @return array 合并完后的数组
+   */
+  static function merge(...$arrs)
+  {
+    $merged = [];
+    while ($arrs) {
+      $array = array_shift($arrs);
+      if (!$array) {
+        continue;
+      }
+      foreach ($array as $key => $value) {
+        if (is_string($key)) {
+          if (
+            is_array($value) && array_key_exists($key, $merged)
+            && is_array($merged[$key])
+          ) {
+            $merged[$key] = self::merge(...[$merged[$key], $value]);
+          } else {
+            $merged[$key] = $value;
+          }
+        } else {
+          $merged[] = $value;
+        }
+      }
+    }
+
+    return $merged;
   }
 }
