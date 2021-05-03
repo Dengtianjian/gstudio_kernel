@@ -70,6 +70,7 @@ class App
     }
     $GLOBALS['GLANG'] = Lang::all();
     ErrorCode::load(); //* 加载错误码
+    $GLOBALS['GURLS'] = [];
 
     include_once(DISCUZ_ROOT . "$devingPlguinPath/routes.php");
   }
