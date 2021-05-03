@@ -45,7 +45,7 @@ class Iuu
       $sqlPath .= "/install.sql";
     }
     if (!\file_exists($sqlPath)) {
-      return false;
+      return $this;
     }
     $sql = \file_get_contents($sqlPath);
     \runquery($sql);
@@ -88,19 +88,21 @@ class Iuu
   }
   public function runUpgradeSql()
   {
-    $sqlFileDirPath = $this->pluginPath . "/Iuu/Upgrade/SQL";
+    $sqlFileDirPath = $this->pluginPath . "/Iuu/Upgrade";
     $multipleEncode = Config::get("multipleEncode", $this->pluginId);
     if ($multipleEncode) {
       $sqlFileDirPath .= "/" . \CHARSET;
-      if (!is_dir($sqlFileDirPath)) {
-        return false;
-      }
+    } else {
+      $sqlFileDirPath .= "/SQL";
+    }
+    if (!is_dir($sqlFileDirPath)) {
+      return $this;
     }
 
     $this->scanDirAndVersionCompare($sqlFileDirPath, function ($version, $fileName) use ($sqlFileDirPath) {
       $sqlFilePath = $sqlFileDirPath .= "/$fileName.sql";
       if (!\file_exists($sqlFilePath)) {
-        return;
+        return $this;
       }
       $sqlContent = \file_get_contents($sqlFilePath);
       \runquery($sqlContent);
