@@ -371,3 +371,22 @@ ul {
   color: var(--primary-color);
   border-bottom: 2px solid var(--primary-color);
 }
+
+/* 联系客服 */
+.support-service {
+  display: block;
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+  padding: 14px 16px;
+  color: var(--primary-color);
+  background: white;
+  border-radius: 50%;
+}
+.support-service i {
+  font-size: 28px;
+}
+.support-service:hover {
+  color: white;
+  background-color: var(--primary-color);
+}
