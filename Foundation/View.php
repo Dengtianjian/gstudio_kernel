@@ -18,7 +18,7 @@ class View
    */
   static private function renderPage($fileName, $fileDir = "", $viewData = [])
   {
-    global $_G, $gstudio_kernel, $GSETS, $GLANG, $GURLS, ${$gstudio_kernel['devingPluginId']};
+    global $_G, $gstudio_kernel, $GSETS, $GLANG, $GURLS, $_GG, ${$gstudio_kernel['devingPluginId']};
     $Response = Response::class;
     $View = self::class;
 
@@ -26,18 +26,19 @@ class View
     foreach ($viewData as $key => $value) {
       global ${$key};
     }
+
     if (\is_array($fileName)) {
       if (Arr::isAssoc($fileName)) {
         foreach ($fileName as $name => $dir) {
-          include_once template($name, $gstudio_kernel['devingPluginId'], $dir);
+          include_once template($name, $_GG['id'], $dir);
         }
       } else {
         foreach ($fileName as $name) {
-          include_once template($name, $gstudio_kernel['devingPluginId'], $fileDir);
+          include_once template($name, $_GG['id'], $fileDir);
         }
       }
     } else {
-      include_once template($fileName, $gstudio_kernel['devingPluginId'], $fileDir);
+      include_once template($fileName, $_GG['id'], $fileDir);
     }
 
     foreach ($viewData as $key => $value) {
@@ -100,12 +101,11 @@ class View
    */
   static function page($viewFile, $viewDirOfViewData = "/", $viewData = [])
   {
-    global $gstudio_kernel;
     if (is_array($viewDirOfViewData)) {
       $viewData = $viewDirOfViewData;
       $viewDirOfViewData = "/";
     }
-    $viewDirOfViewData = $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$viewDirOfViewData";
+    $viewDirOfViewData = GlobalVariables::get("_GG/addon/root") . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
   /**
@@ -116,15 +116,14 @@ class View
    * @param array $viewData? 渲染模板的数据
    * @return void
    */
-  static function dashboard($viewFile, $viewDirOfViewData = "/", $viewData = [])
+  static function dashboard($viewFile, $viewDirOfViewData = "dashboard", $viewData = [])
   {
-    global $gstudio_kernel;
     if (is_array($viewDirOfViewData)) {
       $viewData = $viewDirOfViewData;
-      $viewDirOfViewData = "/";
+      $viewDirOfViewData = "dashboard";
     }
     $realTemplateDir = $viewDirOfViewData;
-    $viewDirOfViewData = $gstudio_kernel['pluginPath'] . "/Views/$viewDirOfViewData";
+    $viewDirOfViewData = GlobalVariables::get("_GG/addon/root") . "/Views/$viewDirOfViewData";
     return self::render("container", $viewDirOfViewData, [
       "_fileName" => $viewFile,
       "_templateDir" => $realTemplateDir,
@@ -140,14 +139,13 @@ class View
    * @param array $viewData? 渲染的数据
    * @return void
    */
-  static function systemPage($viewFile, $viewDirOfViewData = "/", $viewData = [])
+  static function systemPage($viewFile, $viewDirOfViewData = "", $viewData = [])
   {
-    global $gstudio_kernel;
     if (is_array($viewDirOfViewData)) {
       $viewData = $viewDirOfViewData;
-      $viewDirOfViewData = "/";
+      $viewDirOfViewData = "";
     }
-    $viewDirOfViewData = $gstudio_kernel['pluginPath'] . "/Views/$viewDirOfViewData";
+    $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
   /**

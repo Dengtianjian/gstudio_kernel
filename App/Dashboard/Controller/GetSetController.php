@@ -21,6 +21,7 @@ class GetSetController extends Controller
     } else if ($params['setMark']) {
       $setMark = $params['setMark'];
     }
+    $setMark = explode(",", $setMark);
     return Dashboard::getSet($setMark);
   }
 }

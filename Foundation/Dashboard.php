@@ -13,8 +13,7 @@ class Dashboard
   private static function model()
   {
     if (self::$setModel === null) {
-      global $gstudio_kernel;
-      self::$setModel = new Model($gstudio_kernel['dashboard']['setTableName']);
+      self::$setModel = new Model(GlobalVariables::get("_GG/addon/dashboard/setTableName"));
     }
     return self::$setModel;
   }

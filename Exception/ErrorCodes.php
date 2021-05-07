@@ -20,8 +20,14 @@ $AuthCodes = [
 ];
 
 $RouteCodes = [
-  "ROUTE_DOES_NOT_EXIST" => [404, "Route_404001", Lang::value("route_does_not_exits")],
-  "METHOD_NOT_ALLOWED" => [400, "Route_400001", Lang::value("method_not_allowed")]
+  "ROUTE_DOES_NOT_EXIST" => [404, "Route_404001", Lang::value("kernel/route_does_not_exits")],
+  "METHOD_NOT_ALLOWED" => [400, "Route_400001", Lang::value("kernel/method_not_allowed")]
+];
+
+$MiddlwareCodes = [
+  "MIDDLEWARE_EXECUTION_ERROR" => [
+    500, "MIDDLEWARE_500001", Lang::value("kernel/middleware_execution_error")
+  ]
 ];
 
 $ViewCodes = [
@@ -30,4 +36,4 @@ $ViewCodes = [
   ]
 ];
 
-$ErrorCodes = \array_merge($AuthCodes, $RouteCodes, $SubmitCodes, $ViewCodes);
+$ErrorCodes = \array_merge($AuthCodes, $RouteCodes, $SubmitCodes, $ViewCodes, $MiddlwareCodes);

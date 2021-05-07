@@ -27,10 +27,16 @@ class Response
   }
   static function result($statusCode = 200, $code = 200000, $data = null, $message = "")
   {
-    global $app;
+    global $app, $_G;
     $routerType = $app->router['type'];
     if ($routerType === "view") {
-      \showmessage($message, $_SERVER['HTTP_REFERER'], [], [
+      $currentUrl = $_G['siteurl'];
+      $currentUrl = substr($currentUrl, 0, \strlen($currentUrl) - 1) . $_SERVER['REQUEST_URI'];
+      $redirectUrl = $_SERVER['HTTP_REFERER'];
+      if ($redirectUrl == $currentUrl || !$redirectUrl) {
+        $redirectUrl = $_G['siteurl'];
+      }
+      \showmessage($message, $redirectUrl, [], [
         "alert" => "error"
       ]);
       exit();
@@ -65,7 +71,7 @@ class Response
     foreach ($params as $key => $value) {
       global ${$key};
     }
-    include_once template($fileName, $gstudio_kernel['devingPluginId'], $fileDir);
+    include_once template($fileName, GlobalVariables::get("id"), $fileDir);
     foreach ($params as $key => $value) {
       unset($GLOBALS[$key]);
     }
@@ -74,7 +80,6 @@ class Response
   //! 准废弃
   static function view($HTMLFileName, $fileDir = "/", $params = null)
   {
-    global $gstudio_kernel;
     if (is_array($fileDir) || $params !== null) {
       $dir = "";
       if (\is_string($fileDir)) {
@@ -87,15 +92,14 @@ class Response
           $GLOBALS[$key] = $value;
         }
       }
-      $fileDir = $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$dir";
+      $fileDir = GlobalVariables::get("addon/fullRoot") . "/Views/$dir";
       return self::render($HTMLFileName, $fileDir, $params);
     }
-    return template($HTMLFileName, $gstudio_kernel['devingPluginId'], $GLOBALS[$gstudio_kernel['devingPluginId']]['pluginPath'] . "/Views/$fileDir");
+    return template($HTMLFileName, GlobalVariables::get("id"), GlobalVariables::get("addon/fullRoot") . "/Views/$fileDir");
   }
   //! 准废弃
   static function systemView($HTMLFileName, $fileDir = "/", $params = null)
   {
-    global $gstudio_kernel;
     if (is_array($fileDir) || $params !== null) {
       $dir = "";
       if (\is_string($fileDir)) {
@@ -108,10 +112,10 @@ class Response
           $GLOBALS[$key] = $value;
         }
       }
-      $fileDir = $gstudio_kernel['pluginPath'] . "/Views/$dir";
+      $fileDir = GlobalVariables::get("kernel/fullRoot") . "/Views/$dir";
       return self::render($HTMLFileName, $fileDir, $params);
     }
-    return template($HTMLFileName, $gstudio_kernel['devingPluginId'], $gstudio_kernel['pluginPath'] . "/Views/$fileDir");
+    return template($HTMLFileName, "gstudio_kernel", GlobalVariables::get("kernel/fullRoot") . "/Views/$fileDir");
   }
   static function addData($data)
   {

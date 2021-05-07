@@ -8,6 +8,7 @@ if (!defined("IN_DISCUZ")) {
 
 use DB;
 use gstudio_kernel\Foundation\Controller;
+use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Model;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Str;
@@ -24,9 +25,7 @@ class ContainerController extends Controller
   private $serializeDataTypes = ["select", "radio", "checkbox"];
   public function data(Request $request)
   {
-    global $gstudio_kernel;
-
-    $DASHBOARD = $gstudio_kernel['dashboard'];
+    $DASHBOARD = GlobalVariables::get("_GG/addon/dashboard");
     $SetModel = new Model($DASHBOARD['setTableName']);
     $mainId = \intval($request->params("mid"));
     $subId = \intval($request->params("sid"));

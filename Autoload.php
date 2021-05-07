@@ -7,6 +7,9 @@ if (!defined("IN_DISCUZ")) {
 function loader($className)
 {
   $className = str_replace("\\", "/", $className);
-  include_once(DISCUZ_ROOT . "/source/plugin/$className.php");
+  $filePath = DISCUZ_ROOT . "/source/plugin/$className.php";
+  if (file_exists($filePath)) {
+    include_once(DISCUZ_ROOT . "/source/plugin/$className.php");
+  }
 }
 spl_autoload_register("loader", false, true);

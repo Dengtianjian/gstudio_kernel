@@ -6,7 +6,9 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\Response;
+use gstudio_kernel\Foundation\View;
 
 class Excep
 {
@@ -14,13 +16,17 @@ class Excep
   {
     $traceString = \explode(\PHP_EOL, $traceString);
     if ($GLOBALS['app']->router === NULL || $GLOBALS['app']->router['type'] === "view") {
-      if ($GLOBALS[$GLOBALS['app']->pluginId]['mode'] === "production") {
-        include Response::systemView("error");
+      if (Config::get("mode") === "production") {
+        View::systemPage("error", [
+          "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
+        ]);
       } else {
-        include Response::systemView("error");
+        View::systemPage("error", [
+          "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
+        ]);
       }
     } else {
-      if ($GLOBALS[$GLOBALS['app']->pluginId]['mode'] === "production") {
+      if (Config::get("mode") === "production") {
         Response::error(500, 500000, "SERVER ERROR");
       } else {
         Response::error(500, 500000, "SERVER ERROR", [

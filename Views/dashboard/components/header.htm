@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      {if
-      $pageTitle}{$pageTitle}{else}{$GLOBALS['GLANG']['kernel']['backend']}{/if}
+      {if $pageTitle}{$pageTitle}{else}{$_GG['langs']['kernel']['backend']}{/if}
     </title>
     <script
       type="text/javascript"
@@ -13,35 +12,30 @@
     ></script>
     <link
       rel="stylesheet"
-      href="{$GLOBALS['gstudio_kernel']['dashboard']['viewPath']}/css/common.css"
+      href="{$_GG['kernel']['views']}/dashboard/css/common.css"
+    />
+    <link rel="stylesheet" href="{$_GG['kernel']['assets']}/css/c_ui.css" />
+    <link
+      rel="stylesheet"
+      href="{$_GG['kernel']['assets']}/css/c_components.css"
     />
     <link
       rel="stylesheet"
-      href="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/c_ui.css"
+      href="{$_GG['kernel']['assets']}/css/iconfont/shoutao.css"
     />
-    <link
-      rel="stylesheet"
-      href="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/c_components.css"
-    />
-    <link
-      rel="stylesheet"
-      href="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/css/iconfont/shoutao.css"
-    />
-    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/jquery.js"></script>
-    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/http.js"></script>
-    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/utils.js"></script>
-    <script src="{$GLOBALS['gstudio_kernel']['pluginPath']}/Assets/js/c_components.js"></script>
+    <script src="{$_GG['kernel']['assets']}/js/jquery.js"></script>
+    <script src="{$_GG['kernel']['assets']}/js/http.js"></script>
+    <script src="{$_GG['kernel']['assets']}/js/utils.js"></script>
+    <script src="{$_GG['kernel']['assets']}/js/c_components.js"></script>
     <script>
       var jQuery = $.noConflict();
-      CDZXHTTP.setRequestUrl(
-        "plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}"
-      );
+      CDZXHTTP.setRequestUrl("plugin.php?id={$_GG['id']}");
     </script>
   </head>
   <body>
     <header class="page-header">
       <div class="container page-header-contaner">
-        <div class="logo">{$GLOBALS['GLANG']['kernel']['logo_text']}</div>
+        <div class="logo">{$_GG['langs']['kernel']['logo_text']}</div>
         <nav
           class="page-nav {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount']>14}page-nav-more{/if}"
         >

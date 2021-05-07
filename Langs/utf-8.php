@@ -41,6 +41,7 @@ $langs = [
     "view_template_file_not_exist" => "视图模板文件不存在",
     "experimenttal_feature_not_turned_on" => "实验性功能，暂不开放",
     "function_under_development_not_yet_open" => "开发中的功能，暂不开放",
+    "middleware_execution_error" => "中间件执行错误"
   ]
 ];
 

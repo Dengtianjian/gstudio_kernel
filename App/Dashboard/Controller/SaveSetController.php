@@ -7,21 +7,17 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Controller;
+use gstudio_kernel\Foundation\GlobalVariables;
+use gstudio_kernel\Foundation\Lang;
 
 class SaveSetController extends Controller
 {
   protected $Admin = true;
+  protected $Formhash = true;
   public function data()
   {
-    global $_G, $gstudio_kernel, $GLANG;
-    $updateData = $_POST;
-    if ($updateData['DZHash'] !== \FORMHASH) {
-      \showmessage($GLANG["kernel"]['llleal_submission'], $_SERVER['HTTP_REFERER'], [], [
-        "alert" => "error"
-      ]);
-      exit;
-    }
-    unset($updateData['DZHash']);
+    global $_G, $app;
+    $updateData = $app->request->params("sets");
 
     include_once libfile("class/discuz_upload");
     $discuzUpload = new \discuz_upload();
@@ -33,7 +29,7 @@ class SaveSetController extends Controller
       }
     }
 
-    $updateSql = "UPDATE " . \DB::table($gstudio_kernel['dashboard']['setTableName']) . " SET `set_content` = CASE `set_id` ";
+    $updateSql = "UPDATE " . \DB::table(GlobalVariables::get("_GG/addon/dashboard/setTableName")) . " SET `set_content` = CASE `set_id` ";
     $updateIds = [];
     foreach ($updateData as $dataKey => $dataItem) {
       switch (gettype($dataItem)) {
@@ -54,6 +50,11 @@ class SaveSetController extends Controller
 
     \DB::query($updateSql);
 
-    showmessage($GLANG["kernel"]['saved_successfully'], $_SERVER['HTTP_REFERER'], [], ["alert" => "right"]);
+    showmessage(
+      Lang::value("kernel/saved_successfully"),
+      $_SERVER['HTTP_REFERER'],
+      [],
+      ["alert" => "right"]
+    );
   }
 }

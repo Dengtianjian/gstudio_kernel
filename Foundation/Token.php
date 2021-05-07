@@ -10,9 +10,8 @@ class Token
 {
   public static function generate()
   {
-    global $app;
     // $user = Auth::user();
-    // $pass = time() . $app->salt . "_" . $user['uid'];
+    // $pass = time() . Config::get("token/salt") . "_" . $user['uid'];
     // $hash = \password_hash($pass, PASSWORD_BCRYPT);
     // return $hash;
   }

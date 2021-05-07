@@ -1,11 +1,11 @@
-<!--{eval include $Response::systemView("components/header", "dashboard")}-->
+<!--{eval include $View::systemPage("components/header", "dashboard")}-->
   <main class="page-main container">
-    <!--{eval include $Response::systemView("components/aside", "dashboard")}-->
+    <!--{eval include $View::systemPage("components/aside", "dashboard")}-->
     <div class="page-content">
-      <!--{eval include $Response::systemView("components/thirdNav", "dashboard")}-->
+      <!--{eval include $View::systemPage("components/thirdNav", "dashboard")}-->
       <form
         method="POST"
-        action="plugin.php?id={$gstudio_kernel['devingPluginId']}&uri=_dashboard_save"
+        action="plugin.php?id={$_GG['id']}&uri=_dashboard_save"
         class="set-form"
         enctype="multipart/form-data"
       >
@@ -13,25 +13,25 @@
         <!--{loop $sets $setsItem}-->
         <section class="set-item set-item-{$setsItem['set_mark']} set-item-{$setsItem['set_id']} {if $setsItem['set_formtype']=='empty'}set-group{/if}">
           <div class="set-parent">
-            <div class="set-title">{$setsItem['set_name']}{if $GLOBALS[$GLOBALS['app']->pluginId]['mode']!="production"} {$setsItem['set_mark']}{/if}</div>
+            <div class="set-title">{$setsItem['set_name']}{if $_GG['mode']!="production"} {$setsItem['set_mark']}{/if}</div>
           <div class="set-content set-item-{$setsItem['set_mark']}-content">
             <!--{if $setsItem['set_formtype']=="text"}-->
-            <input type="text" name="{$setsItem['set_id']}" value="{$setsItem['set_content']}" />
+            <input type="text" name="sets[{$setsItem['set_id']}]" value="{$setsItem['set_content']}" />
             <!--{elseif $setsItem['set_formtype']=="textarea"}-->
-            <textarea type="text" name="{$setsItem['set_id']}" >{$setsItem['set_content']}</textarea>
+            <textarea type="text" name="sets[{$setsItem['set_id']}]" >{$setsItem['set_content']}</textarea>
             <!--{elseif $setsItem['set_formtype']=="color"}-->
             <div class="set-type-color">
-              <input type="color" value="{$setsItem['set_content']}" name="{$setsItem['set_id']}" onchange="changeColor('color','{$setsItem['set_mark']}',this.value)" ></input>
+              <input type="color" value="{$setsItem['set_content']}" name="sets[{$setsItem['set_id']}]" onchange="changeColor('color','{$setsItem['set_mark']}',this.value)" ></input>
               <input type="text" value="{$setsItem['set_content']}" placeholder="{$GLOBALS['GLANG']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setsItem['set_mark']}',this.value)" ></input>
             </div>
             <!--{elseif $setsItem['set_formtype']=="html"}-->
             <textarea onchange="changeHTML('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_view_content']}</textarea>
-            <input type="hidden" name="{$setsItem['set_id']}" mark="{$setsItem['set_mark']}" ></input>
+            <input type="hidden" name="sets[{$setsItem['set_id']}]" mark="{$setsItem['set_mark']}" ></input>
             <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
-            <input type="hidden" name="{$setsItem['set_id']}" mark="{$setsItem['set_mark']}" value="{$setsItem['set_content']}" />
+            <input type="hidden" name="sets[{$setsItem['set_id']}]" mark="{$setsItem['set_mark']}" value="{$setsItem['set_content']}" />
             <textarea onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_view_content']}</textarea>
             <!--{elseif $setsItem['set_formtype']=="select"}-->
-            <select name="{$setsItem['set_id']}" >
+            <select name="sets[{$setsItem['set_id']}]" >
               <option disabled selected >{$GLOBALS['GLANG']['kernel']['please_choose']}</option>
               <!--{loop $setsItem['set_value'] $setValueKey $setValueItem}-->
               <option value="{$setValueKey}" {if $setsItem['set_content']==$setValueKey}selected{/if}>{$setValueItem}</option>
@@ -40,7 +40,7 @@
             <!--{elseif $setsItem['set_formtype']=="image"}-->
             <input type="file" name="{$setsItem['set_id']}" onchange="changeImage('{$setsItem['set_mark']}',this.files)"/>
             <!--{elseif $setsItem['set_formtype']=="forum"}-->
-            <select class="set-content-forum" name="{$setsItem['set_id']}[]" multiple="multiple" >
+            <select class="set-content-forum" name="sets[{$setsItem['set_id']}][]" multiple="multiple" >
               <!--{loop $forums $forumsItem}-->
               <option disabled value="{$forumsItem['fid']}">{$forumsItem['name']}</option>
                 <!--{loop $forumsItem['sub'] $forumsSubItem}-->
@@ -49,16 +49,16 @@
               <!--{/loop}-->
             </select>
              <!--{elseif $setsItem['set_formtype']=="switch"}-->
-             <label><input type="radio" name="{$setsItem['set_id']}" value="1" {if $setsItem['set_content']==1}checked{/if} />{$GLOBALS['GLANG']['kernel']['turn_on']}</label>
-             <label><input type="radio" name="{$setsItem['set_id']}" value="0" {if $setsItem['set_content']==0}checked{/if} />{$GLOBALS['GLANG']['kernel']['close']}</label>
+             <label><input type="radio" name="sets[{$setsItem['set_id']}]" value="1" {if $setsItem['set_content']==1}checked{/if} />{$GLOBALS['GLANG']['kernel']['turn_on']}</label>
+             <label><input type="radio" name="sets[{$setsItem['set_id']}]" value="0" {if $setsItem['set_content']==0}checked{/if} />{$GLOBALS['GLANG']['kernel']['close']}</label>
               <!--{elseif $setsItem['set_formtype']=="group"}-->
-              <select name="{$setsItem['set_id']}" >
+              <select name="sets[{$setsItem['set_id']}]" >
                 {loop $userGroup $groupItem}
                 <option value="{$groupItem['groupid']}" {if $groupItem['groupid']==$setsItem['set_content']}selected{/if}>{$groupItem['grouptitle']}</option>
                 {/loop}
               </select>
               <!--{elseif $setsItem['set_formtype']=="groups"}-->
-              <select name="{$setsItem['set_id']}[]" multiple >
+              <select name="sets[{$setsItem['set_id']}][]" multiple >
                 {loop $userGroup $groupItem}
                 <option value="{$groupItem['groupid']}" {if in_array($groupItem['groupid'],$setsItem['set_content'])}selected{/if}>{$groupItem['grouptitle']}</option>
                 {/loop}
@@ -83,25 +83,25 @@
           <div class="set-subs">
             <!--{loop $setsItem['set_sub_sets'] $setMergeItem}-->
             <section class="set-item set-item-{$setMergeItem['set_mark']} set-item-{$setMergeItem['set_id']}">
-              <div class="set-title">{$setMergeItem['set_name']} {if $GLOBALS[$GLOBALS['app']->pluginId]['mode']!="production"} {$setMergeItem['set_mark']}{/if}</div>
+              <div class="set-title">{$setMergeItem['set_name']} {if $_GG['mode']!="production"} {$setMergeItem['set_mark']}{/if}</div>
               <div class="set-content set-item-{$setMergeItem['set_mark']}-content">
                 <!--{if $setMergeItem['set_formtype']=="text"}-->
-                <input type="text" name="{$setMergeItem['set_id']}" value="{$setMergeItem['set_content']}" />
+                <input type="text" name="sets[{$setMergeItem['set_id']}]" value="{$setMergeItem['set_content']}" />
                 <!--{elseif $setMergeItem['set_formtype']=="textarea"}-->
-                <textarea type="text" name="{$setMergeItem['set_id']}" >{$setMergeItem['set_content']}</textarea>
+                <textarea type="text" name="sets[{$setMergeItem['set_id']}]" >{$setMergeItem['set_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="color"}-->
                 <div class="set-type-color">
-                  <input type="color" value="{$setMergeItem['set_content']}" name="{$setMergeItem['set_id']}" onchange="changeColor('color','{$setMergeItem['set_mark']}',this.value)" ></input>
+                  <input type="color" value="{$setMergeItem['set_content']}" name="sets[{$setMergeItem['set_id']}]" onchange="changeColor('color','{$setMergeItem['set_mark']}',this.value)" ></input>
                   <input type="text" value="{$setMergeItem['set_content']}" placeholder="{$GLOBALS['GLANG']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setMergeItem['set_mark']}',this.value)" ></input>
                 </div>
                 <!--{elseif $setMergeItem['set_formtype']=="html"}-->
-                <input type="hidden" name="{$setMergeItem['set_id']}" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
+                <input type="hidden" name="sets[{$setMergeItem['set_id']}]" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
                 <textarea onchange="changeHTML('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_view_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="bbcode"}-->
-                <input type="hidden" name="{$setMergeItem['set_id']}" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
+                <input type="hidden" name="sets[{$setMergeItem['set_id']}]" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
                 <textarea onchange="changeBBCode('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_view_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="select"}-->
-                <select name="{$setMergeItem['set_id']}" >
+                <select name="sets[{$setMergeItem['set_id']}]" >
                   <option disabled selected >{$GLOBALS['GLANG']['kernel']['please_choose']}</option>
                   <!--{loop $setMergeItem['set_value'] $setValueKey $setValueItem}-->
                   <option value="{$setValueKey}" {if $setMergeItem['set_content']==$setValueKey}selected{/if}>{$setValueItem}</option>
@@ -110,7 +110,7 @@
                 <!--{elseif $setMergeItem['set_formtype']=="image"}-->
                 <input type="file" name="{$setMergeItem['set_id']}" onchange="changeImage('{$setMergeItem['set_mark']}',this.files)"/>
                 <!--{elseif $setMergeItem['set_formtype']=="forum"}-->
-                <select class="set-content-forum" name="{$setMergeItem['set_id']}[]" multiple="multiple" >
+                <select class="set-content-forum" name="sets[{$setMergeItem['set_id']}][]" multiple="multiple" >
                   <!--{loop $forums $forumsItem}-->
                   <option disabled value="{$forumsItem['fid']}">{$forumsItem['name']}</option>
                     <!--{loop $forumsItem['sub'] $forumsSubItem}-->
@@ -127,7 +127,7 @@
                 <!--{if $setMergeItem['set_formtype']=='image'}-->
                   <img
                   class="set-preview-img"
-                  {if $setsItem['set_content']}src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"{/if}
+                  {if $setMergeItem['set_content']}src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"{/if}
                 />
                 <p><button type="button" onclick="cleanSetImage({$setMergeItem['set_id']})">{$GLOBALS['GLANG']['kernel']['clean_set_image']}</button></p>
 
@@ -210,4 +210,4 @@
   </script>
   <script type="text/javascript" src="/{$_G['setting']['jspath']}bbcode.js?{VERHASH}"></script>
 
-<!--{eval include $Response::systemView("components/footer", "dashboard")}-->
+<!--{eval include $View::systemPage("components/footer", "dashboard")}-->

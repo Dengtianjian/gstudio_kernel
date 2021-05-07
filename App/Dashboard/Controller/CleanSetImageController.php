@@ -7,6 +7,7 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Controller;
+use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Model;
 use gstudio_kernel\Foundation\Request;
 
@@ -16,7 +17,7 @@ class CleanSetImageController extends Controller
   public function data(Request $request)
   {
     $setId = $request->params("set_id");
-    $setModel = new Model($GLOBALS['gstudio_kernel']['dashboard']['setTableName']);
+    $setModel = new Model(GlobalVariables::get("_GG/addon/dashboard/setTableName"));
     $deletedResult = $setModel->where([
       "set_id" => $setId
     ])->update([

@@ -6,6 +6,7 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -17,8 +18,7 @@ class GetGSetController extends Controller
   ];
   public function data(Request $request)
   {
-    global $app;
-    $this->whiteListOfKeys = array_merge($this->whiteListOfKeys, $app->BigGKeyWhiteList);
+    $this->whiteListOfKeys = array_merge($this->whiteListOfKeys, Config::get("DZXGlobalVariablesWhiteList"));
     $keys = $request->params("key");
     if ($keys === null) {
       Response::success([]);

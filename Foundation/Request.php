@@ -123,4 +123,8 @@ class Request
   {
     return \addslashes($_GET['uri']);
   }
+  public function remove($key)
+  {
+    unset($this->paramData[$key]);
+  }
 }

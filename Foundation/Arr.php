@@ -118,4 +118,28 @@ class Arr
 
     return $merged;
   }
+  /**
+   * 分隔字符串转换成多级数组
+   *
+   * @param string $string 字符串
+   * @param string $separator 用于分割字符串的字符。默认是 /
+   * @return void
+   */
+  static function stringToMultiLevelArray($string, $separator = "/")
+  {
+    $strings = explode($separator, $string);
+    $result = [];
+    $previous = NULL;
+    foreach ($strings as $stringItem) {
+      if (\is_array($previous)) {
+        $previous[$stringItem] = [];
+        $previous = &$previous[$stringItem];
+      } else {
+        $result[$stringItem] = [];
+        $previous = &$result[$stringItem];
+      }
+    }
+    unset($previous);
+    return $result;
+  }
 }

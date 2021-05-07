@@ -36,12 +36,12 @@ class Auth
     include_once libfile("function/member");
     $user = \getuserbyuid($tokenInfo['token_uid']);
     \setloginstatus($user, 0);
-    $less = 0.2 * $app->tokenValidPeriod; //* 计算token快过期时间 就刷新token值 例如：token30天有效期 取30的%0.2
+    $less = 0.2 * Config::get("token/period"); //* 计算token快过期时间 就刷新token值 例如：token30天有效期 取30的%0.2
     $less = $less * (60 * 60 * 24);
     if ($tokenInfo['token_expire'] - time()  < $less) {
       $token = Token::generate();
       $now = time();
-      $expireTime = $now + (60 * 60 * 24 * $app->tokenValidPeriod);
+      $expireTime = $now + (60 * 60 * 24 * Config::get("token/period"));
       $TM->insert([
         "token_uid" => $user['uid'],
         "token_content" => $token,

@@ -7,6 +7,7 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Arr;
+use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
 use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Foundation\Model;
@@ -15,8 +16,7 @@ class Attachment
 {
   public static function save($files, $saveDir = "")
   {
-    global $app;
-    $savePath = $app->attachmentPath . "/$saveDir";
+    $savePath = Config::get("attachmentPath") . "/$saveDir";
     return File::upload($files, $savePath);
   }
   public static function upload($files, $tableName = "", $tid = 0, $pid = 0, $price = 0, $remote = 0, $saveDir = "", $extid = 0, $forcename = "")
@@ -51,7 +51,7 @@ class Attachment
       } else {
         $upload->save(true);
         $saveFileName = explode("/", $upload->attach['attachment']);
-        $path = $app->attachmentPath . "/$saveDir/" . $upload->attach['attachment'];
+        $path = Config::get("attachmentPath") . "/$saveDir/" . $upload->attach['attachment'];
         $aid = getattachnewaid($uid);
         $width = 0;
         $fileInfo = [];
