@@ -2,17 +2,17 @@
 
 namespace gstudio_kernel\Foundation;
 
-if (!defined("IN_DISCUZ") || !defined('IN_ADMINCP')) {
+if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
 /** Install Upgrade Uninstall */
 class Iuu
 {
-  private $pluginId = null;
-  private $fromVersion = null;
-  private $latestVersion = null;
-  private $pluginPath = null;
+  protected $pluginId = null;
+  protected $fromVersion = null;
+  protected $latestVersion = null;
+  protected $pluginPath = null;
   public function __construct($pluginId, $fromVersion)
   {
     $this->pluginId = $pluginId;
@@ -25,8 +25,8 @@ class Iuu
     $installFile = \DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install/install.php";
     if (\file_exists($installFile)) {
       include_once($installFile);
-      $namespace = "\\" . $this->pluginId . "\Iuu\Install\Install";
-      $installInstance = new $namespace();
+      $className = "\\" . $this->pluginId . "\Iuu\Install\Install";
+      $installInstance = new $className();
       $installInstance->handle();
     }
     return $this;
@@ -42,7 +42,7 @@ class Iuu
       }
     }
     if (!\file_exists($sqlPath)) {
-      $sqlPath .= "/install.sql";
+      $sqlPath = DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install/install.sql";
     }
     if (!\file_exists($sqlPath)) {
       return $this;
