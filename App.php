@@ -17,9 +17,6 @@ function errorHandler()
 
 // error_reporting(\E_ALL ^ \E_NOTICE);
 // \set_error_handler("gstudio_kernel\\errorHandler", 0);
-
-use Exception;
-use gstudio_kernel\App\Api\GetGSetController;
 use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -27,7 +24,6 @@ use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Exception\ErrorCode;
 use gstudio_kernel\Foundation\Auth;
 use gstudio_kernel\Foundation\Lang;
-use gstudio_kernel\App\Main as Main;
 use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\GlobalVariables;
 
@@ -113,6 +109,7 @@ class App
     }
     $GlobalVariables['request']['query'] = $query;
 
+    include_once(GlobalVariables::getGG("kernel/fullRoot") . "/Routes.php"); //* 载入kernel用到的路由
     include_once($this->pluginPath . "/routes.php"); //* 载入路由
     GlobalVariables::set([
       "_GG" => $GlobalVariables
@@ -124,13 +121,10 @@ class App
   }
   function init()
   {
-    Router::any("_gset", GetGSetController::class);
     $this->setMiddlware(Middleware\GlobalSetsMiddleware::class);
     if (Config::get("dashboard/use") === true) {
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
     }
-
-    Router::view("_download", Main\DownloadAttachmentView::class);
 
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
