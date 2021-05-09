@@ -9,6 +9,7 @@ if (!defined("IN_DISCUZ")) {
 // error_reporting(E_ALL ^ E_NOTICE);
 
 use Exception;
+use gstudio_kernel\App\Api as Api;
 use gstudio_kernel\App\Api\GetGSetController;
 use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
@@ -108,6 +109,7 @@ class App
     }
 
     Router::view("_download", Main\DownloadAttachmentView::class);
+    Router::view("_baidu_oauth", Api\Baidu\OAuthController::class);
 
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
