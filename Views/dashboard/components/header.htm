@@ -47,6 +47,12 @@
             {$nav['nav_name']}
           </a>
           <!--{/loop}-->
+          <a
+            href="plugin.php?id={$_GG['id']}&uri=_extensions"
+            class="page-nav-link {if $_GET['uri']=='_extensions'}page-nav-link-active{/if}"
+          >
+            扩展
+          </a>
         </nav>
         <div class="quick-nav">
           <div class="quick-nav-link" onclick="showAddonPopup()">
