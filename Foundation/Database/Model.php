@@ -32,6 +32,11 @@ class Model
     }
     return $this;
   }
+  public static function ins()
+  {
+    $callClass = \get_called_class();
+    return new $callClass();
+  }
   private function generateSql()
   {
     $sql = "";
