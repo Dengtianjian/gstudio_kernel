@@ -149,6 +149,28 @@ class View
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
   /**
+   * 渲染kernel后台模板
+   *
+   * @param string|array $viewFile 渲染文件名称 可/分割目录
+   * @param string|array $viewDirOfViewData 渲染的目录或者渲染的数据
+   * @param array $viewData 渲染的数据
+   * @return void
+   */
+  static function systemDashboard($viewFile, $viewDirOfViewData = "dashboard", $viewData = [])
+  {
+    if (is_array($viewDirOfViewData)) {
+      $viewData = $viewDirOfViewData;
+      $viewDirOfViewData = "dashboard";
+    }
+    $realTemplateDir = $viewDirOfViewData;
+    $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
+    return self::render("systemContainer", $viewDirOfViewData, [
+      "_fileName" => $viewFile,
+      "_templateDir" => $realTemplateDir,
+      "_viewData" => $viewData
+    ]);
+  }
+  /**
    * 添加渲染的数据到渲染的模板中
    *
    * @param array $data 关联索引的数组
