@@ -13,6 +13,14 @@ class ExtensionIuu extends Iuu
   private $extensionsPath = NULL;
   private $extensionId = NULL;
   private $namespace = NULL;
+  /**
+   * 构建函数
+   *
+   * @param string $pluginId 应用ID
+   * @param string $extensionId 扩展ID
+   * @param string $fromVersion 本地版本
+   * @param string $extensionsPath 扩展路径
+   */
   public function __construct($pluginId, $extensionId, $fromVersion, $extensionsPath = NULL)
   {
     parent::__construct($pluginId, $fromVersion);
@@ -25,6 +33,10 @@ class ExtensionIuu extends Iuu
     }
     $this->extensionId = $extensionId;
   }
+  /**
+   * 安装扩展
+   *
+   */
   public function install()
   {
     $installFile = $this->extensionsPath . "/Iuu/Install/Install.php";
@@ -35,6 +47,10 @@ class ExtensionIuu extends Iuu
     }
     return $this;
   }
+  /**
+   * 运行安装sql
+   *
+   */
   public function runInstallSql()
   {
     $multipleEncode = Config::get("multipleEncode", $this->pluginId);
@@ -57,6 +73,10 @@ class ExtensionIuu extends Iuu
 
     return $this;
   }
+  /**
+   * 升级扩展
+   *
+   */
   public function upgrade()
   {
     $upgradeFilesRootPath = $this->extensionsPath . "/Iuu/Upgrade/Files";
@@ -71,6 +91,10 @@ class ExtensionIuu extends Iuu
     });
     return $this;
   }
+  /**
+   * 运行升级文件
+   *
+   */
   public function runUpgradeSql()
   {
     $sqlFileDirPath = $this->extensionsPath . "/Iuu/Upgrade";
@@ -94,16 +118,31 @@ class ExtensionIuu extends Iuu
     });
     return $this;
   }
+  /**
+   * 清除扩展IUU目录下的所有文件和文件夹，以及IUU文件夹
+   *
+   * @return boolean
+   */
   public function clean()
   {
     $this->cleanInstall();
     $this->cleanUpgrade();
     return File::deleteDirectory($this->extensionsPath . "/Iuu");
   }
+  /**
+   * 清除扩展IUU下的Install文件和文件夹，以及Install文件夹
+   *
+   * @return boolean
+   */
   public function cleanInstall()
   {
     return File::deleteDirectory($this->extensionsPath . "/Iuu/Install");
   }
+  /**
+   * 清除扩展IUU下的Upgrade文件夹，以及Upgrade文件夹
+   *
+   * @return boolean
+   */
   public function cleanUpgrade()
   {
     return File::deleteDirectory($this->extensionsPath . "/Iuu/Upgrade");
