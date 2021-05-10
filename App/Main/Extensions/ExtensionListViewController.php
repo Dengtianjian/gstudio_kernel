@@ -16,9 +16,6 @@ class ExtensionListViewController extends Controller
   protected $Admin = true;
   public function data(Request $request)
   {
-    $Ins = new ExtensionIuu("gstudio_20210303", "LinkDetails", "0.1.0");
-    $Ins->runInstallSql();
-    return;
     $extensions = Extensions::scanDir("source/plugin/gstudio_20210303");
     $extensionIds = array_keys($extensions);
     $EM = new ExtensionsModel();
