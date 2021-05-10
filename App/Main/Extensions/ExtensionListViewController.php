@@ -33,7 +33,7 @@ class ExtensionListViewController extends Controller
           "created_time" => $now,
           "install_time" => 0,
           "upgrade_time" => 0,
-          "local_version" => $extension['version'],
+          "local_version" => "",
           "plugin_id" => $pluginId,
           "extension_id" => $extension['id'],
           "enabled" => 0,
