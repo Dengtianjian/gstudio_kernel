@@ -110,13 +110,14 @@ class Model
   }
   function where($params, $value = "AND", $operator = null, $glue = null)
   {
-    if (\preg_match_all("/=|<|>|BETWEEN|IN|LIKE|NULL|REGEXP/i", $params)) {
+    if (\preg_match_all("/[^\w+][=|<|>|BETWEEN|IN|LIKE|NULL|REGEXP][^\w+]/i", $params)) {
       array_push($this->conditions, $params);
     } else if (is_array($params)) {
       array_push($this->conditions, $params);
     } else {
       array_push($this->conditions, \func_get_args());
     }
+
     $this->querySql = SQL::conditions($this->conditions);
 
     return $this;
