@@ -13,12 +13,14 @@ class Iuu
   protected $fromVersion = null;
   protected $latestVersion = null;
   protected $pluginPath = null;
+  protected $Charset = null;
   public function __construct($pluginId, $fromVersion)
   {
     $this->pluginId = $pluginId;
     $this->pluginPath = DISCUZ_ROOT . "/source/plugin/$pluginId";
     $this->fromVersion = $fromVersion;
     $this->latestVersion = \getglobal("setting/plugins/version/$pluginId");
+    $this->Charset = \strtoupper(\CHARSET);
   }
   public function install()
   {
@@ -36,9 +38,9 @@ class Iuu
     $multipleEncode = Config::get("multipleEncode", $this->pluginId);
     $sqlPath = DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install";
     if ($multipleEncode) {
-      $sqlPath .= "/" . \CHARSET . "/install.sql";
+      $sqlPath .= "/" . $this->Charset . "/install.sql";
       if (!\file_exists($sqlPath)) {
-        $sqlPath .= "/" . \CHARSET . ".sql";
+        $sqlPath .= "/" . $this->Charset . ".sql";
       }
     }
     if (!\file_exists($sqlPath)) {
@@ -52,7 +54,7 @@ class Iuu
 
     return $this;
   }
-  private function scanDirAndVersionCompare($upgradeRealtedFileDir, $callBack)
+  protected function scanDirAndVersionCompare($upgradeRealtedFileDir, $callBack)
   {
     if (!\is_dir($upgradeRealtedFileDir)) {
       return true;
@@ -91,7 +93,7 @@ class Iuu
     $sqlFileDirPath = $this->pluginPath . "/Iuu/Upgrade";
     $multipleEncode = Config::get("multipleEncode", $this->pluginId);
     if ($multipleEncode) {
-      $sqlFileDirPath .= "/" . \CHARSET;
+      $sqlFileDirPath .= "/" . $this->Charset;
     } else {
       $sqlFileDirPath .= "/SQL";
     }
