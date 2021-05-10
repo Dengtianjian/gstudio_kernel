@@ -7,16 +7,14 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Request;
-use gstudio_kernel\Foundation\View;
 use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Extension\ExtensionIuu;
 use gstudio_kernel\Foundation\Extension\Extensions;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Model\ExtensionsModel;
 
-class InstallExtensionController extends Controller
+class UpgradeExtensionController extends Controller
 {
-  protected $Admin = true;
   public function data(Request $request)
   {
     $extensionId = \addslashes($request->params("extension_id"));
@@ -26,16 +24,15 @@ class InstallExtensionController extends Controller
       Response::error(404, 404001, "扩展不存在");
     }
     $extension = $extension[0];
-    if ($extension['installed'] && $extension['install_time']) {
-      Response::error(400, 400001, "扩展已安装，请勿重复安装");
+    $extensionConfig = Extensions::config($extension['extension_id']);
+    if (\version_compare($extension['local_version'], $extensionConfig['version']) !== -1) {
+      Response::error(400, 400001, "扩展已是最新版，无需升级");
     }
-    $extensionConfig = Extensions::config($extension['extension_id'], $extension['path']);
 
     $ext = new ExtensionIuu($extension['plugin_id'], $extension['extension_id'], NULL);
-    $ext->install()->runInstallSql()->cleanInstall();
+    $ext->upgrade()->runUpgradeSql()->cleanUpgrade();
     $EM->where("extension_id", $extension['extension_id'])->where("plugin_id", $extension['plugin_id'])->update([
-      "install_time" => time(),
-      "installed" => 1,
+      "upgrade_time" => time(),
       "local_version" => $extensionConfig['version']
     ])->save();
 

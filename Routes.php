@@ -12,3 +12,4 @@ Router::view("_download", Main\DownloadAttachmentView::class);
 //* 扩展相关
 Router::view("_extensions", Main\Extensions\ExtensionListViewController::class);
 Router::post("_extension/install", Main\Extensions\InstallExtensionController::class);
+Router::post("_extension/upgrade", Main\Extensions\UpgradeExtensionController::class);

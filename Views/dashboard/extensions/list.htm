@@ -112,7 +112,13 @@
     ></c-image>
     <div class="extension-info">
       <div>
-        <div class="extension-name ellipsis1">{$extensionItem['name']}</div>
+        <a
+          class="extension-name ellipsis1"
+          href="{$extensionItem['link']}"
+          target="_blank"
+          rel="noopener noreferrer"
+          >{$extensionItem['name']}</a
+        >
         <ul class="extension-params">
           <li class="extension-param-item">
             <span>版本：</span>{$extensionItem['version']}
@@ -129,18 +135,18 @@
       <div class="extension-summary ellipsis1">{$extensionItem['summary']}</div>
     </div>
     <div class="extension-operations">
-      <a
-        href="{$extensionItem['link']}"
-        target="_blank"
-        rel="noopener noreferrer"
-        ><button class="c-button" size="mini">查看</button></a
-      >
       {if $extensionItem['installed']} {if $extensionItem['enabled']}
       <button class="c-button" size="mini">关闭</button>
       {else}
       <button class="c-button" size="mini" primary>开启</button>
       {/if}
-      <button class="c-button" size="mini">更新</button>
+      <button
+        class="c-button"
+        size="mini"
+        onclick="upgradeExtension(`{$extensionItem['extension_id']}`)"
+      >
+        更新
+      </button>
       <button class="c-button" size="mini">卸载</button>
       {else}
       <button
