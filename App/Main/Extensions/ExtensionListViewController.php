@@ -42,7 +42,8 @@ class ExtensionListViewController extends Controller
           "enabled" => 0,
           "installed" => 0,
           "path" => $extension['root'],
-          "parent_id" => $extension['parent'] ? $extension['parent'] : 0
+          "parent_id" => $extension['parent'] ? $extension['parent'] : 0,
+          "name" => $extension['name']
         ];
         array_push($insertNewData, $insertData);
         $extension = \array_merge($extension, $insertData);

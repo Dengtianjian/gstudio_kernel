@@ -10,6 +10,7 @@ CREATE TABLE `pre_gstudio_kernel_extensions` (
   `installed` tinyint(4) DEFAULT NULL COMMENT '已安装',
   `path` varchar(535) DEFAULT NULL COMMENT '扩展根路径',
   `parent_id` varchar(60) DEFAULT NULL COMMENT '父扩展ID',
+  `name` varchar(60) DEFAULT NULL COMMENT '扩展名称',
   PRIMARY KEY (`id`),
   UNIQUE KEY `extension_id` (`extension_id`),
   KEY `parent_id` (`parent_id`)
