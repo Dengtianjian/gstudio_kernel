@@ -25,7 +25,6 @@ use gstudio_kernel\Exception\ErrorCode;
 use gstudio_kernel\Foundation\Auth;
 use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Config as Config;
-use gstudio_kernel\Foundation\Extension\Extensions;
 use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Model\ExtensionsModel;
 
