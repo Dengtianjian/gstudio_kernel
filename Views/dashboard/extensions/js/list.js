@@ -48,3 +48,21 @@ function upgradeExtension(extensionId) {
       CMessage(err.message);
     });
 }
+
+function uninstallExtension(extensionId) {
+  updateStateEl(extensionId, "卸载中，请稍后", "block");
+  CDZXHTTP.post("_extension/uninstall", {
+    extension_id: extensionId,
+  })
+    .then((res) => {
+      CMessage("卸载完成");
+      updateStateEl(extensionId, "更新数据中，请稍后", "block");
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    })
+    .catch((err) => {
+      updateStateEl(extensionId, "", "none");
+      CMessage(err.message);
+    });
+}
