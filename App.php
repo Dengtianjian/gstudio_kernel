@@ -25,7 +25,9 @@ use gstudio_kernel\Exception\ErrorCode;
 use gstudio_kernel\Foundation\Auth;
 use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Config as Config;
+use gstudio_kernel\Foundation\Extension\Extensions;
 use gstudio_kernel\Foundation\GlobalVariables;
+use gstudio_kernel\Model\ExtensionsModel;
 
 class App
 {
@@ -129,6 +131,11 @@ class App
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
     $this->request = new Request();
+
+    //* 载入扩展
+    if (Config::get("extensions")) {
+      $this->loadExtensions();
+    }
 
     $executeMiddlewareResult = $this->executiveMiddleware();
 
@@ -243,7 +250,6 @@ class App
         }
       }
     }
-    unset($GLOBALS['ISNEXT']);
 
     return $executeCount === $middlewareCount;
   }
@@ -267,5 +273,22 @@ class App
       }
     }
     $GLOBALS['GLANG'] = Lang::all();
+  }
+  public function loadExtensions()
+  {
+    $EM = new ExtensionsModel();
+    $enabledExtensions = $EM->where("enabled", 1)->get();
+    foreach ($enabledExtensions as $extensionItem) {
+      $mainFilepath = DISCUZ_ROOT . $extensionItem['path'] . "/Main.php";
+      if (!\file_exists($mainFilepath)) {
+        Response::error(500, 500, $extensionItem['name'] . " 扩展文件已损坏，请重新安装");
+      }
+      $namespace = "\\" . $extensionItem['plugin_id'] . "\\Extensions\\" . $extensionItem['extension_id'] . "\\Main";
+      if (!\class_exists($namespace)) {
+        Response::error(500, 500, $extensionItem['name'] . " 扩展文件已损坏，请重新安装");
+      }
+      $MainInstance = new $namespace();
+      $MainInstance->handle();
+    }
   }
 }
