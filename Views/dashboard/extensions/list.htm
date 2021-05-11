@@ -100,6 +100,7 @@
   ❗
   本页采用较新的技术开发，请尽量使用Chrome浏览器访问，并且保持浏览器更新到最新版本。如扩展图标不显示请点击页面右侧悬浮图标😀联系客服，🙌谢谢。
 </div>
+{if $extensionCount>0}
 <ul class="extension-list set-panel">
   {loop $extensions $extensionItem}
   <li class="extension-item" data-extension="{$extensionItem['extension_id']}">
@@ -136,9 +137,22 @@
     </div>
     <div class="extension-operations">
       {if $extensionItem['installed']} {if $extensionItem['enabled']}
-      <button class="c-button" size="mini">关闭</button>
+      <button
+        class="c-button"
+        size="mini"
+        onclick="openOrCloseExtension(`{$extensionItem['extension_id']}`,`{$extensionItem['enabled']}`)"
+      >
+        关闭
+      </button>
       {else}
-      <button class="c-button" size="mini" primary>开启</button>
+      <button
+        class="c-button"
+        size="mini"
+        primary
+        onclick="openOrCloseExtension(`{$extensionItem['extension_id']}`,`{$extensionItem['enabled']}`)"
+      >
+        开启
+      </button>
       {/if}
       <button
         class="c-button"
@@ -169,3 +183,13 @@
   </li>
   {/loop}
 </ul>
+{else}
+<div class="sets-empty c-empty">
+  <img
+    src="source/plugin/gstudio_kernel/Assets/images/default/empty.png"
+    class="c-empty_image"
+    width="380"
+  />
+  <div class="c-empty-description">还未安装任何扩展哦~</div>
+</div>
+{/if}

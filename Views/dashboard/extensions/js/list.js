@@ -66,3 +66,26 @@ function uninstallExtension(extensionId) {
       CMessage(err.message);
     });
 }
+
+function openOrCloseExtension(extensionId, enabled) {
+  updateStateEl(
+    extensionId,
+    enabled == 1 ? "关闭中，请稍后" : "开启中，请稍后",
+    "block"
+  );
+  CDZXHTTP.post("_extension/openClose", {
+    extension_id: extensionId,
+    enabled: enabled == 1 ? 0 : 1,
+  })
+    .then((res) => {
+      CMessage(enabled == 1 ? "已关闭" : "已开启");
+      updateStateEl(extensionId, "更新数据中，请稍后", "block");
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    })
+    .catch((err) => {
+      updateStateEl(extensionId, "", "none");
+      CMessage(err.message);
+    });
+}
