@@ -14,6 +14,9 @@ use gstudio_kernel\Foundation\Extension\Extensions;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Model\ExtensionsModel;
 
+/**
+ * 安装扩展API
+ */
 class InstallExtensionController extends Controller
 {
   protected $Admin = true;

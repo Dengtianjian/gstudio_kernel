@@ -11,8 +11,12 @@ use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Model\ExtensionsModel;
 
+/**
+ * 卸载扩展API
+ */
 class UninstallExtensionController extends Controller
 {
+  protected $Admin = 1;
   public function data(Request $request)
   {
     $extensionId = \addslashes($request->params("extension_id"));

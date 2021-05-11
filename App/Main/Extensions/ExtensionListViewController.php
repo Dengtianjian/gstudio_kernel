@@ -11,6 +11,9 @@ use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\View;
 use gstudio_kernel\Model\ExtensionsModel;
 
+/**
+ * 扩展列表页
+ */
 class ExtensionListViewController extends Controller
 {
   protected $Admin = true;
@@ -51,7 +54,8 @@ class ExtensionListViewController extends Controller
 
     View::title("扩展列表");
     View::systemDashboard("extensions/list", [
-      "extensions" => $extensions
+      "extensions" => $extensions,
+      "extensionCount" => count($extensions)
     ]);
   }
 }

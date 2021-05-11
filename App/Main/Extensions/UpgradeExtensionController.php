@@ -13,8 +13,12 @@ use gstudio_kernel\Foundation\Extension\Extensions;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Model\ExtensionsModel;
 
+/**
+ * 更新升级扩展API
+ */
 class UpgradeExtensionController extends Controller
 {
+  protected $Admin = 1;
   public function data(Request $request)
   {
     $extensionId = \addslashes($request->params("extension_id"));
