@@ -29,6 +29,9 @@ class Response
   {
     global $app, $_G;
     $routerType = $app->router['type'];
+    if (!$routerType) {
+      $routerType = "view";
+    }
     if ($routerType === "view") {
       $currentUrl = $_G['siteurl'];
       $currentUrl = substr($currentUrl, 0, \strlen($currentUrl) - 1) . $_SERVER['REQUEST_URI'];
