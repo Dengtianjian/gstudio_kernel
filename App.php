@@ -274,6 +274,12 @@ class App
     }
     $GLOBALS['GLANG'] = Lang::all();
   }
+  /**
+   * 载入扩展
+   * 获取已开启的扩展，然后访问扩展Main入口文件，执行handle方法
+   *
+   * @return void
+   */
   public function loadExtensions()
   {
     $EM = new ExtensionsModel();
