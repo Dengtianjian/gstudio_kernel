@@ -36,4 +36,10 @@ $ViewCodes = [
   ]
 ];
 
+$ServerCodes = [
+  "SERVER_ERROR" => [
+    500, "SERVER_ERROR_500001", Lang::value("kernel/serverError")
+  ]
+];
+
 $ErrorCodes = \array_merge($AuthCodes, $RouteCodes, $SubmitCodes, $ViewCodes, $MiddlwareCodes);
