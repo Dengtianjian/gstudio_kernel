@@ -29,6 +29,7 @@
     <script src="{$_GG['kernel']['assets']}/js/c_components.js"></script>
     <script>
       var jQuery = $.noConflict();
+      const CJQuery = $.noConflict();
       CDZXHTTP.setRequestUrl("plugin.php?id={$_GG['id']}");
     </script>
   </head>
@@ -37,24 +38,43 @@
       <div class="container page-header-contaner">
         <div class="logo">{$_GG['langs']['kernel']['logo_text']}</div>
         <nav
-          class="page-nav {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount']>14}page-nav-more{/if}"
+          class="
+            page-nav
+            {if
+            $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount']>14}page-nav-more{/if}
+          "
         >
           <!--{loop $GLOBALS['gstudio_kernel']['dashboard']['mainNavs'] $nav}-->
           <a
             href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
-            class="page-nav-link {if $GLOBALS['gstudio_kernel']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}"
+            class="
+              page-nav-link
+              {if
+              $GLOBALS['gstudio_kernel']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}
+            "
           >
             {$nav['nav_name']}
           </a>
           <!--{/loop}-->
           <a
             href="plugin.php?id={$_GG['id']}&uri=_extensions"
-            class="page-nav-link {if $_GET['uri']=='_extensions'}page-nav-link-active{/if}"
+            class="
+              page-nav-link
+              {if
+              $_GET['uri']=='_extensions'}page-nav-link-active{/if}
+            "
           >
-            扩展
+            {$_GG['langs']['kernel']['extension']}
           </a>
         </nav>
         <div class="quick-nav">
+          <a
+            href="plugin.php?id={$_GET['id']}"
+            class="quick-nav-link"
+            target="_blank"
+          >
+            {$_GG['langs']['kernel']['homepage']}
+          </a>
           <div class="quick-nav-link" onclick="showAddonPopup()">
             {$GLOBALS['GLANG']['kernel']['switch_app']}
           </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace gstudio_kernel\Exception;
+namespace gstudio_kernel\Foundation\Exception;
 
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');

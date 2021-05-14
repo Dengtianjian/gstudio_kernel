@@ -1,6 +1,6 @@
 <?php
 
-namespace gstudio_kernel\Exception;
+namespace gstudio_kernel\Foundation\Exception;
 
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
@@ -10,7 +10,7 @@ use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\View;
 
-class Excep
+class Exception
 {
   public static function handle($code = 0, $message = "", $file = "", $line = null, $trace = "", $traceString = NULL, $previous = null)
   {
@@ -41,7 +41,7 @@ class Excep
     }
     exit();
   }
-  public static function exception($exception)
+  public static function receive($exception)
   {
     $code = $exception->getCode();
     $message = $exception->getMessage();
@@ -52,7 +52,7 @@ class Excep
     $traceString = $exception->getTraceAsString();
     self::handle($code, $message, $file, $line, $trace, $traceString, $previous);
   }
-  public static function t($message)
+  public static function out($message)
   {
     self::handle(0, $message);
   }

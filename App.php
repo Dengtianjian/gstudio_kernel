@@ -21,12 +21,12 @@ use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Router;
-use gstudio_kernel\Exception\ErrorCode;
 use gstudio_kernel\Foundation\Auth;
 use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Model\ExtensionsModel;
+use gstudio_kernel\Foundation\Exception\ErrorCode;
 
 class App
 {
@@ -45,7 +45,7 @@ class App
   {
     global $_G;
 
-    \set_exception_handler("gstudio_kernel\Exception\Excep::exception");
+    \set_exception_handler("gstudio_kernel\Foundation\Exception\Exception::receive");
 
     //* 存放全局用到的数据
     $GlobalVariables = [

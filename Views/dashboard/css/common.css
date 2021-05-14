@@ -45,7 +45,7 @@ ul {
 }
 .page-header-contaner {
   display: grid;
-  grid-template-columns: 140px auto 300px;
+  grid-template-columns: 140px auto 330px;
   height: 60px;
 }
 .page-header .logo {
@@ -194,6 +194,7 @@ ul {
 .page-content {
   display: inline-block;
   margin-left: 15px;
+  width: 100%;
 }
 
 .page-footer {

@@ -62,6 +62,7 @@ class View
       $viewData = $viewDirOfViewData;
       $viewDirOfViewData = "/";
     }
+
     $viewData = \array_merge(self::$viewData, $viewData);
     if (count($viewData) > 0) {
       foreach ($viewData as $key => $value) {
@@ -85,6 +86,7 @@ class View
       }
     } else {
       if (!\file_exists($viewDirOfViewData . "/$viewFile.htm")) {
+        debug($viewDirOfViewData . "/$viewFile.htm");
         Response::error("VIEW_TEMPLATE_NOT_EXIST");
       }
     }
@@ -105,30 +107,9 @@ class View
       $viewData = $viewDirOfViewData;
       $viewDirOfViewData = "/";
     }
+    $viewDirOfViewData = \str_replace(GlobalVariables::get("_GG/addon/root") . "/Views", "", $viewDirOfViewData);
     $viewDirOfViewData = GlobalVariables::get("_GG/addon/root") . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
-  }
-  /**
-   * 渲染后台模板页面
-   *
-   * @param string|array $viewFile 模板的文件名称。可数组或单一字符串
-   * @param string $viewDirOfViewData? 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。基于根路径也就是当前插件的根目录的Views文件夹
-   * @param array $viewData? 渲染模板的数据
-   * @return void
-   */
-  static function dashboard($viewFile, $viewDirOfViewData = "dashboard", $viewData = [])
-  {
-    if (is_array($viewDirOfViewData)) {
-      $viewData = $viewDirOfViewData;
-      $viewDirOfViewData = "dashboard";
-    }
-    $realTemplateDir = $viewDirOfViewData;
-    $viewDirOfViewData = GlobalVariables::get("_GG/addon/root") . "/Views/$viewDirOfViewData";
-    return self::render("container", $viewDirOfViewData, [
-      "_fileName" => $viewFile,
-      "_templateDir" => $realTemplateDir,
-      "_viewData" => $viewData
-    ]);
   }
 
   /**
@@ -145,11 +126,34 @@ class View
       $viewData = $viewDirOfViewData;
       $viewDirOfViewData = "";
     }
+    $viewDirOfViewData = \str_replace(GlobalVariables::get("_GG/kernel/root") . "/Views/", "", $viewDirOfViewData);
     $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData);
   }
   /**
-   * 渲染kernel后台模板
+   * 渲染后台模板页面
+   *
+   * @param string|array $viewFile 模板的文件名称。可数组或单一字符串
+   * @param string $viewDirOfViewData? 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。基于根路径也就是当前插件的根目录的Views文件夹
+   * @param array $viewData? 渲染模板的数据
+   * @return void
+   */
+  static function dashboard($viewFile, $viewDirOfViewData = "dashboard", $viewData = [])
+  {
+    if (is_array($viewDirOfViewData)) {
+      $viewData = $viewDirOfViewData;
+      $viewDirOfViewData = "dashboard";
+    }
+    $realTemplateDir = GlobalVariables::get("_GG/addon/root") . "/Views/" . $viewDirOfViewData;
+    $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
+    return self::render("container", $viewDirOfViewData, [
+      "_fileName" => $viewFile,
+      "_templateDir" => $realTemplateDir,
+      "_viewData" => $viewData
+    ]);
+  }
+  /**
+   * 渲染kernel后台模板systemPage
    *
    * @param string|array $viewFile 渲染文件名称 可/分割目录
    * @param string|array $viewDirOfViewData 渲染的目录或者渲染的数据
@@ -162,7 +166,8 @@ class View
       $viewData = $viewDirOfViewData;
       $viewDirOfViewData = "dashboard";
     }
-    $realTemplateDir = $viewDirOfViewData;
+    $realTemplateDir = GlobalVariables::get("_GG/kernel/root") . "/Views/" . $viewDirOfViewData;
+    $viewDirOfViewData = \str_replace(GlobalVariables::get("_GG/kernel/root"), "", $viewDirOfViewData);
     $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
     return self::render("systemContainer", $viewDirOfViewData, [
       "_fileName" => $viewFile,
