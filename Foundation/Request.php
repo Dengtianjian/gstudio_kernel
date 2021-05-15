@@ -28,6 +28,8 @@ class Request
       $params = [];
     }
     $params = \array_merge($params, $_GET, $_POST);
+    $this->uri = \addslashes($params['uri']);
+    $this->pluginId = \addslashes($params['id']);
     unset($params['id']);
     unset($params['uri']);
     $this->paramData = $params;
@@ -118,10 +120,6 @@ class Request
   public function query($key = null)
   {
     return $this->getArrayData($this->query, $key);
-  }
-  public function uri()
-  {
-    return \addslashes($_GET['uri']);
   }
   public function remove($key)
   {

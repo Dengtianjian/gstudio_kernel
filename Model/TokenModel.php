@@ -6,13 +6,14 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Model;
 
 class TokenModel extends Model
 {
   public function __construct()
   {
-    $this->tableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_token";
+    $this->tableName = GlobalVariables::getGG("id") . "_token";
   }
   public function getByContent($tokenContent)
   {

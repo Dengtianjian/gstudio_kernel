@@ -41,16 +41,16 @@
           class="
             page-nav
             {if
-            $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount']>14}page-nav-more{/if}
+            $_GG['addon']['dashboard']['mainNavCount']>14}page-nav-more{/if}
           "
         >
-          <!--{loop $GLOBALS['gstudio_kernel']['dashboard']['mainNavs'] $nav}-->
+          <!--{loop $_GG['addon']['dashboard']['mainNavs'] $nav}-->
           <a
-            href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&uri=dashboard&mid={$nav['nav_id']}"
+            href="plugin.php?id={$_GG['id']}&uri=dashboard&mid={$nav['nav_id']}"
             class="
               page-nav-link
               {if
-              $GLOBALS['gstudio_kernel']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}
+              $_GG['addon']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}
             "
           >
             {$nav['nav_name']}
@@ -76,7 +76,7 @@
             {$_GG['langs']['kernel']['homepage']}
           </a>
           <div class="quick-nav-link" onclick="showAddonPopup()">
-            {$GLOBALS['GLANG']['kernel']['switch_app']}
+            {$_GG['langs']['kernel']['switch_app']}
           </div>
           <a
             href="https://www.cooocc.com"
@@ -85,19 +85,19 @@
             >COC</a
           >
           <a href="index.php" class="quick-nav-link" target="_blank"
-            >{$GLOBALS['GLANG']['kernel']['site_homepage']}</a
+            >{$_GG['langs']['kernel']['site_homepage']}</a
           >
           <a
             href="https://addon.dismall.com/?@19011.developer"
             class="quick-nav-link"
             target="_blank"
           >
-            {$GLOBALS['GLANG']['kernel']['addon_center']}
+            {$_GG['langs']['kernel']['addon_center']}
           </a>
         </div>
         <div class="addons-popup">
           <div class="addons-list">
-            {loop $GLOBALS['gstudio_kernel']['plugins'] $pluginId $pluginName}
+            {loop $_GG['addon']['dashboard']['plugins'] $pluginId $pluginName}
             <div class="addon-item">
               <div>
                 <img
@@ -110,7 +110,7 @@
               <a
                 class="addon-switch"
                 href="plugin.php?id={$pluginId}&uri=dashboard"
-                >{$GLOBALS['GLANG']['kernel']['switch']}</a
+                >{$_GG['langs']['kernel']['switch']}</a
               >
             </div>
             {/loop}

@@ -18,8 +18,7 @@ class View
    */
   static private function renderPage($fileName, $fileDir = "", $viewData = [])
   {
-    global $_G, $gstudio_kernel, $GSETS, $GLANG, $GURLS, $_GG, ${$gstudio_kernel['devingPluginId']};
-    $Response = Response::class;
+    global $_G, $_GG;
     $View = self::class;
 
     $viewData = \array_merge(self::$viewData, $viewData);

@@ -44,10 +44,10 @@ class PseudoStatic
       $previous = $item;
     }
 
-    $GLOBALS['GURLS'] = Arr::merge($GLOBALS['GURLS'], $mergeData);
+    $urls = Arr::merge(GlobalVariables::getGG("rewriteURL"), $mergeData);
     GlobalVariables::set([
       "_GG" => [
-        "rewriteURL" => $GLOBALS['GURLS']
+        "rewriteURL" => $urls
       ]
     ]);
   }

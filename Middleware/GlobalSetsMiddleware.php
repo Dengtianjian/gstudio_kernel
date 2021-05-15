@@ -13,14 +13,12 @@ class GlobalSetsMiddleware
   public function handle($next)
   {
     if (count(Config::get("globalSets")) > 0) {
-      $GLOBALS['GSETS'] = Dashboard::getSetValue(Config::get("globalSets"));
       GlobalVariables::set([
         "_GG" => [
-          "sets" => $GLOBALS['GSETS']
+          "sets" => Dashboard::getSetValue(Config::get("globalSets"))
         ]
       ]);
     } else {
-      $GLOBALS['GSETS'] = [];
       GlobalVariables::set([
         "_GG" => [
           "sets" => []

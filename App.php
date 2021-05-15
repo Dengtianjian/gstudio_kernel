@@ -15,8 +15,9 @@ function errorHandler()
   }
 }
 
-// error_reporting(\E_ALL ^ \E_NOTICE);
-// \set_error_handler("gstudio_kernel\\errorHandler", 0);
+// error_reporting(\E_ALL);
+\set_error_handler("gstudio_kernel\\errorHandler", 0);
+
 use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -46,6 +47,7 @@ class App
     global $_G;
 
     \set_exception_handler("gstudio_kernel\Foundation\Exception\Exception::receive");
+
 
     //* 存放全局用到的数据
     $GlobalVariables = [
@@ -94,10 +96,8 @@ class App
     $this->pluginId = $pluginId;
     $this->pluginPath = DISCUZ_ROOT . "source/plugin/$pluginId";
     $this->uri = \addslashes($_GET['uri']);
-    $GLOBALS['GURLS'] = [];
 
     $this->loadLang();
-    $GlobalVariables['langs'] = $GLOBALS['GLANG'];
     ErrorCode::load(); //* 加载错误码
 
     //* 分析query
@@ -111,7 +111,7 @@ class App
     $GlobalVariables['request']['query'] = $query;
 
     include_once(GlobalVariables::getGG("kernel/fullRoot") . "/Routes.php"); //* 载入kernel用到的路由
-    include_once($this->pluginPath . "/routes.php"); //* 载入路由
+    include_once($this->pluginPath . "/Routes.php"); //* 载入路由
     GlobalVariables::set([
       "_GG" => $GlobalVariables
     ]);
@@ -232,16 +232,15 @@ class App
 
     foreach ($middlewares as $middlewareItem) {
       if (\is_callable($middlewareItem)) {
-        $middlewareItem($this->request, function () {
-          global $executeCount;
+        $middlewareItem(function () use (&$executeCount) {
           $executeCount++;
-        });
+        }, $this->request);
       } else {
         $middlewareInstance = new $middlewareItem();
         $isNext = false;
         $middlewareInstance->handle(function () use (&$isNext) {
           $isNext = true;
-        });
+        }, $this->request);
         if ($isNext == false) {
           break;
         } else {
@@ -254,7 +253,15 @@ class App
   }
   public function setDashboardTable($globalVarKey, $tableName)
   {
-    $GLOBALS['gstudio_kernel']['dashboard'][$globalVarKey] = $tableName;
+    GlobalVariables::set([
+      "_GG" => [
+        "addon" => [
+          "dashboard" => [
+            $globalVarKey => $tableName
+          ]
+        ]
+      ]
+    ]);
   }
   /**
    * 加载语言包
@@ -271,7 +278,11 @@ class App
         include_once($langFilePath);
       }
     }
-    $GLOBALS['GLANG'] = Lang::all();
+    GlobalVariables::set([
+      "_GG" => [
+        "langs" => Lang::all()
+      ]
+    ]);
   }
   /**
    * 载入扩展

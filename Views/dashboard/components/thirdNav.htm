@@ -1,15 +1,24 @@
 {if $_dashboard['thirdNavCount']}
 <div class="third-navs">
   <a
-    class="third-nav-item {if !$_dashboard['thirdNavId']}third-nav-item_active{/if}"
-    href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&mid={$_dashboard['mainNavId']}&sid=$_dashboard['subNavId']&uri={if {$_dashboard['currentSubNav']['nav_uri']}}{$_dashboard['currentSubNav']['nav_uri']}{else}dashboard{/if}"
+    class="
+      third-nav-item
+      {if
+      !$_dashboard['thirdNavId']}third-nav-item_active{/if}
+    "
+    href="plugin.php?id={$_GG['id']}&mid={$_dashboard['mainNavId']}&sid=$_dashboard['subNavId']&uri={if {$_dashboard['currentSubNav']['nav_uri']}}{$_dashboard['currentSubNav']['nav_uri']}{else}dashboard{/if}"
   >
     {$_dashboard['currentSubNav']['nav_name']}
   </a>
   {loop $_dashboard['thirdNavs'] $itemIndex $thirdNavItem}
   <a
-    class="third-nav-item {if $_dashboard['thirdNavId']==$thirdNavItem['nav_id']}third-nav-item_active{/if} ellipsis1"
-    href="plugin.php?id={$GLOBALS['gstudio_kernel']['devingPluginId']}&mid={$_dashboard['mainNavId']}&sid=$_dashboard['subNavId']&tid={$thirdNavItem['nav_id']}&uri={if $thirdNavItem['nav_uri']}{$thirdNavItem['nav_uri']}{else}dashboard{/if}"
+    class="
+      third-nav-item
+      {if
+      $_dashboard['thirdNavId']==$thirdNavItem['nav_id']}third-nav-item_active{/if}
+      ellipsis1
+    "
+    href="plugin.php?id={$_GG['id']}&mid={$_dashboard['mainNavId']}&sid=$_dashboard['subNavId']&tid={$thirdNavItem['nav_id']}&uri={if $thirdNavItem['nav_uri']}{$thirdNavItem['nav_uri']}{else}dashboard{/if}"
   >
     {$thirdNavItem['nav_name']}
   </a>

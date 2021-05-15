@@ -13,6 +13,7 @@ use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\View;
 use gstudio_kernel\App\Dashboard\Controller as DashboardController;
+use gstudio_kernel\Foundation\Request;
 
 class GlobalDashboardMiddleware
 {
@@ -23,39 +24,35 @@ class GlobalDashboardMiddleware
     "gstudio_20210303",
     "gstudio_kernel"
   ];
-  public function handle($next)
+  public function handle($next, Request $request)
   {
     $pageRenderAppendData = []; //* 渲染模板追加的数据
-    $GLOBALS['gstudio_kernel']['dashboard']['viewPath'] = GlobalVariables::get("_GG/addon/fullRoot") . "/Views/dashboard";
     $pageRenderAppendData['viewPath'] =  GlobalVariables::get("_GG/addon/fullRoot") . "/Views/dashboard";
 
     if (Config::get("dashboard/navTableName")) {
       $navTableName = Config::get("dashboard/navTableName");
     } else {
-      $navTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_dashboard_nav";
-      $GLOBALS['gstudio_kernel']['dashboard']['navTableName'] = $navTableName;
+      $navTableName = $request->pluginId . "_dashboard_nav";
     }
     $pageRenderAppendData['navTableName'] = $navTableName;
     if (Config::get("dashboard/setTableName")) {
       $setTableName = Config::get("dashboard/setTableName");
     } else {
-      $setTableName = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_dashboard_set";
-      $GLOBALS['gstudio_kernel']['dashboard']['setTableName'] = $setTableName;
+      $setTableName = $request->pluginId . "_dashboard_set";
     }
     $pageRenderAppendData['setTableName'] = $setTableName;
 
     $navsData = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=0 ORDER BY `nav_sort` ASC", [
       $navTableName
     ]);
-    $GLOBALS['gstudio_kernel']['dashboard']['mainNavCount'] = count($navsData);
 
     $mainNavId = $_GET['mid'] ? intval($_GET['mid']) : 0;
     $subNavId = $_GET['sid'] ? intval($_GET['sid']) : 0;
     $thirdLevelNav = $_GET['tid'] ? intval($_GET['tid']) : 0;
-    $GLOBALS['gstudio_kernel']['dashboard']['subNavId'] = $subNavId;
-    $GLOBALS['gstudio_kernel']['dashboard']['thirdNavId'] = $thirdLevelNav;
+    $uri = $request->uri;
     $pageRenderAppendData['subNavId'] = $subNavId;
     $pageRenderAppendData['thirdNavId'] = $thirdLevelNav;
+    $pageRenderAppendData['uri'] = $uri;
 
     $mainNavs = [];
     foreach ($navsData as $nav) {
@@ -65,8 +62,6 @@ class GlobalDashboardMiddleware
     if (!$mainNavId) {
       $mainNavId = $mainNavs[array_keys($mainNavs)[0]]['nav_id'];
     }
-    $GLOBALS['gstudio_kernel']['dashboard']['mainNavId'] = $mainNavId;
-    $GLOBALS['gstudio_kernel']['dashboard']['mainNavs'] = $mainNavs;
     $pageRenderAppendData['mainNavId'] = $mainNavId;
     $pageRenderAppendData['mainNavs'] = $mainNavs;
 
@@ -79,7 +74,6 @@ class GlobalDashboardMiddleware
     foreach ($subsData as $sub) {
       $subNavs[$sub['nav_id']] = $sub;
     }
-    $GLOBALS['gstudio_kernel']['dashboard']['subNavs'] = $subNavs;
     $pageRenderAppendData['subNavs'] = $subNavs;
     $thirdNavs = [];
     if ($subNavId) {
@@ -100,7 +94,6 @@ class GlobalDashboardMiddleware
         $plugins[$plugin['identifier']] = $plugin['name'];
       }
     }
-    $GLOBALS['gstudio_kernel']['plugins'] = $plugins;
     $pageRenderAppendData['plugins'] = $plugins;
 
     $setTableName = Config::get("dashboard/setTableName");
@@ -120,6 +113,7 @@ class GlobalDashboardMiddleware
     View::addData([
       "_dashboard" => $pageRenderAppendData
     ]);
+
     GlobalVariables::set([
       "_GG" => [
         "addon" => [

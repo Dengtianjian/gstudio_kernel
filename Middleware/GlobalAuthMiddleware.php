@@ -6,17 +6,21 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
-
 use gstudio_kernel\Foundation\Auth;
+use gstudio_kernel\Foundation\GlobalVariables;
+use gstudio_kernel\Foundation\Request;
 
 class GlobalAuthMiddleware
 {
-  public function handle($next)
+  public function handle($next, Request $request)
   {
-    global $app;
-    $GLOBALS['gstudio_kernel']['tokenTableName'] = $GLOBALS['gstudio_kernel']['devingPluginId'] . "_token";
+    GlobalVariables::set([
+      "token" => [
+        "tableName" => $request->pluginId . "_token"
+      ]
+    ]);
 
-    if ($app->request->params("_token")) {
+    if ($request->params("_token")) {
       Auth::check();
     }
 

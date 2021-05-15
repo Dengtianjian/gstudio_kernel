@@ -6,7 +6,7 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
-use gstudio_kernel\Exception\ErrorCode;
+use gstudio_kernel\Foundation\Exception\ErrorCode;
 
 class Response
 {
@@ -65,60 +65,6 @@ class Response
       \print_r(\json_encode($result));
     }
     exit();
-  }
-  //! 准废弃
-  static function render($fileName, $fileDir = "", $params = [])
-  {
-    global $_G, $gstudio_kernel, $GSETS, $GLANG;
-    $Response = self::class;
-    foreach ($params as $key => $value) {
-      global ${$key};
-    }
-    include_once template($fileName, GlobalVariables::get("id"), $fileDir);
-    foreach ($params as $key => $value) {
-      unset($GLOBALS[$key]);
-    }
-    return true;
-  }
-  //! 准废弃
-  static function view($HTMLFileName, $fileDir = "/", $params = null)
-  {
-    if (is_array($fileDir) || $params !== null) {
-      $dir = "";
-      if (\is_string($fileDir)) {
-        $dir = $fileDir;
-      } else {
-        $params = $fileDir;
-      }
-      if (count($params) > 0) {
-        foreach ($params as $key => $value) {
-          $GLOBALS[$key] = $value;
-        }
-      }
-      $fileDir = GlobalVariables::get("addon/fullRoot") . "/Views/$dir";
-      return self::render($HTMLFileName, $fileDir, $params);
-    }
-    return template($HTMLFileName, GlobalVariables::get("id"), GlobalVariables::get("addon/fullRoot") . "/Views/$fileDir");
-  }
-  //! 准废弃
-  static function systemView($HTMLFileName, $fileDir = "/", $params = null)
-  {
-    if (is_array($fileDir) || $params !== null) {
-      $dir = "";
-      if (\is_string($fileDir)) {
-        $dir = $fileDir;
-      } else {
-        $params = $fileDir;
-      }
-      if (count($params) > 0) {
-        foreach ($params as $key => $value) {
-          $GLOBALS[$key] = $value;
-        }
-      }
-      $fileDir = GlobalVariables::get("kernel/fullRoot") . "/Views/$dir";
-      return self::render($HTMLFileName, $fileDir, $params);
-    }
-    return template($HTMLFileName, "gstudio_kernel", GlobalVariables::get("kernel/fullRoot") . "/Views/$fileDir");
   }
   static function addData($data)
   {
