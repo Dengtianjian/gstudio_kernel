@@ -28,6 +28,7 @@ use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Model\ExtensionsModel;
 use gstudio_kernel\Foundation\Exception\ErrorCode;
+use gstudio_kernel\Middleware\GlobalExtensionsMiddleware;
 
 class App
 {
@@ -122,6 +123,11 @@ class App
   }
   function init()
   {
+    //* 载入扩展
+    if (Config::get("extensions")) {
+      $this->loadExtensions();
+      $this->setMiddlware(GlobalExtensionsMiddleware::class);
+    }
     $this->setMiddlware(Middleware\GlobalSetsMiddleware::class);
     if (Config::get("dashboard/use") === true) {
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
@@ -130,11 +136,6 @@ class App
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
     $this->request = new Request();
-
-    //* 载入扩展
-    if (Config::get("extensions")) {
-      $this->loadExtensions();
-    }
 
     $executeMiddlewareResult = $this->executiveMiddleware();
 
