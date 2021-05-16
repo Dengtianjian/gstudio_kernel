@@ -79,21 +79,6 @@ class App
         "query" => [], //* 请求的query
       ]
     ];
-
-    //! 老代码 待去除
-    $GLOBALS["gstudio_kernel"] = [
-      "mode" => $this->mode,
-      "pluginId" => "gstudio_kernel",
-      "pluginPath" => "source/plugin/gstudio_kernel",
-      "assets" => "source/plugin/gstudio_kernel/Assets",
-      "devingPluginId" => $pluginId
-    ];
-    $GLOBALS[$pluginId] = [
-      "mode" => $this->mode,
-      "pluginId" => $pluginId,
-      "pluginPath" => "source/plugin/$pluginId",
-      "assets" => "source/plugin/$pluginId/Assets"
-    ];
     $this->pluginId = $pluginId;
     $this->pluginPath = DISCUZ_ROOT . "source/plugin/$pluginId";
     $this->uri = \addslashes($_GET['uri']);
@@ -111,11 +96,11 @@ class App
     }
     $GlobalVariables['request']['query'] = $query;
 
-    include_once(GlobalVariables::getGG("kernel/fullRoot") . "/Routes.php"); //* 载入kernel用到的路由
-    include_once($this->pluginPath . "/Routes.php"); //* 载入路由
     GlobalVariables::set([
       "_GG" => $GlobalVariables
     ]);
+    include_once($GlobalVariables['kernel']['fullRoot'] . "/Routes.php"); //* 载入kernel用到的路由
+    include_once($this->pluginPath . "/Routes.php"); //* 载入路由
   }
   function setMiddlware($middlwareNameOfFunction)
   {

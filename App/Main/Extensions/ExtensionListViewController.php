@@ -19,7 +19,7 @@ class ExtensionListViewController extends Controller
   protected $Admin = true;
   public function data(Request $request)
   {
-    $extensions = Extensions::scanDir("source/plugin/gstudio_20210303");
+    $extensions = Extensions::scanDir("source/plugin/" . GlobalVariables::getGG("id"));
     $extensionIds = array_keys($extensions);
     $EM = new ExtensionsModel();
     $DBExtensions = $EM->getByExtensionId($extensionIds);
