@@ -27,16 +27,9 @@ class ContainerController extends Controller
   {
     $DASHBOARD = GlobalVariables::get("_GG/addon/dashboard");
     $SetModel = new Model($DASHBOARD['setTableName']);
-    $mainId = \intval($request->params("mid"));
-    $subId = \intval($request->params("sid"));
-    $thirdNavId = \intval($request->params("tid"));
-    $navId = [];
-    if ($thirdNavId) {
-      $navId = $thirdNavId;
-    } else if ($subId) {
-      $navId = $subId;
-    } else {
-      $navId = \array_keys($DASHBOARD['subNavs']);
+    $navId = $request->params("nav_id");
+    if (!$navId && $request->uri === "dashboard") {
+      $navId = GlobalVariables::getGG("addon/dashboard/firstLevelNav/nav_id");
     }
 
     $setsData = $SetModel->where([
