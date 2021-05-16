@@ -123,11 +123,6 @@ class App
   }
   function init()
   {
-    //* 载入扩展
-    if (Config::get("extensions")) {
-      $this->loadExtensions();
-      $this->setMiddlware(GlobalExtensionsMiddleware::class);
-    }
     $this->setMiddlware(Middleware\GlobalSetsMiddleware::class);
     if (Config::get("dashboard/use") === true) {
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
@@ -136,6 +131,12 @@ class App
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
     $this->request = new Request();
+
+    //* 载入扩展
+    if (Config::get("extensions")) {
+      $this->loadExtensions();
+      $this->setMiddlware(GlobalExtensionsMiddleware::class);
+    }
 
     $executeMiddlewareResult = $this->executiveMiddleware();
 
