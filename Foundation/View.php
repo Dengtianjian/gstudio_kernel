@@ -144,7 +144,7 @@ class View
       $viewDirOfViewData = "dashboard";
     }
     $realTemplateDir = GlobalVariables::get("_GG/addon/root") . "/Views/" . $viewDirOfViewData;
-    $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
+    $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/dashboard";
     return self::render("container", $viewDirOfViewData, [
       "_fileName" => $viewFile,
       "_templateDir" => $realTemplateDir,
@@ -167,7 +167,7 @@ class View
     }
     $realTemplateDir = GlobalVariables::get("_GG/kernel/root") . "/Views/" . $viewDirOfViewData;
     $viewDirOfViewData = \str_replace(GlobalVariables::get("_GG/kernel/root"), "", $viewDirOfViewData);
-    $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
+    $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/dashboard";
     return self::render("systemContainer", $viewDirOfViewData, [
       "_fileName" => $viewFile,
       "_templateDir" => $realTemplateDir,
