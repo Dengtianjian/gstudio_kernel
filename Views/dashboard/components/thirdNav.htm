@@ -1,24 +1,38 @@
-{if $_dashboard['thirdNavCount']}
+{if $_GG['addon']['dashboard']['thirdLevelNavCount']>0}
 <div class="third-navs">
   <a
     class="
       third-nav-item
       {if
-      !$_dashboard['thirdNavId']}third-nav-item_active{/if}
+        $_GET['nav_id']==$_GG['addon']['dashboard']['secondLevelNav']['nav_id']
+        ||
+        $_GET['uri']==$_GG['addon']['dashboard']['secondLevelNav']['nav_uri']
+      }third-nav-item_active
+      {/if}
     "
-    href="plugin.php?id={$_GG['id']}&mid={$_dashboard['mainNavId']}&sid=$_dashboard['subNavId']&uri={if {$_dashboard['currentSubNav']['nav_uri']}}{$_dashboard['currentSubNav']['nav_uri']}{else}dashboard{/if}"
+    {if $_GG['addon']['dashboard']['secondLevelNav']['nav_custom']}
+    href="plugin.php?id={$_GG['id']}&uri={$_GG['addon']['dashboard']['secondLevelNav']['nav_uri']}"
+    {else}
+    href="plugin.php?id={$_GG['id']}&uri=dashboard&nav_id={$_GG['addon']['dashboard']['secondLevelNav']['nav_id']}"
+    {/if}
   >
-    {$_dashboard['currentSubNav']['nav_name']}
+    {$_GG['addon']['dashboard']['secondLevelNav']['nav_name']}
   </a>
-  {loop $_dashboard['thirdNavs'] $itemIndex $thirdNavItem}
+  {loop $_GG['addon']['dashboard']['thirdLevelNavs'] $itemIndex $thirdNavItem}
   <a
     class="
       third-nav-item
-      {if
-      $_dashboard['thirdNavId']==$thirdNavItem['nav_id']}third-nav-item_active{/if}
       ellipsis1
+      {if $_GG['addon']['dashboard']['thirdLevelNav']['nav_id']==$thirdNavItem['nav_id']
+        ||
+      $_GET['uri']==$thirdNavItem['nav_uri']
+      }third-nav-item_active{/if}
     "
-    href="plugin.php?id={$_GG['id']}&mid={$_dashboard['mainNavId']}&sid=$_dashboard['subNavId']&tid={$thirdNavItem['nav_id']}&uri={if $thirdNavItem['nav_uri']}{$thirdNavItem['nav_uri']}{else}dashboard{/if}"
+    {if $thirdNavItem['nav_custom']}
+    href="plugin.php?id={$_GG['id']}&uri={$thirdNavItem['nav_uri']}"
+    {else}
+    href="plugin.php?id={$_GG['id']}&uri=dashboard&nav_id={$thirdNavItem['nav_id']}"
+    {/if}
   >
     {$thirdNavItem['nav_name']}
   </a>
