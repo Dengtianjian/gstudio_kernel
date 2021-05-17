@@ -46,9 +46,16 @@ class File
         return \strpos($fileName, $fileExtension) !== false;
       }
     } else {
-      $info = \exif_imagetype($fileName);
-      if ($info === false) {
-        return false;
+      if (!\function_exists("exif_imagetype")) {
+        $info = \exif_imagetype($fileName);
+        if ($info === false) {
+          return false;
+        }
+      } else {
+        $info = @\getimagesize($fileName);
+        if (!$info) {
+          return false;
+        }
       }
       return true;
     }

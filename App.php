@@ -39,7 +39,6 @@ class App
   private $globalMiddlware = []; //*全局中间件
   private $router = null; //* 路由相关
   private $request = null; //* 请求相关
-  private $mode = "production"; //* 当前运行模式
   public function __get($name)
   {
     return $this->$name;
@@ -98,11 +97,11 @@ class App
     }
     $GlobalVariables['request']['query'] = $query;
 
-    include_once(GlobalVariables::getGG("kernel/fullRoot") . "/Routes.php"); //* 载入kernel用到的路由
-    include_once($this->pluginPath . "/Routes.php"); //* 载入路由
     GlobalVariables::set([
       "_GG" => $GlobalVariables
     ]);
+    include_once($GlobalVariables['kernel']['fullRoot'] . "/Routes.php"); //* 载入kernel用到的路由
+    include_once($this->pluginPath . "/Routes.php"); //* 载入路由
   }
   function setMiddlware($middlwareNameOfFunction)
   {
@@ -110,11 +109,6 @@ class App
   }
   function init()
   {
-    //* 载入扩展
-    if (Config::get("extensions")) {
-      $this->loadExtensions();
-      $this->setMiddlware(GlobalExtensionsMiddleware::class);
-    }
     $this->setMiddlware(Middleware\GlobalSetsMiddleware::class);
     if (Config::get("dashboard/use") === true) {
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
@@ -126,6 +120,12 @@ class App
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
     $this->request = new Request();
+
+    //* 载入扩展
+    if (Config::get("extensions")) {
+      $this->loadExtensions();
+      $this->setMiddlware(GlobalExtensionsMiddleware::class);
+    }
 
     $executeMiddlewareResult = $this->executiveMiddleware();
 
@@ -149,10 +149,10 @@ class App
           $langJson = \serialize([]);
         }
         $multipleEncodeJSScript = "
-    <script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
-    <script>
-      const GLANG=unserialize('$langJson');
-    </script>
+<script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
+<script>
+  const GLANG=unserialize('$langJson');
+</script>
     ";
       } else {
         $langJson = \json_encode(GlobalVariables::get("_GG/langs"));
@@ -160,14 +160,14 @@ class App
           $langJson = \json_encode([]);
         }
         $multipleEncodeJSScript = "
-    <script>
-      const GLANG=JSON.parse('$langJson');
-    </script>
+<script>
+  const GLANG=JSON.parse('$langJson');
+</script>
     ";
       }
       if (Config::get("mode") === "development") {
         $multipleEncodeJSScript .= "
-  <script>
+<script>
   console.log(GLANG);
 </script>
           ";

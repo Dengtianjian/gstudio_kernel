@@ -14,13 +14,17 @@ function updateStateEl(extesionId, textContent, display = "none") {
   statusEl.style.display = display;
 }
 function installExtension(extensionId) {
-  updateStateEl(extensionId, "安装中，请稍后", "block");
+  updateStateEl(extensionId, GLANG["kernel"]["extensionInstalling"], "block");
   CDZXHTTP.post("_extension/install", {
     extension_id: extensionId,
   })
     .then((res) => {
-      CMessage("安装成功");
-      updateStateEl(extensionId, "更新数据中，请稍后", "block");
+      CMessage(GLANG["kernel"]["extensionInstalledSuccessfully"]);
+      updateStateEl(
+        extensionId,
+        GLANG["kernel"]["extensionUpdatingData"],
+        "block"
+      );
       setTimeout(() => {
         location.reload();
       }, 500);
@@ -32,13 +36,17 @@ function installExtension(extensionId) {
 }
 
 function upgradeExtension(extensionId) {
-  updateStateEl(extensionId, "更新中，请稍后", "block");
+  updateStateEl(extensionId, GLANG["kernel"]["extensionUpgrading"], "block");
   CDZXHTTP.post("_extension/upgrade", {
     extension_id: extensionId,
   })
     .then((res) => {
-      CMessage("更新成功");
-      updateStateEl(extensionId, "更新数据中，请稍后", "block");
+      CMessage(GLANG["kernel"]["extensionUpdateSuccessed"]);
+      updateStateEl(
+        extensionId,
+        GLANG["kernel"]["extensionUpdatingData"],
+        "block"
+      );
       setTimeout(() => {
         location.reload();
       }, 500);
@@ -50,13 +58,17 @@ function upgradeExtension(extensionId) {
 }
 
 function uninstallExtension(extensionId) {
-  updateStateEl(extensionId, "卸载中，请稍后", "block");
+  updateStateEl(extensionId, GLANG["kernel"]["extensionUninstalling"], "block");
   CDZXHTTP.post("_extension/uninstall", {
     extension_id: extensionId,
   })
     .then((res) => {
-      CMessage("卸载完成");
-      updateStateEl(extensionId, "更新数据中，请稍后", "block");
+      CMessage(GLANG["kernel"]["extensionUninstallComplete"]);
+      updateStateEl(
+        extensionId,
+        GLANG["kernel"]["extensionUpdatingData"],
+        "block"
+      );
       setTimeout(() => {
         location.reload();
       }, 500);
@@ -70,7 +82,9 @@ function uninstallExtension(extensionId) {
 function openOrCloseExtension(extensionId, enabled) {
   updateStateEl(
     extensionId,
-    enabled == 1 ? "关闭中，请稍后" : "开启中，请稍后",
+    enabled == 1
+      ? GLANG["kernel"]["extensionClosing"]
+      : GLANG["kernel"]["extensionOpening"],
     "block"
   );
   CDZXHTTP.post("_extension/openClose", {
@@ -78,8 +92,16 @@ function openOrCloseExtension(extensionId, enabled) {
     enabled: enabled == 1 ? 0 : 1,
   })
     .then((res) => {
-      CMessage(enabled == 1 ? "已关闭" : "已开启");
-      updateStateEl(extensionId, "更新数据中，请稍后", "block");
+      CMessage(
+        enabled == 1
+          ? GLANG["kernel"]["extensionClosed"]
+          : GLANG["kernel"]["extensionTurnedOn"]
+      );
+      updateStateEl(
+        extensionId,
+        GLANG["kernel"]["extensionUpdatingData"],
+        "block"
+      );
       setTimeout(() => {
         location.reload();
       }, 500);

@@ -44,28 +44,24 @@
             $_GG['addon']['dashboard']['mainNavCount']>14}page-nav-more{/if}
           "
         >
-          <!--{loop $_GG['addon']['dashboard']['mainNavs'] $nav}-->
+          <!--{loop $_GG['addon']['dashboard']['firstLevelNavs'] $nav}-->
           <a
-            href="plugin.php?id={$_GG['id']}&uri=dashboard&mid={$nav['nav_id']}"
+            {if $nav['nav_custom']}
+            href="plugin.php?id={$_GG['id']}&uri={$nav['nav_uri']}"
+            {else}
+            href="plugin.php?id={$_GG['id']}&uri=dashboard&nav_id={$nav['nav_id']}"
+            {/if}
             class="
               page-nav-link
               {if
-              $_GG['addon']['dashboard']['mainNavId']==$nav['nav_id']}page-nav-link-active{/if}
+              $_GG['addon']['dashboard']['firstLevelNav']['nav_id']==$nav['nav_id']
+              ||$_GET['uri']==$nav['nav_uri']
+              }page-nav-link-active{/if}
             "
           >
             {$nav['nav_name']}
           </a>
           <!--{/loop}-->
-          <a
-            href="plugin.php?id={$_GG['id']}&uri=_extensions"
-            class="
-              page-nav-link
-              {if
-              $_GET['uri']=='_extensions'}page-nav-link-active{/if}
-            "
-          >
-            {$_GG['langs']['kernel']['extension']}
-          </a>
         </nav>
         <div class="quick-nav">
           <a

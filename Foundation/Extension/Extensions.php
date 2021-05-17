@@ -17,7 +17,7 @@ class Extensions
   {
     $extensionPath = $rootPath . "/" . $extensionFolderName;
     if (!is_dir($extensionPath)) {
-      return false;
+      return [];
     }
     $dirs = \scandir($extensionPath);
     $extensions = [];

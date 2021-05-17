@@ -1,10 +1,10 @@
 <!--{eval $View::systemPage("components/header", "dashboard")}-->
 
-<main class="page-main container">
+<main class="page-main container" {if $_GG['addon']['dashboard']['secondLevelNavCount']==0}style="display:block;"{/if}>
   <!--{eval $View::systemPage("components/aside", "dashboard")}-->
   <section class="page-content">
     <!--{eval $View::systemPage("components/thirdNav", "dashboard")}-->
-    <!--{eval $View::page($_fileName, $_templateDir, $_viewData)}-->
+    <!--{eval $View::page($_fileName, $_templateDir, $_viewData,'dashboard')}-->
   </section>
 </main>
 

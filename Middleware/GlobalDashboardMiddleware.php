@@ -13,7 +13,9 @@ use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\View;
 use gstudio_kernel\App\Dashboard\Controller as DashboardController;
+use gstudio_kernel\Foundation\Arr;
 use gstudio_kernel\Foundation\Request;
+use gstudio_kernel\Foundation\Response;
 
 class GlobalDashboardMiddleware
 {
@@ -26,6 +28,7 @@ class GlobalDashboardMiddleware
   ];
   public function handle($next, Request $request)
   {
+    global $_GG;
     $pageRenderAppendData = []; //* 渲染模板追加的数据
     $pageRenderAppendData['viewPath'] =  GlobalVariables::get("_GG/addon/fullRoot") . "/Views/dashboard";
 
@@ -42,49 +45,122 @@ class GlobalDashboardMiddleware
     }
     $pageRenderAppendData['setTableName'] = $setTableName;
 
-    $navsData = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=0 ORDER BY `nav_sort` ASC", [
+    //* 查询所有主导航
+    $firstLevelNavs = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=0 ORDER BY `nav_sort` ASC", [
       $navTableName
     ]);
+    if (GlobalVariables::getGG("addon/dashboard/firstLevelNavs")) {
+      $firstLevelNavs = Arr::merge($firstLevelNavs, GlobalVariables::getGG("addon/dashboard/firstLevelNavs"));
+    }
+    $firstLevelNavs = Arr::indexToAssoc($firstLevelNavs, "nav_id");
 
-    $mainNavId = $_GET['mid'] ? intval($_GET['mid']) : 0;
-    $subNavId = $_GET['sid'] ? intval($_GET['sid']) : 0;
-    $thirdLevelNav = $_GET['tid'] ? intval($_GET['tid']) : 0;
-    $uri = $request->uri;
-    $pageRenderAppendData['subNavId'] = $subNavId;
-    $pageRenderAppendData['thirdNavId'] = $thirdLevelNav;
-    $pageRenderAppendData['uri'] = $uri;
+    $navId = $request->params("nav_id");
+    $uri = \addslashes($_GET['uri']);
 
-    $mainNavs = [];
-    foreach ($navsData as $nav) {
-      $mainNavs[$nav['nav_id']] = $nav;
+    // TODO 当是动态添加导航时，要自定义设置页面
+
+    $firstLevelNav = null;
+    $secondLevelNav = null;
+    $secondLevelNavs = [];
+    if (GlobalVariables::getGG("addon/dashboard/secondLevelNavs")) {
+      $secondLevelNavs = Arr::merge($secondLevelNavs, GlobalVariables::getGG("addon/dashboard/secondLevelNavs"));
+    }
+    $thirdLevelNav = null;
+    $thirdLevelNavs = [];
+    if (GlobalVariables::getGG("addon/dashboard/thirdLevelNavs")) {
+      $thirdLevelNavs = Arr::merge($thirdLevelNavs, GlobalVariables::getGG("addon/dashboard/thirdLevelNavs"));
     }
 
-    if (!$mainNavId) {
-      $mainNavId = $mainNavs[array_keys($mainNavs)[0]]['nav_id'];
-    }
-    $pageRenderAppendData['mainNavId'] = $mainNavId;
-    $pageRenderAppendData['mainNavs'] = $mainNavs;
+    if ($uri && !$navId) {
+      if ($uri === "dashboard" && !$navId) {
+        //* 没有输入URI 也没有nav_id 就获取第一个第一级导航
+        $navId = array_keys($firstLevelNavs)[0];
+      } else {
+        $hasUriNavs = Arr::indexToAssoc($firstLevelNavs, "nav_uri");
+        $firstLevelNav = $hasUriNavs[$uri];
+        if ($firstLevelNav) {
+          $navId = $firstLevelNav['nav_id'];
+        }
 
-    $main = $mainNavs[$mainNavId];
-    $subsData = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=%d", [
-      $navTableName, $mainNavId
-    ]);
-
-    $subNavs = [];
-    foreach ($subsData as $sub) {
-      $subNavs[$sub['nav_id']] = $sub;
+        $navId = \intval($navId);
+        $nav = \DB::fetch_first("SELECT * FROM %t WHERE `nav_uri`=%s ", [
+          $navTableName, $uri
+        ]);
+        if (!empty($nav)) {
+          $navId = $nav['nav_id'];
+        }
+      }
     }
-    $pageRenderAppendData['subNavs'] = $subNavs;
-    $thirdNavs = [];
-    if ($subNavId) {
-      $thirdNavs = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=%d", [
-        $navTableName, $subNavId
-      ]);
-      $pageRenderAppendData['currentSubNav'] = $subNavs[$subNavId];
+    if ($navId) {
+      if ($firstLevelNavs[$navId]) {
+        $firstLevelNav = $firstLevelNavs[$navId];
+        $secondLevelNav = $firstLevelNav;
+        $secondLevelNavs = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=%i ORDER BY `nav_sort` ASC", [
+          $navTableName, $firstLevelNav['nav_id']
+        ]);
+      } else {
+        $nav = DB::fetch_first("SELECT * FROM `%t` WHERE `nav_id` = %i ", [
+          $navTableName,
+          $navId
+        ]);
+        if (empty($nav)) {
+          // Response::error(500, 500001, "导航不存在");
+        }
+        $firstLevelNav = $firstLevelNavs[$nav['nav_up']];
+        if ($firstLevelNav) {
+          //* 说明是第二级导航，获取第三级导航，并且查询同级导航
+          $secondLevelNav = $nav;
+          $thirdLevelNavs = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=%i ORDER BY `nav_sort` ASC", [
+            $navTableName, $nav['nav_id']
+          ]);
+          $secondLevelNavs = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=%i ORDER BY `nav_sort` ASC", [
+            $navTableName, $secondLevelNav['nav_up']
+          ]);
+        } else {
+          //* 说明是第三级导航，查询第二级导航，并且查询第二级导航的同级导航以及同级导航
+          $thirdLevelNav = $nav;
+          $secondLevelNav = \DB::fetch_first("SELECT * FROM %t WHERE `nav_id`=%i", [
+            $navTableName, $nav['nav_up']
+          ]);
+          if (empty($secondLevelNav)) {
+            Response::error(500, 500002, "导航不存在");
+          }
+          $secondLevelNavs = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=%i ORDER BY `nav_sort` ASC", [
+            $navTableName, $secondLevelNav['nav_up']
+          ]);
+          $firstLevelNav = $firstLevelNavs[$secondLevelNav['nav_up']];
+          $thirdLevelNavs = \DB::fetch_all("SELECT * FROM %t WHERE `nav_up`=%i ORDER BY `nav_sort` ASC", [
+            $navTableName, $secondLevelNav['nav_id']
+          ]);
+        }
+      }
+    } else {
+      $secondLevelNavs = Arr::indexToAssoc($secondLevelNavs, "nav_uri");
+      $thirdLevelNavs = Arr::indexToAssoc($thirdLevelNavs, "nav_uri");
+      if ($firstLevelNavs[$uri]) {
+        $firstLevelNav = $firstLevelNavs[$uri];
+        $secondLevelNav = $firstLevelNav;
+      } else if ($secondLevelNavs[$uri]) {
+        $secondLevelNav = $secondLevelNavs[$uri];
+        $firstLevelNav = $firstLevelNavs[$secondLevelNav['nav_up']];
+      } else if ($thirdLevelNavs[$uri]) {
+        $thirdLevelNav = $thirdLevelNavs[$uri];
+        $secondLevelNav = $secondLevelNavs[$thirdLevelNav['nav_up']];
+        $firstLevelNav = $firstLevelNavs[$secondLevelNav['nav_up']];
+      }
     }
-    $pageRenderAppendData['thirdNavs'] = $thirdNavs;
-    $pageRenderAppendData['thirdNavCount'] = count($thirdNavs);
 
+    //* 一级导航
+    $pageRenderAppendData['firstLevelNav'] = $firstLevelNav;
+    $pageRenderAppendData['firstLevelNavs'] = $firstLevelNavs;
+    //* 二级导航
+    $pageRenderAppendData['secondLevelNav'] = $secondLevelNav;
+    $pageRenderAppendData['secondLevelNavs'] = $secondLevelNavs;
+    //* 三级导航
+    $pageRenderAppendData['thirdLevelNav'] = $thirdLevelNav;
+    $pageRenderAppendData['thirdLevelNavs'] = $thirdLevelNavs;
+
+    //* 应用
     $pluginData = DB::fetch_all("SELECT * FROM `%t` WHERE `identifier` LIKE (%i)", [
       "common_plugin", "'%gstudio_%'"
     ]);
@@ -96,28 +172,18 @@ class GlobalDashboardMiddleware
     }
     $pageRenderAppendData['plugins'] = $plugins;
 
-    $setTableName = Config::get("dashboard/setTableName");
-    $navTableName = Config::get("dashboard/navTableName");
-    if ($setTableName === NULL) {
-      $setTableName = GlobalVariables::get("_GG/id") . "_dashboard_set";
-    }
-    if ($navTableName === NULL) {
-      $navTableName = GlobalVariables::get("_GG/id") . "_dashboard_nav";
-    }
-    $pageRenderAppendData['setTableName'] = $setTableName;
-    $pageRenderAppendData['navTableName'] = $navTableName;
     Router::view("dashboard", DashboardController\ContainerController::class);
     Router::postView("_dashboard_save", DashboardController\SaveSetController::class);
     Router::put("_dashboard_cleansetimg", DashboardController\CleanSetImageController::class);
 
-    View::addData([
-      "_dashboard" => $pageRenderAppendData
-    ]);
-
+    $_GG['addon']['dashboard'] = $pageRenderAppendData;
     GlobalVariables::set([
       "_GG" => [
         "addon" => [
-          "dashboard" => $pageRenderAppendData
+          "dashboard" => [
+            "secondLevelNavCount" => count(GlobalVariables::getGG("addon/dashboard/secondLevelNavs")),
+            "thirdLevelNavCount" => count(GlobalVariables::getGG("addon/dashboard/thirdLevelNavs")),
+          ]
         ]
       ]
     ]);

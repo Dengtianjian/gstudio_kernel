@@ -108,4 +108,26 @@ class Dashboard
       "set_content" => $setContent
     ])->save();
   }
+  /**
+   * 增加自定义导航
+   *
+   * @param array $firstLevelNavs 第一级导航，二维关联数组
+   * @param array $secondLevelNavs 第二级导航，二维关联数组
+   * @param array $thirdLevelNavs 第三级导航，二维关联数组
+   * @return void
+   */
+  public static function customNav($firstLevelNavs, $secondLevelNavs = [], $thirdLevelNavs = [])
+  {
+    GlobalVariables::set([
+      "_GG" => [
+        "addon" => ["dashboard" => [
+          "firstLevelNavs" => $firstLevelNavs,
+          "secondLevelNavs" => $secondLevelNavs,
+          "secondLevelNavCount" => count($secondLevelNavs),
+          "thirdLevelNavs" => $thirdLevelNavs,
+          "thirdLevelNavCount" => count($thirdLevelNavs)
+        ]]
+      ]
+    ]);
+  }
 }

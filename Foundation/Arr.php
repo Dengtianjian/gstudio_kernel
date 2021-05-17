@@ -20,42 +20,28 @@ class Arr
   }
   /**
    * 抽取元素的指定键值为当前元素的键
-   *
+    //! 准废弃
    * @param array $array 原数组 索引数组
    * @param string $key 键名
    * @return array
    */
   static function valueToKey($array, $key)
   {
+    return self::indexToAssoc($array, $key);
+  }
+  /**
+   * 索引数组转关联数组
+   * @param array $array 原数组 索引数组
+   * @param string $key 键名
+   * @return array
+   */
+  static function indexToAssoc($array, $key)
+  {
     $result = [];
     foreach ($array as $item) {
       $result[$item[$key]] = $item;
     }
     return $result;
-  }
-  //! tree替换
-  static function sortByParentChild($arr, $dataPrimaryKey, $relatedParentKey, $childArrayKeys = "childs")
-  {
-    $returnData = [];
-    foreach ($arr as $arrItem) {
-      if ($arrItem[$relatedParentKey] == 0) {
-        if ($returnData[$arrItem[$dataPrimaryKey]]) {
-          $returnData[$arrItem[$dataPrimaryKey]] = \array_merge($returnData[$arrItem[$dataPrimaryKey]], $arrItem);
-        } else {
-          $arrItem[$childArrayKeys] = [];
-          $returnData[$arrItem[$dataPrimaryKey]] = $arrItem;
-        }
-      } else {
-        if ($returnData[$arrItem[$relatedParentKey]]) {
-          \array_push($returnData[$arrItem[$relatedParentKey]][$childArrayKeys], $arrItem);
-        } else {
-          $returnData[$arrItem[$relatedParentKey]] = [
-            $childArrayKeys => [$arrItem]
-          ];
-        }
-      }
-    }
-    return \array_values($returnData);
   }
   /**
    * 分级
