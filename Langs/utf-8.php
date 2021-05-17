@@ -7,7 +7,16 @@ if (!defined("IN_DISCUZ")) {
 }
 
 $langs = [
-  "common" => [],
+  "common" => [
+    "install" => "安装",
+    "uninstall" => "卸载",
+    "upgrade" => "升级",
+    "update" => "更新",
+    "version" => "版本",
+    "symbol" => [
+      "colon" => "："
+    ]
+  ],
   "kernel" => [
     "all" => "全部",
     "footer_copyright" => "COOOCC 版权所有",
@@ -44,7 +53,30 @@ $langs = [
     "middleware_execution_error" => "中间件执行错误",
     "homepage" => "首页",
     "extension" => "扩展",
-    "serverError" => "服务器错误"
+    "serverError" => "服务器错误",
+    "extension_list" => "扩展列表",
+    "extension_new_technology_tips" => "❗
+    本页采用较新的技术开发，请尽量使用Chrome浏览器访问，并且保持浏览器更新到最新版本。如扩展图标不显示请点击页面右侧悬浮图标😀联系客服，🙌谢谢。",
+    "extension_no_install_any" => "还未安装任何扩展哦~",
+    "extensionTurnOn" => "开启",
+    "extensionClose" => "关闭",
+    "extensionLastUpgradeTime" => "最后一次升级时间：",
+    "extensionNotExists" => "扩展不存在",
+    "extensionDoNotInstall" => "扩展已安装，请勿重复安装",
+    "extensionFileCorrupted" => "扩展文件已损坏或不存在，请重新安装扩展",
+    "extensionAlreadyOn" => "当前扩展已是开启状态",
+    "extensionClosed" => "当前扩展已是关闭状态",
+    "extensionNoNeedToUpgrade" => "扩展已是最新版，无需升级",
+    "extensionInstalling" => "安装中，请稍后",
+    "extensionInstalledSuccessfully" => "安装成功",
+    "extensionUpdatingData" => "更新数据中，请稍后",
+    "extensionUpgrading" => "更新中，请稍后",
+    "extensionUpdateSuccessed" => "更新成功",
+    "extensionUninstalling" => "卸载中，请稍后",
+    "extensionClosing" => "关闭中，请稍后",
+    "extensionOpening" => "开启中，请稍后",
+    "extensionClosed" => "已关闭",
+    "extensionTurnedOn" => "已开启",
   ]
 ];
 

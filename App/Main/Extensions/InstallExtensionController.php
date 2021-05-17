@@ -7,10 +7,10 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Request;
-use gstudio_kernel\Foundation\View;
 use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Extension\ExtensionIuu;
 use gstudio_kernel\Foundation\Extension\Extensions;
+use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Model\ExtensionsModel;
 
@@ -26,11 +26,11 @@ class InstallExtensionController extends Controller
     $EM = new ExtensionsModel();
     $extension = $EM->getByExtensionId($extensionId);
     if (empty($extension)) {
-      Response::error(404, 404001, "扩展不存在");
+      Response::error(404, 404001, Lang::value("extensionNotExists"));
     }
     $extension = $extension[0];
     if ($extension['installed'] && $extension['install_time']) {
-      Response::error(400, 400001, "扩展已安装，请勿重复安装");
+      Response::error(400, 400001, Lang::value("extensionDoNotInstall"));
     }
     $extensionConfig = Extensions::config($extension['extension_id'], $extension['path']);
 

@@ -1,4 +1,4 @@
-CREATE TABLE `pre_gstudio_kernel_extensions` (
+CREATE TABLE IF NOT EXISTS `pre_gstudio_kernel_extensions` (
   `id` int(12) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `install_time` int(13) DEFAULT NULL COMMENT '安装时间',
   `upgrade_time` int(13) DEFAULT NULL COMMENT '更新时间',

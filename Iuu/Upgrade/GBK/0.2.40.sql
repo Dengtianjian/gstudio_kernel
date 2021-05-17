@@ -1,18 +1,18 @@
-CREATE TABLE `pre_gstudio_kernel_extensions` (
-  `id` int(12) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `install_time` int(13) DEFAULT NULL COMMENT '°²×°Ê±¼ä',
-  `upgrade_time` int(13) DEFAULT NULL COMMENT '¸üÐÂÊ±¼ä',
-  `local_version` varchar(20) DEFAULT NULL COMMENT '±¾µØ°æ±¾',
-  `plugin_id` varchar(40) DEFAULT NULL COMMENT 'ËùÊô²å¼þid¡£kernelµÄÊÇÏµÍ³À©Õ¹',
-  `extension_id` varchar(60) DEFAULT NULL COMMENT 'À©Õ¹id',
-  `enabled` tinyint(1) DEFAULT NULL COMMENT 'ÒÑ¿ªÆô',
-  `installed` tinyint(4) DEFAULT NULL COMMENT 'ÒÑ°²×°',
-  `path` varchar(535) DEFAULT NULL COMMENT 'À©Õ¹¸ùÂ·¾¶',
-  `parent_id` varchar(60) DEFAULT NULL COMMENT '¸¸À©Õ¹ID',
-  `created_time` int(13) DEFAULT NULL COMMENT '¼ÇÂ¼´´½¨Ê±¼ä',
-  `name` varchar(60) DEFAULT NULL COMMENT 'À©Õ¹Ãû³Æ',
+CREATE TABLE IF NOT EXISTS `pre_gstudio_kernel_extensions` (
+  `id` int(12) NOT NULL AUTO_INCREMENT COMMENT 'ï¿½ï¿½ï¿½ï¿½',
+  `install_time` int(13) DEFAULT NULL COMMENT 'ï¿½ï¿½×°Ê±ï¿½ï¿½',
+  `upgrade_time` int(13) DEFAULT NULL COMMENT 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½',
+  `local_version` varchar(20) DEFAULT NULL COMMENT 'ï¿½ï¿½ï¿½Ø°æ±¾',
+  `plugin_id` varchar(40) DEFAULT NULL COMMENT 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½idï¿½ï¿½kernelï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½Õ¹',
+  `extension_id` varchar(60) DEFAULT NULL COMMENT 'ï¿½ï¿½Õ¹id',
+  `enabled` tinyint(1) DEFAULT NULL COMMENT 'ï¿½Ñ¿ï¿½ï¿½ï¿½',
+  `installed` tinyint(4) DEFAULT NULL COMMENT 'ï¿½Ñ°ï¿½×°',
+  `path` varchar(535) DEFAULT NULL COMMENT 'ï¿½ï¿½Õ¹ï¿½ï¿½Â·ï¿½ï¿½',
+  `parent_id` varchar(60) DEFAULT NULL COMMENT 'ï¿½ï¿½ï¿½ï¿½Õ¹ID',
+  `created_time` int(13) DEFAULT NULL COMMENT 'ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½',
+  `name` varchar(60) DEFAULT NULL COMMENT 'ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½',
   PRIMARY KEY (`id`),
   UNIQUE KEY `extension_id` (`extension_id`),
   KEY `plugin_id` (`plugin_id`),
   KEY `parent_id` (`parent_id`)
-) COMMENT = 'À©Õ¹±í'
+) COMMENT = 'ï¿½ï¿½Õ¹ï¿½ï¿½'
