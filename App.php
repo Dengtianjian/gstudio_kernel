@@ -18,6 +18,7 @@ function errorHandler()
 // error_reporting(\E_ALL);
 \set_error_handler("gstudio_kernel\\errorHandler", 0);
 
+use gstudio_kernel\App\Api as Api;
 use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -80,20 +81,6 @@ class App
       ]
     ];
 
-    //! 老代码 待去除
-    $GLOBALS["gstudio_kernel"] = [
-      "mode" => $this->mode,
-      "pluginId" => "gstudio_kernel",
-      "pluginPath" => "source/plugin/gstudio_kernel",
-      "assets" => "source/plugin/gstudio_kernel/Assets",
-      "devingPluginId" => $pluginId
-    ];
-    $GLOBALS[$pluginId] = [
-      "mode" => $this->mode,
-      "pluginId" => $pluginId,
-      "pluginPath" => "source/plugin/$pluginId",
-      "assets" => "source/plugin/$pluginId/Assets"
-    ];
     $this->pluginId = $pluginId;
     $this->pluginPath = DISCUZ_ROOT . "source/plugin/$pluginId";
     $this->uri = \addslashes($_GET['uri']);
@@ -132,6 +119,9 @@ class App
     if (Config::get("dashboard/use") === true) {
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
     }
+
+    Router::view("_download", Main\DownloadAttachmentView::class); //* 后期优化
+    Router::view("_baidu_oauth", Api\Baidu\OAuthController::class); //* 后期通过扩展增加，待去掉
 
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
 
@@ -177,9 +167,9 @@ class App
       }
       if (Config::get("mode") === "development") {
         $multipleEncodeJSScript .= "
-          <script>
-          console.log(GLANG);
-        </script>
+  <script>
+  console.log(GLANG);
+</script>
           ";
       }
       print_r($multipleEncodeJSScript);

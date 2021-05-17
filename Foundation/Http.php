@@ -8,6 +8,11 @@ if (!defined("IN_DISCUZ")) {
 
 class Http
 {
+  /**
+   * 获取用户IP地址
+   *
+   * @return string IP地址
+   */
   public static function realClientIp()
   {
     $ip = null;
@@ -20,15 +25,7 @@ class Http
     }
     return $ip;
   }
-  public static function send()
-  {
-  }
-  public static function get()
-  {
-  }
-  public static function post()
-  {
-  }
+  //! 准废弃
   public static function sGet($url, $post_data = [])
   {
     $postdata = http_build_query($post_data);
@@ -43,6 +40,7 @@ class Http
     $result = file_get_contents($url, false, $context);
     return $result;
   }
+  //! 准废弃
   public static function sPost($url, $post_data)
   {
     $postdata = http_build_query($post_data);
