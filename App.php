@@ -145,10 +145,10 @@ class App
           $langJson = \serialize([]);
         }
         $multipleEncodeJSScript = "
-    <script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
-    <script>
-      const GLANG=unserialize('$langJson');
-    </script>
+<script src='source/plugin/gstudio_kernel/Assets/js/unserialize.js'></script>
+<script>
+  const GLANG=unserialize('$langJson');
+</script>
     ";
       } else {
         $langJson = \json_encode(GlobalVariables::get("_GG/langs"));
@@ -156,16 +156,16 @@ class App
           $langJson = \json_encode([]);
         }
         $multipleEncodeJSScript = "
-    <script>
-      const GLANG=JSON.parse('$langJson');
-    </script>
+<script>
+  const GLANG=JSON.parse('$langJson');
+</script>
     ";
       }
       if (Config::get("mode") === "development") {
         $multipleEncodeJSScript .= "
-          <script>
-          console.log(GLANG);
-        </script>
+<script>
+  console.log(GLANG);
+</script>
           ";
       }
       print_r($multipleEncodeJSScript);
