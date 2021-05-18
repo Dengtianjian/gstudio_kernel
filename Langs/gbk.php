@@ -55,8 +55,7 @@ $langs = [
     "extension" => "扩展",
     "serverError" => "服务器错误",
     "extension_list" => "扩展列表",
-    "extension_new_technology_tips" => "?
-    本页采用较新的技术开发，请尽量使用Chrome浏览器访问，并且保持浏览器更新到最新版本。如扩展图标不显示请点击页面右侧悬浮图标?联系客服，?谢谢。",
+    "extension_new_technology_tips" => "?本页采用较新的技术开发，请尽量使用Chrome浏览器访问，并且保持浏览器更新到最新版本。如扩展图标不显示请点击页面右侧悬浮图标?联系客服，?谢谢。",
     "extension_no_install_any" => "还未安装任何扩展哦~",
     "extensionTurnOn" => "开启",
     "extensionClose" => "关闭",
