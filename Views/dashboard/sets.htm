@@ -21,15 +21,15 @@
             <textarea type="text" name="sets[{$setsItem['set_id']}]" >{$setsItem['set_content']}</textarea>
             <!--{elseif $setsItem['set_formtype']=="color"}-->
             <div class="set-type-color">
-              <input type="color" value="{$setsItem['set_content']}" name="sets[{$setsItem['set_id']}]" onchange="changeColor('color','{$setsItem['set_mark']}',this.value)" ></input>
-              <input type="text" value="{$setsItem['set_content']}" placeholder="{$_GG['langs']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setsItem['set_mark']}',this.value)" ></input>
+              <input type="color" value="{$setsItem['set_content']}" name="sets[{$setsItem['set_id']}]" onchange="changeColor('color',`{$setsItem['set_mark']}`,this.value)" ></input>
+              <input type="text" value="{$setsItem['set_content']}" placeholder="{$_GG['langs']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text',`{$setsItem['set_mark']}`,this.value)" ></input>
             </div>
             <!--{elseif $setsItem['set_formtype']=="html"}-->
-            <textarea onchange="changeHTML('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_view_content']}</textarea>
+            <textarea onchange="changeHTML(`{$setsItem['set_mark']}`,this.value)" >{$setsItem['set_view_content']}</textarea>
             <input type="hidden" name="sets[{$setsItem['set_id']}]" mark="{$setsItem['set_mark']}" ></input>
             <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
             <input type="hidden" name="sets[{$setsItem['set_id']}]" mark="{$setsItem['set_mark']}" value="{$setsItem['set_content']}" />
-            <textarea onchange="changeBBCode('{$setsItem['set_mark']}',this.value)" >{$setsItem['set_view_content']}</textarea>
+            <textarea onchange="changeBBCode(`{$setsItem['set_mark']}`,this.value)" >{$setsItem['set_view_content']}</textarea>
             <!--{elseif $setsItem['set_formtype']=="select"}-->
             <select name="sets[{$setsItem['set_id']}]" >
               <option disabled selected >{$_GG['langs']['kernel']['please_choose']}</option>
@@ -38,7 +38,7 @@
               <!--{/loop}-->
             </select>
             <!--{elseif $setsItem['set_formtype']=="image"}-->
-            <input type="file" name="{$setsItem['set_id']}" onchange="changeImage('{$setsItem['set_mark']}',this.files)"/>
+            <input type="file" name="{$setsItem['set_id']}" onchange="changeImage(`{$setsItem['set_mark']}`,this.files)"/>
             <!--{elseif $setsItem['set_formtype']=="forum"}-->
             <select class="set-content-forum" name="sets[{$setsItem['set_id']}][]" multiple="multiple" >
               <!--{loop $forums $forumsItem}-->
@@ -72,7 +72,7 @@
                 class="set-preview-img"
                 {if $setsItem['set_content']}src="{$_G['siteurl']}{$setsItem['set_content']}" {/if}
               />
-              <p><button type="button" onclick="cleanSetImage({$setsItem['set_id']})">{$_GG['langs']['kernel']['clean_set_image']}</button></p>
+              <p><button type="button" onclick="cleanSetImage(`{$setsItem['set_id']}`)">{$_GG['langs']['kernel']['clean_set_image']}</button></p>
             <!--{elseif $setsItem['set_formtype']=='html'}-->
             {$setsItem['set_view_content']}
             <!--{elseif $setsItem['set_formtype']=="bbcode"}-->
@@ -91,15 +91,15 @@
                 <textarea type="text" name="sets[{$setMergeItem['set_id']}]" >{$setMergeItem['set_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="color"}-->
                 <div class="set-type-color">
-                  <input type="color" value="{$setMergeItem['set_content']}" name="sets[{$setMergeItem['set_id']}]" onchange="changeColor('color','{$setMergeItem['set_mark']}',this.value)" ></input>
-                  <input type="text" value="{$setMergeItem['set_content']}" placeholder="{$_GG['langs']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text','{$setMergeItem['set_mark']}',this.value)" ></input>
+                  <input type="color" value="{$setMergeItem['set_content']}" name="sets[{$setMergeItem['set_id']}]" onchange="changeColor('color',`{$setMergeItem['set_mark']}`,this.value)" ></input>
+                  <input type="text" value="{$setMergeItem['set_content']}" placeholder="{$_GG['langs']['kernel']['form_color_input_placeholder']}" onchange="changeColor('text',`{$setMergeItem['set_mark']}`,this.value)" ></input>
                 </div>
                 <!--{elseif $setMergeItem['set_formtype']=="html"}-->
                 <input type="hidden" name="sets[{$setMergeItem['set_id']}]" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
-                <textarea onchange="changeHTML('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_view_content']}</textarea>
+                <textarea onchange="changeHTML(`{$setMergeItem['set_mark']}`,this.value)" >{$setMergeItem['set_view_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="bbcode"}-->
                 <input type="hidden" name="sets[{$setMergeItem['set_id']}]" mark="{$setMergeItem['set_mark']}" value="{$setMergeItem['set_content']}" />
-                <textarea onchange="changeBBCode('{$setMergeItem['set_mark']}',this.value)" >{$setMergeItem['set_view_content']}</textarea>
+                <textarea onchange="changeBBCode(`{$setMergeItem['set_mark']}`,this.value)" >{$setMergeItem['set_view_content']}</textarea>
                 <!--{elseif $setMergeItem['set_formtype']=="select"}-->
                 <select name="sets[{$setMergeItem['set_id']}]" >
                   <option disabled selected >{$_GG['langs']['kernel']['please_choose']}</option>
@@ -108,7 +108,7 @@
                   <!--{/loop}-->
                 </select>
                 <!--{elseif $setMergeItem['set_formtype']=="image"}-->
-                <input type="file" name="{$setMergeItem['set_id']}" onchange="changeImage('{$setMergeItem['set_mark']}',this.files)"/>
+                <input type="file" name="{$setMergeItem['set_id']}" onchange="changeImage(`{$setMergeItem['set_mark']}`,this.files)"/>
                 <!--{elseif $setMergeItem['set_formtype']=="forum"}-->
                 <select class="set-content-forum" name="sets[{$setMergeItem['set_id']}][]" multiple="multiple" >
                   <!--{loop $forums $forumsItem}-->
@@ -129,7 +129,7 @@
                   class="set-preview-img"
                   {if $setMergeItem['set_content']}src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"{/if}
                 />
-                <p><button type="button" onclick="cleanSetImage({$setMergeItem['set_id']})">{$_GG['langs']['kernel']['clean_set_image']}</button></p>
+                <p><button type="button" onclick="cleanSetImage(`{$setMergeItem['set_id']}`)">{$_GG['langs']['kernel']['clean_set_image']}</button></p>
 
                 <!--{/if}-->
               </div>
@@ -208,6 +208,6 @@
       });
     }
   </script>
-  <script type="text/javascript" src="/{$_G['setting']['jspath']}bbcode.js?{VERHASH}"></script>
+  <script type="text/javascript" src="{$_G['siteurl']}{$_G['setting']['jspath']}bbcode.js?{VERHASH}"></script>
 
 <!--{eval include $View::systemPage("components/footer", "dashboard")}-->
