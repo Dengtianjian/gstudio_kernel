@@ -16,6 +16,9 @@ class CDZXHTTP {
           config["body"] = JSON.stringify(params);
         }
       }
+      let headers = new Headers();
+      headers.append("x-ajax", "fetch");
+      config["headers"] = headers;
       fetch(url, config)
         .then((res) => {
           if (res.status === 204) {

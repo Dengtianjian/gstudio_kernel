@@ -125,4 +125,15 @@ class Request
   {
     unset($this->paramData[$key]);
   }
+  public function headers($key = null)
+  {
+    if ($key) {
+      return \getallheaders()[$key];
+    }
+    return \getallheaders();
+  }
+  public function ajax()
+  {
+    return $this->headers("X-Ajax");
+  }
 }

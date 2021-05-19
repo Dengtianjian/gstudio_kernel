@@ -7,6 +7,9 @@ use gstudio_kernel\Foundation\Response;
 class View
 {
   private static $viewData = [];
+  private static $outputHeaderHTML = [];
+  private static $outputFooterHTML = [];
+
   /**
    * 渲染模板文件
    * global渲染的数据，载入渲染的模板文件，并且删除掉$GLOBALS中渲染的数据
@@ -27,6 +30,7 @@ class View
       global ${$key};
     }
 
+    self::outputHeader();
     if (\is_array($fileName)) {
       if (Arr::isAssoc($fileName)) {
         foreach ($fileName as $name => $dir) {
@@ -229,5 +233,41 @@ class View
       "metadescription" => Str::replaceParams($descriptionSourceString, $params),
       "pageDescription" => Str::replaceParams($descriptionSourceString, $params),
     ]);
+  }
+  /**
+   * 模板的头部HTML
+   *
+   * @param string $html HTML代码片段
+   * @return void
+   */
+  static function header($html = null)
+  {
+    \array_push(self::$outputHeaderHTML, $html);
+  }
+  static function outputHeader()
+  {
+    if (count(self::$outputHeaderHTML)) {
+      $outputHeader = \implode("\n", self::$outputHeaderHTML);
+      self::$outputHeaderHTML = [];
+      print_r($outputHeader);
+    }
+  }
+  /**
+   * 模板的头部HTML
+   *
+   * @param string $html HTML代码片段
+   * @return void
+   */
+  static function footer($html = null)
+  {
+    \array_push(self::$outputFooterHTML, $html);
+  }
+  static function outputFooter()
+  {
+    if (count(self::$outputFooterHTML)) {
+      $outputFooter = \implode("\n", self::$outputFooterHTML);
+      self::$outputFooterHTML = [];
+      print_r($outputFooter);
+    }
   }
 }
