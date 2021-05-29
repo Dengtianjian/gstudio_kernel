@@ -159,4 +159,17 @@ class Application
       $MainInstance->handle();
     }
   }
+  protected function setAttachmentPath()
+  {
+    if (Config::get("attachmentPath") === NULL) {
+      $attachmentRoot = \getglobal("setting/attachdir") . "plugin/" . GlobalVariables::getGG("id");
+      $attachmentUrl = \getglobal("setting/attachurl") . "plugin/" . GlobalVariables::getGG("id");
+      if (!is_dir($attachmentRoot)) {
+        \dmkdir($attachmentRoot);
+      }
+      Config::set([
+        "attachmentPath" => $attachmentUrl
+      ]);
+    }
+  }
 }

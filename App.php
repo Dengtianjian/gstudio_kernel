@@ -81,7 +81,7 @@ class App extends Application
     ErrorCode::load(); //* 加载错误码
 
     //* 分析query
-    //! 待去除
+    //! 待废弃
     $queryString = $_SERVER['QUERY_STRING'];
     $queryString = explode("&", $queryString);
     $query = [];
@@ -111,6 +111,9 @@ class App extends Application
 
     $request = new Request();
     $this->request = $request;
+
+    //* 设置附件目录
+    $this->setAttachmentPath();
 
     //* 载入扩展
     if (Config::get("extensions")) {
