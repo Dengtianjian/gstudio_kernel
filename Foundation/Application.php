@@ -72,6 +72,7 @@ class Application
       $instance->verifyFormhash();
       $result = $instance->data($this->request);
       if ($this->request->ajax() === NULL) {
+        \print_r("<script>const FORMHASH=\"" . FORMHASH . "\";</script>");
         View::outputFooter();
       }
       return $result;
