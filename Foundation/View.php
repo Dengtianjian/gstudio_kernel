@@ -7,10 +7,8 @@ use gstudio_kernel\Foundation\Response;
 class View
 {
   private static $viewData = [];
-  private static $outputHeaderHTML = [
-    "<script>const FORMHASH=\"" . FORMHASH . "\";</script>"
-  ];
-  private static $outputFooterHTML = [];
+  private static $outputHeaderHTML = [];
+  private static $outputFooterHTML = ["<script>const FORMHASH=\"" . FORMHASH . "\";</script>"];
 
   /**
    * 渲染模板文件
