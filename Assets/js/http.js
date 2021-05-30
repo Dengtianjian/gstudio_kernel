@@ -19,7 +19,9 @@ class CDZXHTTP {
       let headers = new Headers();
       headers.append("x-ajax", "fetch");
       config["headers"] = headers;
-      url += "&formhash=" + FORMHASH;
+      if (typeof FORMHASH != "undefined") {
+        url += "&formhash=" + FORMHASH;
+      }
       fetch(url, config)
         .then((res) => {
           if (res.status === 204) {
