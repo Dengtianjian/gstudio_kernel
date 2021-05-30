@@ -11,6 +11,7 @@ class Request
   private $paramData = [];
   private $includeData = [];
   private $query = [];
+  private $headers = [];
   public function __construct()
   {
     $this->serializationParams();
@@ -127,10 +128,26 @@ class Request
   }
   public function headers($key = null)
   {
-    if ($key) {
-      return \getallheaders()[$key];
+    if (\function_exists("getallheaders")) {
+      if ($key) {
+        return \getallheaders()[$key];
+      }
+      return \getallheaders();
     }
-    return \getallheaders();
+
+    if (empty($this->headers)) {
+      $headers = [];
+      foreach ($_SERVER as $name => $value) {
+        if (substr($name, 0, 5) == 'HTTP_') {
+          $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+        }
+      }
+      $this->headers = $headers;
+    }
+    if ($key) {
+      return $this->headers[$key];
+    }
+    return $this->headers;
   }
   public function ajax()
   {
