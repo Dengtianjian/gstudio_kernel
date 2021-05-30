@@ -39,39 +39,10 @@ class App extends Application
    */
   function __construct($pluginId = null)
   {
-    global $_G;
-
     \set_exception_handler("gstudio_kernel\Foundation\Exception\Exception::receive");
 
-    //* 存放全局用到的数据
-    $GlobalVariables = [
-      "id" => $pluginId, //* 当前运行中的应用ID
-      "sets" => [], //* 设置项，包含配置项里设置的全局设置项
-      "rewriteURL" => [], //* 重写的URL
-      "mode" => Config::get("mode", $pluginId), //* 当前运行模式
-      "langs" => [], //* 字典
-      "kernel" => [ //* 内核
-        "root" => "source/plugin/gstudio_kernel",
-        "fullRoot" => DISCUZ_ROOT . "source/plugin/gstudio_kernel",
-        "URLRoot" => $_G['siteurl'] . "source/plugin/gstudio_kernel",
-        "assets" => $_G['siteurl'] . "source/plugin/gstudio_kernel/Assets",
-        "views" => $_G['siteurl'] . "source/plugin/gstudio_kernel/Views",
-      ],
-      "addon" => [ //* 当前运行中的应用信息
-        "id" => $pluginId,  //* 应用ID
-        "root" => "source/plugin/$pluginId",
-        "fullRoot" => DISCUZ_ROOT . "source/plugin/$pluginId",
-        "URLRoot" => $_G['siteurl'] . "source/plugin/$pluginId", //* 应用文件夹路径
-        "assets" => $_G['siteurl'] . "source/plugin/$pluginId/Assets", //* 应用静态文件路径
-        "views" => $_G['siteurl'] . "source/plugin/$pluginId/Views", //* 应用模板文件路径
-      ],
-      "request" => [ //* 请求相关
-        "uri" => \addslashes($_GET['uri']), //* 请求的URI
-        "method" => $_SERVER['REQUEST_METHOD'], //* 请求的方法
-        "params" => [], //* 请求参数
-        "query" => [], //* 请求的query
-      ]
-    ];
+    //* 初始化全局数据
+    self::initGlobalVariables($pluginId);
 
     $this->pluginId = $pluginId;
     $this->pluginPath = DISCUZ_ROOT . "source/plugin/$pluginId";
@@ -89,7 +60,11 @@ class App extends Application
       $item = explode("=", $item);
       $query[$item[0]] = $item[1];
     }
-    $GlobalVariables['request']['query'] = $query;
+    $GlobalVariables = [
+      "request" => [
+        "query" => $query
+      ]
+    ];
 
     GlobalVariables::set([
       "_GG" => $GlobalVariables
@@ -143,5 +118,9 @@ class App extends Application
     if ($result !== NULL) {
       Response::success($result);
     }
+  }
+  public static function hook($pluginId)
+  {
+    self::initGlobalVariables($pluginId);
   }
 }

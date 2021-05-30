@@ -7,7 +7,9 @@ use gstudio_kernel\Foundation\Response;
 class View
 {
   private static $viewData = [];
-  private static $outputHeaderHTML = [];
+  private static $outputHeaderHTML = [
+    "<script>const FORMHASH=\"" . FORMHASH . "\";</script>"
+  ];
   private static $outputFooterHTML = [];
 
   /**
@@ -18,9 +20,10 @@ class View
    * @param string $fileDir 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。
    * @param array $viewData渲染的数据
    * @param string $templateId? 模板唯一标识符
+   * @param boolean $hook?=false 是否是hook插槽
    * @return boolean 一直都是 true
    */
-  static private function renderPage($fileName, $fileDir = "", $viewData = [], $templateId = "")
+  static private function renderPage($fileName, $fileDir = "", $viewData = [], $templateId = "", $hook = false)
   {
     global $_G, $_GG;
     $View = self::class;
@@ -30,23 +33,36 @@ class View
       global ${$key};
     }
 
+    $blocks = [];
+
     self::outputHeader();
     if (\is_array($fileName)) {
       if (Arr::isAssoc($fileName)) {
         foreach ($fileName as $name => $dir) {
           include_once template($name, $_GG['id'] . "_$templateId", $dir);
+          if ($hook) {
+            $blocks[$name] = ${$blocks};
+          }
         }
       } else {
         foreach ($fileName as $name) {
           include_once template($name, $_GG['id'] . "_$templateId", $fileDir);
+          if ($hook) {
+            $blocks[$name] = ${$blocks};
+          }
         }
       }
     } else {
       include_once template($fileName, $_GG['id'] . "_$templateId", $fileDir);
+      $blocks = ${$fileName};
     }
 
     foreach ($viewData as $key => $value) {
       unset($GLOBALS[$key]);
+    }
+
+    if ($hook) {
+      return $blocks;
     }
 
     return true;
@@ -59,9 +75,10 @@ class View
    * @param string $viewDirOfViewData? 文件的路径或者渲染的数据。传入的如果是数组就是渲染的数据，否则就是模板路径。
    * @param array $viewData? 渲染的数据
    * @param string $templateId? 模板唯一标识符
+   * @param boolean $hook?=false 是否是hook插槽
    * @return void
    */
-  static function render($viewFile, $viewDirOfViewData = "/", $viewData = [], $templateId = "")
+  static function render($viewFile, $viewDirOfViewData = "/", $viewData = [], $templateId = "", $hook = false)
   {
     if (is_array($viewDirOfViewData)) {
       $viewData = $viewDirOfViewData;
@@ -96,7 +113,7 @@ class View
       }
     }
 
-    return self::renderPage($viewFile, $viewDirOfViewData, $viewData, $templateId);
+    return self::renderPage($viewFile, $viewDirOfViewData, $viewData, $templateId, $hook);
   }
   /**
    * 渲染页面
@@ -136,6 +153,24 @@ class View
     $viewDirOfViewData = \str_replace(GlobalVariables::get("_GG/kernel/root") . "/Views/", "", $viewDirOfViewData);
     $viewDirOfViewData = GlobalVariables::get("_GG/kernel/root") . "/Views/$viewDirOfViewData";
     return self::render($viewFile, $viewDirOfViewData, $viewData, $templateId);
+  }
+  /**
+   * 渲染hook插槽块
+   *
+   * @param string|array $viewFile 模板文件名称。可字符串，可字符串数组
+   * @param string $viewDirOfViewData 渲染的渲染文件路径。传入是关联数组就是渲染的数据
+   * @param array $viewData 渲染的数据
+   * @return array|string 如果传入的viewFile是数组就会返回关联数组，元素的是加载的块html代码，否则就是单个块html代码
+   */
+  static function hook($viewFile, $viewDirOfViewData = "", $viewData = [])
+  {
+    if (is_array($viewDirOfViewData)) {
+      $viewData = $viewDirOfViewData;
+      $viewDirOfViewData = "";
+    }
+    $viewDirOfViewData = \str_replace(GlobalVariables::get("_GG/addon/root") . "/Views", "", $viewDirOfViewData);
+    $viewDirOfViewData = GlobalVariables::get("_GG/addon/root") . "/Views/$viewDirOfViewData";
+    return self::render($viewFile, $viewDirOfViewData, $viewData, "hook", true);
   }
   /**
    * 渲染后台模板页面
