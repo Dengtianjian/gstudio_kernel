@@ -319,10 +319,14 @@ class Curl
     }
     \curl_setopt_array($curl, $options);
     $result = \curl_exec($curl);
+
     if ($result === false) {
       $this->curlErrorMsg = \curl_error($curl);
       $this->curlErrorNo = \curl_errno($curl);
     } else {
+      if ($this->isJson) {
+        $result = \json_decode($result, true);
+      }
       $this->responseData = $result;
     }
     curl_close($curl);

@@ -102,7 +102,7 @@ class App extends Application
 
     $executeMiddlewareResult = $this->executiveMiddleware();
 
-    $router = Router::match($this->uri);
+    $router = Router::match($request->uri);
     $this->router = $router;
     if (!$router) {
       Response::error("ROUTE_DOES_NOT_EXIST");

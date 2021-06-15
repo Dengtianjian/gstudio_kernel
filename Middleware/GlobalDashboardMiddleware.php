@@ -11,7 +11,6 @@ use DB;
 use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Router;
-use gstudio_kernel\Foundation\View;
 use gstudio_kernel\App\Dashboard\Controller as DashboardController;
 use gstudio_kernel\Foundation\Arr;
 use gstudio_kernel\Foundation\Request;
@@ -24,7 +23,8 @@ class GlobalDashboardMiddleware
     "gstudio_c20210203",
     "gstudio_sitenav_bak",
     "gstudio_20210303",
-    "gstudio_kernel"
+    "gstudio_kernel",
+    "gstudio_20210519"
   ];
   public function handle($next, Request $request)
   {
@@ -58,7 +58,6 @@ class GlobalDashboardMiddleware
     $uri = \addslashes($_GET['uri']);
 
     // TODO 当是动态添加导航时，要自定义设置页面
-
     $firstLevelNav = null;
     $secondLevelNav = null;
     $secondLevelNavs = [];
@@ -74,7 +73,12 @@ class GlobalDashboardMiddleware
     if ($uri && !$navId) {
       if ($uri === "dashboard" && !$navId) {
         //* 没有输入URI 也没有nav_id 就获取第一个第一级导航
-        $navId = array_keys($firstLevelNavs)[0];
+        $firstNav = array_values($firstLevelNavs)[0];
+        $navId = $firstNav['nav_id'];
+        if ($firstNav['nav_custom']) {
+          $uri = $firstNav['nav_uri'];
+          $request->uri = $uri;
+        }
       } else {
         $hasUriNavs = Arr::indexToAssoc($firstLevelNavs, "nav_uri");
         $firstLevelNav = $hasUriNavs[$uri];
@@ -104,7 +108,7 @@ class GlobalDashboardMiddleware
           $navId
         ]);
         if (empty($nav)) {
-          // Response::error(500, 500001, "导航不存在");
+          Response::error(500, 500001, "导航不存在");
         }
         $firstLevelNav = $firstLevelNavs[$nav['nav_up']];
         if ($firstLevelNav) {
@@ -159,6 +163,7 @@ class GlobalDashboardMiddleware
     //* 三级导航
     $pageRenderAppendData['thirdLevelNav'] = $thirdLevelNav;
     $pageRenderAppendData['thirdLevelNavs'] = $thirdLevelNavs;
+    // debug($secondLevelNavs);
 
     //* 应用
     $pluginData = DB::fetch_all("SELECT * FROM `%t` WHERE `identifier` LIKE (%i)", [
