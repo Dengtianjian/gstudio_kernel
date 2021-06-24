@@ -91,7 +91,7 @@ class ContainerController extends Controller
 
     $setCount = count($sets);
 
-    View::systemPage("sets", "dashboard", [
+    View::systemPage("sets", "Dashboard", [
       "setCount" => $setCount,
       "sets" => $sets,
       "userGroup" => $userGroup
