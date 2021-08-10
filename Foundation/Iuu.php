@@ -46,6 +46,7 @@ class Iuu
     if (!\file_exists($sqlPath)) {
       $sqlPath = DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install/install.sql";
     }
+
     if (!\file_exists($sqlPath)) {
       return $this;
     }
