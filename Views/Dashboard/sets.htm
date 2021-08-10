@@ -1,4 +1,11 @@
 <!--{eval include $View::systemPage("components/header", "Dashboard")}-->
+{if $setCount>0}
+<style>
+  .page-footer {
+    margin-bottom: 60px;
+  }
+</style>
+{/if}
 <main class="page-main container" {if $_GG['addon']['dashboard']['secondLevelNavCount']==0}style="display:block;" {/if}>
   <!--{eval include $View::systemPage("components/aside", "Dashboard")}-->
   <div class="page-content">
@@ -153,7 +160,8 @@
               <img class="set-preview-img" {if
                 $setMergeItem['set_content']}src="{if $setMergeItem['set_content']}{$_G['siteurl']}{$setMergeItem['set_content']}{/if}"
                 {/if} />
-              <p><button type="button"
+              <p>
+                <button type="button"
                   onclick="cleanSetImage(`{$setMergeItem['set_id']}`)">{$_GG['langs']['kernel']['clean_set_image']}</button>
               </p>
 

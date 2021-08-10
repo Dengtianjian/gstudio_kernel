@@ -332,8 +332,13 @@ ul {
   transition: opacity 0.4s linear;
 }
 .form-operate {
+  position:fixed;
+  bottom:0;
+  left:0;
+  padding:10px 0;
   width: 100%;
   text-align: center;
+  background-color:white;
 }
 .form-submit-button:hover {
   opacity: 0.8;
