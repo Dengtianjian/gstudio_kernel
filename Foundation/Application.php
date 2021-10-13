@@ -121,10 +121,11 @@ class Application
    */
   protected function loadLang()
   {
-    include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Langs/" . CHARSET . ".php");
+    $charset = strtoupper(CHARSET);
+    include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Langs/$charset.php");
     $langDirPath = $this->pluginPath . "/Langs/";
     if (\file_exists($langDirPath)) {
-      $langFilePath = $this->pluginPath . "/Langs/" . CHARSET . ".php";
+      $langFilePath = $this->pluginPath . "/Langs/$charset.php";
       if (\file_exists($langFilePath)) {
         include_once($langFilePath);
       }
