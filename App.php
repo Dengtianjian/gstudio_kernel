@@ -79,7 +79,6 @@ class App extends Application
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
     }
 
-    Router::view("_download", Main\DownloadAttachmentView::class); //* 后期优化
     Router::view("_baidu_oauth", Api\Baidu\OAuthController::class); //* 后期通过扩展增加，待去掉
 
     $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
