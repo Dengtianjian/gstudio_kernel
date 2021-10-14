@@ -16,6 +16,6 @@ if (!file_exists(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Autoload.php")) {
 include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Autoload.php");
 
 $Iuu = new Iuu("gstudio_kernel", $_GET['fromversion']);
-$Iuu->install()->runInstallSql();
+$Iuu->install()->runInstallSql()->cleanInstall();
 
 $finish = TRUE;
