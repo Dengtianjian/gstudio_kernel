@@ -6,10 +6,12 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use Exception;
 use gstudio_kernel\Foundation\Arr;
 use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
 use gstudio_kernel\Foundation\File;
+use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Model;
 
 class Attachment
@@ -21,13 +23,10 @@ class Attachment
   }
   public static function upload($files, $tableName = "", $tid = 0, $pid = 0, $price = 0, $remote = 0, $saveDir = "", $extid = 0, $forcename = "")
   {
-    global $app;
-    include_once \libfile("discuz/upload", "class");
-    $upload = new \discuz_upload();
     $uploadResult = [];
-    $onlyOny = false;
+    $onlyOne = false;
     if (Arr::isAssoc($files)) {
-      $onlyOny = true;
+      $onlyOne = true;
       $files = [$files];
     } else {
       $files = array_values($files);
@@ -39,95 +38,78 @@ class Attachment
     if ($tableName) {
       $insertDatas[$tableName] = [];
     }
-    include_once \libfile("function/core");
     foreach ($files as $fileItem) {
-      $upload->init($fileItem, $saveDir, $extid, $forcename);
-      if ($upload->error()) {
-        $uploadResult[] =  [
-          "error" => $upload->error(),
-          "message" => $upload->errormessage()
-        ];
-        continue;
-      } else {
-        $upload->save(true);
-        $saveFileName = explode("/", $upload->attach['attachment']);
-        $path = Config::get("attachmentPath") . "/$saveDir/" . $upload->attach['attachment'];
-        $aid = getattachnewaid($uid);
-        $width = 0;
-        $fileInfo = [];
-        if ($upload->attach['isimage']) {
-          $fileInfo['width'] = $upload->attach['imageinfo'][0];
-          $fileInfo['height'] = $upload->attach['imageinfo'][1];
-          $width = $fileInfo['width'];
-          if (!$width) {
-            $width = 0;
-          }
-        }
-        $insertData = array(
-          'aid' => $aid,
-          "tid" => $tid,
-          "pid" => $pid,
-          'uid' => $uid,
-          'dateline' => $timestamp,
-          'filename' => dhtmlspecialchars(censor($upload->attach['name'])),
-          'filesize' => $upload->attach['size'],
-          'attachment' => $upload->attach['attachment'],
-          'remote' => $remote,
-          "description" => "",
-          "readperm" => 0,
-          "price" => $price,
-          'isimage' => $upload->attach['isimage'],
-          'width' => $width,
-          'thumb' => 0,
-          "picid" => 0
-        );
-        if (!$tableName) {
-          $tableId = null;
-          if ($tid) {
-            $tableId = getattachtableid($tid);
-          } else {
-            $tableId = getattachtableid(time());
-          }
-          $tableName = "forum_attachment_" . $tableId;
-          if (!$insertDatas[$tableName]) {
-            $insertDatas[$tableName] = [];
-          }
-          array_push($insertDatas[$tableName], $insertData);
+      $path = Config::get("attachmentPath") . "/$saveDir/";
+      $updateResult = File::upload($fileItem, $path);
+      $aid = getattachnewaid($uid);
+      $width = 0;
+      $fileInfo = [];
+
+      $insertData = array(
+        'aid' => $aid,
+        "tid" => $tid,
+        "pid" => $pid,
+        'uid' => $uid,
+        'dateline' => $timestamp,
+        'filename' => dhtmlspecialchars(censor($updateResult['sourceFileName'])),
+        'filesize' => $updateResult['size'],
+        'attachment' => $updateResult['saveFileName'],
+        'remote' => $remote,
+        "description" => "",
+        "readperm" => 0,
+        "price" => $price,
+        'isimage' => (int)File::isImage($updateResult['sourceFileName']),
+        'width' => $width,
+        'thumb' => 0,
+        "picid" => 0
+      );
+      if (!$tableName) {
+        $tableId = null;
+        if ($tid) {
+          $tableId = getattachtableid($tid);
         } else {
-          array_push($insertDatas[$tableName], $insertData);
+          $tableId = getattachtableid(time());
         }
-        $fileInfo = [
-          "path" => $path,
-          "extension" => $upload->attach['extension'],
-          "sourceFileName" => $upload->attach['name'],
-          "saveFileName" => $saveFileName[count($saveFileName) - 1],
-          "size" => $upload->attach['size'],
-          "type" => $upload->attach['type'],
-          "fullPath" => $path,
-          "aid" => $aid,
-          "tableId" => $tableId,
-          "tableName" => $tableName,
-          "dzAidEncode" => \aidencode($aid, 0, $tid),
-          "downloadEncode" => self::aidencode($aid)
-        ];
-        $uploadResult[] = $fileInfo;
-        $updateDatas[] = [
-          $aid,
-          $tableId,
-          $uid
-        ];
+        $tableName = "forum_attachment_" . $tableId;
+        if (!$insertDatas[$tableName]) {
+          $insertDatas[$tableName] = [];
+        }
+        array_push($insertDatas[$tableName], $insertData);
+      } else {
+        array_push($insertDatas[$tableName], $insertData);
       }
+      $fileInfo = [
+        "path" => $updateResult['path'],
+        "extension" => $updateResult['extension'],
+        "sourceFileName" => $updateResult['sourceFileName'],
+        "saveFileName" => $updateResult['saveFileName'],
+        "size" => $updateResult['size'],
+        "fullPath" => $updateResult['fullPath'],
+        "aid" => $aid,
+        "tableId" => $tableId,
+        "tableName" => $tableName,
+        "dzAidEncode" => \aidencode($aid, 0, $tid),
+        "downloadEncode" => self::aidencode($aid,"plugin/".GlobalVariables::getGG('id')."/attachments")
+      ];
+      $uploadResult[] = $fileInfo;
+      $updateDatas[] = [
+        $aid,
+        $tableId,
+        $uid
+      ];
     }
+
     foreach ($insertDatas as $tableName => $insertData) {
-      $attachmenModel = new Model($tableName);
-      $attachmenModel->batchInsertByMS($insertData)->save();
+      $attachmenModel = new DatabaseModel($tableName);
+      $fieldNames = array_keys($insertData[0]);
+      $attachmenModel->batchInsert($fieldNames, $insertData)->save();
     }
     $ForumAttachmentModel = new DatabaseModel("forum_attachment");
     $ForumAttachmentModel->batchUpdate([
       "aid", "tableid", "uid"
     ], $updateDatas)->save();
 
-    if ($onlyOny) {
+    if ($onlyOne) {
       return $uploadResult[0];
     }
 

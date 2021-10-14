@@ -3,6 +3,7 @@
 namespace gstudio_kernel\App\Main;
 
 use gstudio_kernel\Foundation\Controller;
+use gstudio_kernel\Foundation\GlobalVariables;
 
 if (!defined('IN_DISCUZ')) {
   exit('Access Denied');
@@ -168,7 +169,6 @@ class DownloadAttachmentView extends Controller
       }
       exit();
     }
-
     $filename = $_G['setting']['attachdir'] . '/' . $dir . '/' . $attach['attachment'];
     if (!$attach['remote'] && !is_readable($filename)) {
       if (!$requestmode) {
