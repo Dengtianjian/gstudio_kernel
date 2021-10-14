@@ -50,24 +50,25 @@ class Arr
    * @param string $dataPrimaryKey 主键，也是父子都有的一个唯一值
    * @param string $relatedParentKey 关联键名，用于关联父子
    * @param string $childArrayKeys = childs 子级保存在指定的键值下的数组名称
+   * @param any $isParentValue = 0 用于判断是父级的值 例如 xxx===isParentValue=true 就说明他是父级 
    * @return array 分级后的数组
    */
-  static function tree($arr, $dataPrimaryKey, $relatedParentKey, $childArrayKeys = "childs")
+  static function tree($arr, $dataPrimaryKey, $relatedParentKey, $childArrayKeys = "childs", $isParentValue = 0)
   {
     $arr = self::valueToKey($arr, $dataPrimaryKey);
     $result = [];
     foreach ($arr as &$arrItem) {
-      if (!$arrItem[$relatedParentKey]) { //* 最高级
-        if (!$result[$arrItem[$dataPrimaryKey]]) { //* 判断结果数组里是否存在，没有就加进去
+      if ($arrItem[$relatedParentKey] == $isParentValue) {
+        if (!$result[$arrItem[$dataPrimaryKey]]) {
+          $arrItem[$childArrayKeys] = [];
           $result[$arrItem[$dataPrimaryKey]] = $arrItem;
-          $arrItem['reference'] = &$result[$arrItem[$dataPrimaryKey]];
-          $arrItem['reference'][$childArrayKeys] = [];
         }
-      } else { //* 下级
-        if ($arr[$arrItem[$relatedParentKey]]['reference']) {
-          $arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys][$arrItem[$dataPrimaryKey]] = $arrItem;
-          $arrItem['reference'] = &$arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys][$arrItem[$dataPrimaryKey]];
+      } else {
+        if (!$result[$arrItem[$relatedParentKey]][$childArrayKeys]) {
+          $arr[$arrItem[$relatedParentKey]][$childArrayKeys] = [];
+          $result[$arrItem[$relatedParentKey]] = $arr[$arrItem[$relatedParentKey]];
         }
+        array_push($result[$arrItem[$relatedParentKey]][$childArrayKeys], $arrItem);
       }
     }
     return $result;
