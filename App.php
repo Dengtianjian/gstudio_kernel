@@ -69,7 +69,8 @@ class App extends Application
     GlobalVariables::set([
       "_GG" => $GlobalVariables
     ]);
-    include_once($GlobalVariables['kernel']['fullRoot'] . "/Routes.php"); //* 载入kernel用到的路由
+    
+    include_once(GlobalVariables::get("kernel/fullRoot") . "/Routes.php"); //* 载入kernel用到的路由
     include_once($this->pluginPath . "/Routes.php"); //* 载入路由
   }
   function init()
