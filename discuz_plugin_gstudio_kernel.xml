@@ -2,7 +2,7 @@
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
 	<item id="Version"><![CDATA[X3.4]]></item>
-	<item id="Time"><![CDATA[2021-10-14 03:46]]></item>
+	<item id="Time"><![CDATA[2021-10-17 12:19]]></item>
 	<item id="From"><![CDATA[Local (http://127.0.0.82/)]]></item>
 	<item id="Data">
 		<item id="plugin">
@@ -15,7 +15,7 @@
 			<item id="directory"><![CDATA[gstudio_kernel/]]></item>
 			<item id="copyright"><![CDATA[COOOCC]]></item>
 			<item id="modules"><![CDATA[a:0:{}]]></item>
-			<item id="version"><![CDATA[0.2.46]]></item>
+			<item id="version"><![CDATA[0.2.48]]></item>
 		</item>
 		<item id="version"><![CDATA[X3.4]]></item>
 		<item id="installfile"><![CDATA[install.php]]></item>
