@@ -19,6 +19,9 @@ class Attachment
   public static function save($files, $saveDir = "")
   {
     $savePath = Config::get("attachmentPath") . "/$saveDir";
+    if (!is_dir($savePath)) {
+      mkdir($savePath, 0777, true);
+    }
     return File::upload($files, $savePath);
   }
   public static function upload($files, $tableName = "", $tid = 0, $pid = 0, $price = 0, $remote = 0, $saveDir = "", $extid = 0, $forcename = "")
@@ -89,7 +92,7 @@ class Attachment
         "tableId" => $tableId,
         "tableName" => $tableName,
         "dzAidEncode" => \aidencode($aid, 0, $tid),
-        "downloadEncode" => self::aidencode($aid,"plugin/".GlobalVariables::getGG('id')."/attachments")
+        "downloadEncode" => self::aidencode($aid, "plugin/" . GlobalVariables::getGG('id') . "/attachments")
       ];
       $uploadResult[] = $fileInfo;
       $updateDatas[] = [
