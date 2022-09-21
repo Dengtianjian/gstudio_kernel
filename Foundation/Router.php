@@ -5,7 +5,7 @@ namespace gstudio_kernel\Foundation;
 use gstudio_kernel\Foundation\Data\Arr;
 use gstudio_kernel\Foundation\Network\Curl;
 
-if (!defined("F_KERNEL")) {
+if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 

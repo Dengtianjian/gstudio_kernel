@@ -15,7 +15,7 @@ function errorHandler()
   }
 }
 
-// error_reporting(\E_ALL);
+error_reporting(\E_ALL);
 \set_error_handler("gstudio_kernel\\errorHandler", 0);
 
 use gstudio_kernel\App\Api as Api;
@@ -26,6 +26,7 @@ use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\Exception\ErrorCode;
+use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Middleware\GlobalExtensionsMiddleware;
 use gstudio_kernel\Middleware\GlobalMultipleEncodeMiddleware;
 
@@ -38,6 +39,9 @@ class App extends Application
    */
   function __construct($pluginId = null)
   {
+    $GLOBALS['App'] = $this;
+    $this->request = new Request();
+
     $this->pluginId = $pluginId;
     $this->uri = \addslashes($_GET['uri']);
 
@@ -52,11 +56,10 @@ class App extends Application
 
     $this->loadLang();
     ErrorCode::load(F_KERNEL_ROOT . "ErrorCodes.php"); //* 加载错误码
+    Output::debug(ErrorCode::all());
 
     include_once(F_KERNEL_ROOT . "/Routes.php"); //* 载入kernel路由
     include_once(F_APP_ROOT . "/Routes.php"); //* 载入当前应用路由
-
-    $this->request = new Request();
   }
   function defineConstants()
   {
@@ -101,7 +104,7 @@ class App extends Application
     $executeMiddlewareResult = $this->executiveMiddleware();
 
     $router = Router::match($request->uri);
-    
+
     if (isset($router['params'])) {
       $this->request->setParams($router['params']);
     }

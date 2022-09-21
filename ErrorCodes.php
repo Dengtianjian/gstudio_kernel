@@ -2,7 +2,7 @@
 
 namespace gstudio_kernel;
 
-if (!defined("F_KERNEL")) {
+if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 

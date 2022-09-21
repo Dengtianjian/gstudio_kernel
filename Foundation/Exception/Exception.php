@@ -31,15 +31,15 @@ class Exception
    */
   public static function handle($code = 0, $message = "", $file = "", $line = null, $trace = "", $traceString = NULL, $previous = null)
   {
-    global $app;
+    global $App;
     $traceString = \explode(\PHP_EOL, $traceString);
-    if ($app->router === NULL || $app->router['type'] === "view") {
+    if ($App->router === NULL || $App->router['type'] === "view") {
       if (Config::get("mode") === "production") {
-        View::systemPage("error", [
+        View::kernelPage("error", [
           "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
         ]);
       } else {
-        View::systemPage("error", [
+        View::kernelPage("error", [
           "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
         ]);
       }

@@ -11,7 +11,7 @@ class Application
   protected $uri = null; //* 请求的URI
   protected $globalMiddlware = []; //*全局中间件
   protected $router = null; //* 路由相关
-  protected $request = null; //* 请求相关
+  public $request = null; //* 请求相关
   private function __clone()
   {
   }
@@ -185,7 +185,7 @@ class Application
   protected function loadExtensions()
   {
     $EM = new ExtensionsModel();
-    $enabledExtensions = $EM->where("enabled", 1)->get();
+    $enabledExtensions = $EM->where("enabled", 1)->getAll();
     foreach ($enabledExtensions as $extensionItem) {
       $mainFilepath = DISCUZ_ROOT . $extensionItem['path'] . "/Main.php";
       if (!\file_exists($mainFilepath)) {

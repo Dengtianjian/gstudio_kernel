@@ -4,7 +4,7 @@ namespace gstudio_kernel\Foundation;
 
 use gstudio_kernel\Foundation\Data\Arr;
 
-if (!defined("F_KERNEL")) {
+if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 

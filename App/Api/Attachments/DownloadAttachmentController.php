@@ -1,14 +1,14 @@
 <?php
 
-namespace gstudio_kernel\App\Main;
+namespace gstudio_kernel\App\Api\Attachments;
 
-use gstudio_kernel\Foundation\BaseController;
+use gstudio_kernel\Foundation\AuthController;
 
 if (!defined('IN_DISCUZ')) {
   exit('Access Denied');
 }
 
-class DownloadAttachmentView extends BaseController
+class DownloadAttachmentController extends AuthController
 {
   public function data()
   {
