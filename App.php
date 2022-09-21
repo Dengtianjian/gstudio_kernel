@@ -25,7 +25,6 @@ use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\Config as Config;
-use gstudio_kernel\Foundation\GlobalVariables;
 use gstudio_kernel\Foundation\Exception\ErrorCode;
 use gstudio_kernel\Middleware\GlobalExtensionsMiddleware;
 use gstudio_kernel\Middleware\GlobalMultipleEncodeMiddleware;
@@ -39,53 +38,52 @@ class App extends Application
    */
   function __construct($pluginId = null)
   {
-    \set_exception_handler("gstudio_kernel\Foundation\Exception\Exception::receive");
-
-    //* 初始化全局数据
-    self::initGlobalVariables($pluginId);
-
     $this->pluginId = $pluginId;
-    $this->pluginPath = DISCUZ_ROOT . "source/plugin/$pluginId";
     $this->uri = \addslashes($_GET['uri']);
 
+    \set_exception_handler("gstudio_kernel\Foundation\Exception\Exception::receive");
+
+    $this->defineConstants();
+
+    //* 初始化全局数据
+    $this->initAppStore();
+    //* 初始化配置
+    $this->initConfig();
+
     $this->loadLang();
-    ErrorCode::load(); //* 加载错误码
+    ErrorCode::load(F_KERNEL_ROOT . "ErrorCodes.php"); //* 加载错误码
 
-    //* 分析query
-    //! 待废弃
-    $queryString = $_SERVER['QUERY_STRING'];
-    $queryString = explode("&", $queryString);
-    $query = [];
-    foreach ($queryString as $item) {
-      $item = explode("=", $item);
-      $query[$item[0]] = $item[1];
-    }
-    $GlobalVariables = [
-      "request" => [
-        "query" => $query
-      ]
-    ];
+    include_once(F_KERNEL_ROOT . "/Routes.php"); //* 载入kernel路由
+    include_once(F_APP_ROOT . "/Routes.php"); //* 载入当前应用路由
 
-    GlobalVariables::set([
-      "_GG" => $GlobalVariables
-    ]);
-    
-    include_once(GlobalVariables::getGG("kernel/fullRoot") . "/Routes.php"); //* 载入kernel用到的路由
-    include_once($this->pluginPath . "/Routes.php"); //* 载入路由
+    $this->request = new Request();
+  }
+  function defineConstants()
+  {
+    global $_G;
+    define("F_APP_ID", $this->pluginId);
+    define("F_APP_ROOT", DISCUZ_ROOT . "source/plugin/" . $this->pluginId);
+    define("F_KERNEL_ROOT", DISCUZ_ROOT . "source/plugin/gstudio_kernel");
+    define("F_KERNEL", true);
+    define("F_CACHE_KEY", time());
+
+    //* 获取URL地址
+    define("F_BASE_URL", $_G['siteurl']);
   }
   function init()
   {
+    header("Access-Control-Allow-Origin:*");
+    header('Access-Control-Allow-Methods:*');
+    header('Access-Control-Allow-Headers:*');
+    header('Access-Control-Max-Age:86400');
+    header('Access-Control-Allow-Credentials: true');
+
     $this->setMiddlware(Middleware\GlobalSetsMiddleware::class);
     if (Config::get("dashboard/use") === true) {
       $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
     }
 
-    Router::view("_baidu_oauth", Api\Baidu\OAuthController::class); //* 后期通过扩展增加，待去掉
-
-    $this->setMiddlware(Middleware\GlobalAuthMiddleware::class);
-
-    $request = new Request();
-    $this->request = $request;
+    $request = $this->request;
 
     //* 设置附件目录
     $this->setAttachmentPath();
@@ -103,6 +101,12 @@ class App extends Application
     $executeMiddlewareResult = $this->executiveMiddleware();
 
     $router = Router::match($request->uri);
+    
+    if (isset($router['params'])) {
+      $this->request->setParams($router['params']);
+    }
+    $this->request->router = $router;
+    $executeMiddlewareResult = $this->executiveMiddleware();
     $this->router = $router;
     if (!$router) {
       Response::error("ROUTE_DOES_NOT_EXIST");
@@ -114,13 +118,10 @@ class App extends Application
     }
 
     $result = $this->executiveController();
-
-    if ($result !== NULL) {
-      Response::success($result);
-    }
+    Response::success($result);
   }
   public static function hook($pluginId)
   {
-    self::initGlobalVariables($pluginId);
+    // self::initGlobalVariables($pluginId);
   }
 }

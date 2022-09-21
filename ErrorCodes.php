@@ -1,11 +1,12 @@
 <?php
 
-namespace gstudio_kernel\Foundation\Exception;
+namespace gstudio_kernel;
 
-if (!defined("IN_DISCUZ")) {
+if (!defined("F_KERNEL")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Exception\ErrorCode;
 use gstudio_kernel\Foundation\Lang;
 
 $SubmitCodes = [
@@ -41,5 +42,7 @@ $ServerCodes = [
     500, "SERVER_ERROR_500001", Lang::value("kernel/serverError")
   ]
 ];
-
-$ErrorCodes = \array_merge($AuthCodes, $RouteCodes, $SubmitCodes, $ViewCodes, $MiddlwareCodes);
+$ErrorCodes = \array_merge($AuthCodes, $RouteCodes, $SubmitCodes, $ViewCodes, $MiddlwareCodes, $ServerCodes);
+foreach ($ErrorCodes as $key => $value) {
+  ErrorCode::add($key, $value[0], $value[1], $value[2]);
+}

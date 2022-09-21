@@ -1,8 +1,8 @@
 <?php
 
-namespace gstudio_kernel\Foundation;
+namespace gstudio_kernel\Foundation\Data;
 
-if (!defined("IN_DISCUZ")) {
+if (!defined("F_KERNEL")) {
   exit('Access Denied');
 }
 
@@ -16,18 +16,10 @@ class Arr
    */
   static function isAssoc($array)
   {
-    return array_keys($array) !== range(0, count($array) - 1);
-  }
-  /**
-   * 抽取元素的指定键值为当前元素的键
-    //! 准废弃
-   * @param array $array 原数组 索引数组
-   * @param string $key 键名
-   * @return array
-   */
-  static function valueToKey($array, $key)
-  {
-    return self::indexToAssoc($array, $key);
+    if (is_array($array)) {
+      return array_keys($array) !== range(0, count($array) - 1);
+    }
+    return false;
   }
   /**
    * 索引数组转关联数组
@@ -50,25 +42,24 @@ class Arr
    * @param string $dataPrimaryKey 主键，也是父子都有的一个唯一值
    * @param string $relatedParentKey 关联键名，用于关联父子
    * @param string $childArrayKeys = childs 子级保存在指定的键值下的数组名称
-   * @param any $isParentValue = 0 用于判断是父级的值 例如 xxx===isParentValue=true 就说明他是父级 
    * @return array 分级后的数组
    */
-  static function tree($arr, $dataPrimaryKey, $relatedParentKey, $childArrayKeys = "childs", $isParentValue = 0)
+  static function tree($arr, $dataPrimaryKey, $relatedParentKey, $childArrayKeys = "childs")
   {
-    $arr = self::valueToKey($arr, $dataPrimaryKey);
+    $arr = self::indexToAssoc($arr, $dataPrimaryKey);
     $result = [];
     foreach ($arr as &$arrItem) {
-      if ($arrItem[$relatedParentKey] == $isParentValue) {
-        if (!$result[$arrItem[$dataPrimaryKey]]) {
-          $arrItem[$childArrayKeys] = [];
+      if (!$arrItem[$relatedParentKey]) { //* 最高级
+        if (!isset($result[$arrItem[$dataPrimaryKey]])) { //* 判断结果数组里是否存在，没有就加进去
           $result[$arrItem[$dataPrimaryKey]] = $arrItem;
+          $arrItem['reference'] = &$result[$arrItem[$dataPrimaryKey]];
+          $arrItem['reference'][$childArrayKeys] = [];
         }
-      } else {
-        if (!$result[$arrItem[$relatedParentKey]][$childArrayKeys]) {
-          $arr[$arrItem[$relatedParentKey]][$childArrayKeys] = [];
-          $result[$arrItem[$relatedParentKey]] = $arr[$arrItem[$relatedParentKey]];
+      } else { //* 下级
+        if ($arr[$arrItem[$relatedParentKey]]['reference']) {
+          $arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys][$arrItem[$dataPrimaryKey]] = $arrItem;
+          $arrItem['reference'] = &$arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys][$arrItem[$dataPrimaryKey]];
         }
-        array_push($result[$arrItem[$relatedParentKey]][$childArrayKeys], $arrItem);
       }
     }
     return $result;
@@ -127,6 +118,14 @@ class Arr
       }
     }
     unset($previous);
+    return $result;
+  }
+  static function partial(array $target, array $keys): array
+  {
+    $result = [];
+    foreach ($keys as $key) {
+      $result[$key] = $target[$key];
+    }
     return $result;
   }
 }

@@ -2,98 +2,81 @@
 
 namespace gstudio_kernel\Foundation;
 
-if (!defined("IN_DISCUZ")) {
+if (!defined("F_KERNEL")) {
   exit('Access Denied');
 }
 
 class Request
 {
-  private $paramData = [];
-  private $includeData = [];
-  private $query = [];
+  private $body = [];
   private $headers = [];
+  private $paramsData = [];
+  private $paginationParams = [
+    "page" => 1,
+  ];
+  public $pipes = [];
+  public $uri = "";
+  public $router = null;
+  public $method = "";
   public function __construct()
   {
-    $this->serializationParams();
-    $this->filterParams();
+    $this->serializationBody();
+
+    //* 管道参数处理
+    if (isset($_GET["_pipes"])) {
+      $this->pipes = array_merge($this->pipes, explode(",", $_GET['_pipes']));
+      unset($_GET["_pipes"]);
+    }
+    if (isset($this->body["_pipes"])) {
+      $this->pipes = array_merge($this->pipes, $this->body['_pipes']);
+      unset($this->body["_pipes"]);
+      unset($_POST["_pipes"]);
+    }
+    unset($_REQUEST["_pipes"]);
+    $this->pipes = array_map(fn ($item) => addslashes($item), $this->pipes);
+
+    //* 分页参数
+    $this->paginationParams = [
+      "page" => isset($_REQUEST["page"]) ? intval($_REQUEST["page"]) : 1,
+      "limit" => 10,
+      "skip" => isset($_REQUEST["skip"]) ? intval($_REQUEST["skip"]) : null
+    ];
+
+    if (isset($_REQUEST["limit"])) {
+      $this->paginationParams['limit'] = intval($_REQUEST["limit"]);
+    } else if (isset($_REQUEST["perPage"])) {
+      $this->paginationParams['limit'] = intval($_REQUEST["perPage"]);
+    }
+
+    //* 请求方式
+    $this->method = $_SERVER['REQUEST_METHOD'];
+    if (isset($_REQUEST['_method'])) {
+      $this->method = $_REQUEST['_method'];
+    }
+    $this->method = strtoupper($this->method);
+
+    //* 请求的URI
+    $this->uri = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], "?") ?: strlen($_SERVER['REQUEST_URI']));
   }
-  private function serializationParams()
+  private function serializationBody()
   {
-    $params = \file_get_contents("php://input");
-    if ($params) {
-      $params = \json_decode($params, true);
-      if ($params === null) {
-        $params = [];
+    //* 请求体处理
+    $body = \file_get_contents("php://input");
+    if ($body) {
+      $body = \json_decode($body, true);
+      if ($body === null) {
+        $body = [];
       }
     } else {
-      $params = [];
+      $body = [];
     }
-    $params = \array_merge($params, $_GET, $_POST);
-    $this->uri = \addslashes($params['uri']);
-    $this->pluginId = \addslashes($params['id']);
-    unset($params['id']);
-    unset($params['uri']);
-    $this->paramData = $params;
-  }
-  private function filterParams()
-  {
-    $params = $this->paramData;
-    $filters = [];
-    $page = [];
-    $fields = [];
-    $includes = [];
-    foreach ($params as $field => $value) {
-      if (preg_match("/filter\|(\w+)/", $field) === 1) {
-        $fieldName = explode("|", $field);
-        if (strpos($value, ",") !== false) {
-          $value = \explode(",", $value);
-        }
-        $filters[$fieldName[1]] = $value;
-        unset($params[$field]);
-      } else if ($field === "limit" || $field === "offset") {
-        $page[$field] = intval($value);
-        unset($params[$field]);
-      } else if (preg_match("/^field$/", $field) === 1) {
-        $fields = \addslashes($_GET['field']);
-        unset($params[$field]);
-      } else if (\strpos($field, "|") > 1) {
-        list($includeName, $fieldName) = \explode("|", $field);
-        if (!$includes[$includeName]) {
-          $includes[$includeName] = [
-            "filters" => [],
-            "page" => [
-              "offset" => null,
-              "limit" => null
-            ]
-          ];
-        }
-        switch ($fieldName) {
-          case "filter":
-            list($name, $fieldValue) = \explode("|", $value);
-            $includes[$includeName]['filters'][$name] = $fieldValue;
-            break;
-          case "offset":
-          case "limit":
-            $includes[$includeName]['page'][$fieldName] = intval($value);
-            break;
-          default:
-            $includes[$includeName][$fieldName] = $value;
-        }
 
-        unset($params[$field]);
-      }
-    }
-    $this->includeData = $includes;
-    $this->query = [
-      "filters" => $filters,
-      "page" => $page,
-      "field" => $fields
-    ];
-    $this->paramData = $params;
+    $this->body = \array_merge($body, $_POST);
   }
   private function getArrayData($arr, $keys)
   {
     if (\is_string($keys)) {
+      if (!isset($arr[$keys])) return null;
       return $arr[$keys];
     } else if (\is_array($keys)) {
       $returns = [];
@@ -107,30 +90,31 @@ class Request
 
     return $arr;
   }
-  public function params($paramsKey = null)
+  public function body($paramsKey = null, ...$paramsKeys)
   {
-    if (count(func_get_args()) > 1) {
-      $paramsKey = func_get_args();
+    if (empty($paramsKey) || !$paramsKey) return $this->body;
+    if (count($paramsKeys) > 0) {
+      array_push($paramsKeys, $paramsKey);
+      return $this->getArrayData($this->body, $paramsKeys);
     }
-    return $this->getArrayData($this->paramData, $paramsKey);
-  }
-  public function includes($fieldName = null)
-  {
-    return $this->getArrayData($this->includeData, $fieldName);
+    return $this->getArrayData($this->body, $paramsKey);
   }
   public function query($key = null)
   {
-    return $this->getArrayData($this->query, $key);
+    return $this->getArrayData($_GET, $key);
   }
   public function remove($key)
   {
-    unset($this->paramData[$key]);
+    unset($this->body[$key]);
   }
   public function headers($key = null)
   {
     if (\function_exists("getallheaders")) {
-      if ($key) {
-        return \getallheaders()[$key];
+      if (isset($key)) {
+        if (isset(\getallheaders()[$key])) {
+          return \getallheaders()[$key];
+        }
+        return null;
       }
       return \getallheaders();
     }
@@ -149,8 +133,55 @@ class Request
     }
     return $this->headers;
   }
-  public function ajax()
+  /**
+   * 是否是AJAX异步请求，也就是非页面渲染
+   *
+   * @return bool|string
+   */
+  public function ajax(): bool|string|null
   {
+    if (isset($_GET['isAjax'])) {
+      return true;
+    }
     return $this->headers("X-Ajax");
+  }
+  /**
+   * 是否是内部异步请求
+   *
+   * @return bool|string
+   */
+  public function async(): bool|string|null
+  {
+    if (isset($_GET['isAsync'])) {
+      return true;
+    }
+    return $this->headers("X-Async");
+  }
+  public function setParams($params = [])
+  {
+    $params = $params ?: [];
+    $this->paramsData = array_merge($this->paramsData, $params);
+    return $this->paramsData;
+  }
+  public function params($key = null, ...$keys)
+  {
+    if (empty($key) || !$key) return $this->paramsData;
+    if (count($keys) > 0) {
+      array_push($paramsKeys, $key);
+      return $this->getArrayData($this->paramsData, $keys);
+    }
+    return $this->getArrayData($this->paramsData, $key);
+  }
+  public function pagination(string $key = null): int|array
+  {
+    if ($key) {
+      return $this->paginationParams[$key];
+    }
+    return $this->paginationParams;
+  }
+  public function set(string $uri, string $method)
+  {
+    $this->uri = $uri;
+    $this->method = $method;
   }
 }

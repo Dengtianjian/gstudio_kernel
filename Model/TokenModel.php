@@ -2,18 +2,18 @@
 
 namespace gstudio_kernel\Model;
 
+use gstudio_kernel\Foundation\Database\Model;
+use gstudio_kernel\Foundation\Store;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
-
-use gstudio_kernel\Foundation\GlobalVariables;
-use gstudio_kernel\Foundation\Model;
 
 class TokenModel extends Model
 {
   public function __construct()
   {
-    $this->tableName = GlobalVariables::getGG("id") . "_token";
+    $this->tableName = F_APP_ID . "_token";
   }
   public function getByContent($tokenContent)
   {

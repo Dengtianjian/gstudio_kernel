@@ -2,6 +2,8 @@
 
 namespace gstudio_kernel\Foundation\Exception;
 
+use gstudio_kernel\Foundation\Response;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
@@ -9,10 +11,13 @@ if (!defined("IN_DISCUZ")) {
 class ErrorCode
 {
   private static $errorCodes = [];
-  public static function load()
+  public static function load($filePath)
   {
-    include_once(\DISCUZ_ROOT . "source/plugin/gstudio_kernel/Foundation/Exception/ErrorCodes.php");
-    self::$errorCodes = \array_merge(self::$errorCodes, $ErrorCodes);
+    if (file_exists($filePath)) {
+      include_once($filePath);
+    } else {
+      Response::error(500, "ErrorCode:500001", "Server error");
+    }
   }
   public static function add($keyCode, $statusCode, $code, $message)
   {

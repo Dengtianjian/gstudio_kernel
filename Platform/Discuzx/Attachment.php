@@ -6,13 +6,11 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
-use Exception;
-use gstudio_kernel\Foundation\Arr;
 use gstudio_kernel\Foundation\Config;
+use gstudio_kernel\Foundation\Data\Arr;
 use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
 use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Foundation\GlobalVariables;
-use gstudio_kernel\Foundation\Model;
 
 class Attachment
 {

@@ -2,6 +2,8 @@
 
 namespace gstudio_kernel\Foundation;
 
+use kernel\Foundation\Database\PDO\Model;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }

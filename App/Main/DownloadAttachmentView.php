@@ -2,14 +2,13 @@
 
 namespace gstudio_kernel\App\Main;
 
-use gstudio_kernel\Foundation\Controller;
-use gstudio_kernel\Foundation\GlobalVariables;
+use gstudio_kernel\Foundation\BaseController;
 
 if (!defined('IN_DISCUZ')) {
   exit('Access Denied');
 }
 
-class DownloadAttachmentView extends Controller
+class DownloadAttachmentView extends BaseController
 {
   public function data()
   {

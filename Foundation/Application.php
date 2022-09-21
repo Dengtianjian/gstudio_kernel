@@ -2,12 +2,12 @@
 
 namespace gstudio_kernel\Foundation;
 
+use Error;
 use gstudio_kernel\Model\ExtensionsModel;
 
 class Application
 {
   protected $pluginId = null; //* 当前插件ID
-  protected $pluginPath = ""; //* 当前插件路径
   protected $uri = null; //* 请求的URI
   protected $globalMiddlware = []; //*全局中间件
   protected $router = null; //* 路由相关
@@ -34,52 +34,94 @@ class Application
   {
     array_push($this->globalMiddlware, $middlwareNameOfFunction);
   }
-  //! 待废弃
-  public function setDashboardTable($globalVarKey, $tableName)
-  {
-    GlobalVariables::set([
-      "_GG" => [
-        "addon" => [
-          "dashboard" => [
-            $globalVarKey => $tableName
-          ]
-        ]
-      ]
-    ]);
-  }
   protected function executiveController()
   {
-    $controller = $this->router['controller'];
+
+    $controllerParams = $this->router['controller'];
+    $executeFunName = null;
+    if (is_array($controllerParams)) {
+      $length = count($controllerParams);
+      $controller = $controllerParams[0];
+      if ($length === 2) {
+        $executeFunName = $controllerParams[1];
+      }
+    } else {
+      $controller = $controllerParams;
+    }
+
     if (\is_callable($controller)) {
       return $controller($this->request);
     } else {
-      $instance = new $controller();
-      if ($instance->Auth === true) {
-        if (Auth::isVerified() === false) {
-          Auth::check();
+      $instance = new $controller($this->request);
+
+      if (empty($executeFunName)) {
+        if ($this->router['type'] === "async" || $this->request->async()) {
+          if (strtolower($this->request->method) === "get") {
+            Response::error(500, "500:AsyncControlerNotAllowGetMethodRequest", "禁止Get请求");
+          }
+          if (!method_exists($instance, "async") && $this->router['type'] === "resource") {
+            Response::error(500, "500:ControllerMissingAsyncFunction", "服务器错误", [], "控制器缺失async函数");
+          } else if (!method_exists($instance, "data") && $this->router['type'] === "async") {
+            if (!method_exists($instance, "post")) {
+              Response::error(500, "500:ControllerMissingDataHandlerFunction", "服务器错误", [], "控制器缺少data|post函数");
+            }
+          }
+        }
+        if ($this->router['type'] === "resource" && $this->request->async()) {
+          $executeFunName = "async";
+        } else if ($this->router['type'] === "async") {
+          $executeFunName = "data";
+          if (!method_exists($instance, $executeFunName)) {
+            $executeFunName = "post";
+          }
+        } else if (method_exists($instance, $this->request->method)) {
+          $executeFunName = $this->request->method;
+        } else {
+          if (!method_exists($instance, "data")) {
+            throw new Error("执行的控制器缺少data函数");
+          }
+          $executeFunName = "data";
         }
       }
-      if ($instance->Admin !== false) {
-        $adminId = $instance->Admin;
-        if (Auth::isVerified() == false) {
-          Auth::check();
-        }
-        if (Auth::isVerifiedAdmin() == false) {
-          Auth::checkAdmin($adminId);
-        }
-      }
-      $instance->verifyFormhash();
+
+      // if ($instance->Auth === true) {
+      //   if (Auth::isVerified() === false) {
+      //     Auth::check();
+      //   }
+      // }
+      // if ($instance->Admin !== false) {
+      //   $adminId = $instance->Admin;
+      //   if (Auth::isVerified() == false) {
+      //     Auth::check();
+      //   }
+      //   if (Auth::isVerifiedAdmin() == false) {
+      //     Auth::checkAdmin($adminId);
+      //   }
+      // }
+      // $instance->verifyFormhash();
+
       $result = $instance->data($this->request);
+
       if ($this->request->ajax() === NULL) {
         View::outputFooter();
+      } else {
+        if (gettype($instance->serialization) === "string" || (is_array($instance->serialization) && count($instance->serialization) > 0)) {
+          if (gettype($instance->serialization) === "array") {
+            $ruleName = "serializer_" . time();
+            Serializer::addRule($ruleName, $instance->serialization);
+            $instance->serialization = $ruleName;
+          }
+          $result = Serializer::use($instance->serialization, $result);
+        }
       }
+
       return $result;
     }
   }
   protected function executiveMiddleware()
   {
     $middlewares = array_reverse($this->globalMiddlware);
-    if ($this->router['middleware']) {
+    if (isset($this->router['middleware']) && $this->router['middleware']) {
       if (\is_array($this->router['middleware'])) {
         $middlewares = \array_merge($this->router['middleware']);
       } else {
@@ -123,17 +165,15 @@ class Application
   {
     $charset = strtoupper(CHARSET);
     include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Langs/$charset.php");
-    $langDirPath = $this->pluginPath . "/Langs/";
+    $langDirPath = F_APP_ROOT . "/Langs/";
     if (\file_exists($langDirPath)) {
-      $langFilePath = $this->pluginPath . "/Langs/$charset.php";
+      $langFilePath = F_APP_ROOT . "/Langs/$charset.php";
       if (\file_exists($langFilePath)) {
         include_once($langFilePath);
       }
     }
-    GlobalVariables::set([
-      "_GG" => [
-        "langs" => Lang::all()
-      ]
+    Store::setApp([
+      "langs"=>Lang::all()
     ]);
   }
   /**
@@ -162,8 +202,8 @@ class Application
   protected function setAttachmentPath()
   {
     if (Config::get("attachmentPath") === NULL) {
-      $attachmentRoot = \getglobal("setting/attachdir") . "plugin/" . GlobalVariables::getGG("id");
-      $attachmentUrl = \getglobal("setting/attachurl") . "plugin/" . GlobalVariables::getGG("id");
+      $attachmentRoot = \getglobal("setting/attachdir") . "plugin/" . F_APP_ID;
+      $attachmentUrl = \getglobal("setting/attachurl") . "plugin/" . F_APP_ID;
       if (!is_dir($attachmentRoot)) {
         \dmkdir($attachmentRoot);
       }
@@ -172,40 +212,44 @@ class Application
       ]);
     }
   }
-  protected static function initGlobalVariables($pluginId)
+  protected function initAppStore()
   {
-    global $_G;
     //* 存放全局用到的数据
-    $GlobalVariables = [
-      "id" => $pluginId, //* 当前运行中的应用ID
-      "sets" => [], //* 设置项，包含配置项里设置的全局设置项
+    $__App = [
+      "id" => F_APP_ID, //* 当前运行中的应用ID
       "rewriteURL" => [], //* 重写的URL
-      "mode" => Config::get("mode", $pluginId), //* 当前运行模式
+      "mode" => Config::get("mode", F_APP_ID), //* 当前运行模式
       "langs" => [], //* 字典
-      "kernel" => [ //* 内核
-        "root" => "source/plugin/gstudio_kernel",
-        "fullRoot" => DISCUZ_ROOT . "source/plugin/gstudio_kernel",
-        "URLRoot" => $_G['siteurl'] . "source/plugin/gstudio_kernel",
-        "assets" => $_G['siteurl'] . "source/plugin/gstudio_kernel/Assets",
-        "views" => $_G['siteurl'] . "source/plugin/gstudio_kernel/Views",
-      ],
+      "kernel" => [], //* 内核
       "addon" => [ //* 当前运行中的应用信息
-        "id" => $pluginId,  //* 应用ID
-        "root" => "source/plugin/$pluginId",
-        "fullRoot" => DISCUZ_ROOT . "source/plugin/$pluginId",
-        "URLRoot" => $_G['siteurl'] . "source/plugin/$pluginId", //* 应用文件夹路径
-        "assets" => $_G['siteurl'] . "source/plugin/$pluginId/Assets", //* 应用静态文件路径
-        "views" => $_G['siteurl'] . "source/plugin/$pluginId/Views", //* 应用模板文件路径
-      ],
-      "request" => [ //* 请求相关
-        "uri" => \addslashes($_GET['uri']), //* 请求的URI
-        "method" => $_SERVER['REQUEST_METHOD'], //* 请求的方法
-        "params" => [], //* 请求参数
-        "query" => [], //* 请求的query
+        "id" => $this->pluginId,
+        "root" => F_APP_ROOT,
+        "assets" => F_APP_ROOT . "/Assets",
+        "views" => F_APP_ROOT . "/Views"
       ]
     ];
-    GlobalVariables::set([
-      "_GG" => $GlobalVariables
-    ]);
+    Store::setApp($__App);
+  }
+  protected function initConfig()
+  {
+    $fileBase = F_APP_ROOT;
+    $configFilePath = F_APP_ROOT . "/Config.php";
+    if (!file_exists($configFilePath)) {
+      $fileBase .= "/Configs";
+      $configFilePath = "$fileBase/Config.php";
+    }
+    Config::read($configFilePath);
+
+    //* 模式下的配置文件
+    $modeConfigFilePath = "$fileBase/Config." . Config::get("mode") . ".php";
+    if (file_exists($modeConfigFilePath)) {
+      Config::read($modeConfigFilePath);
+    }
+
+    //* 本地下的配置文件
+    $localConfigFilePath = "$fileBase/Config.local.php";
+    if (file_exists($localConfigFilePath)) {
+      Config::read($localConfigFilePath);
+    }
   }
 }

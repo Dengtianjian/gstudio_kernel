@@ -2,27 +2,31 @@
 
 namespace gstudio_kernel\Foundation;
 
+use gstudio_kernel\Foundation\Data\Arr;
+
 class Config
 {
   private static $configs = [];
   /**
    * 读取应用Config文件
    *
-   * @param string $pluginId 应用Id
    * @param string $filePath 应用配置文件所在路径
    * @return array
    */
-  static function read($pluginId, $filePath = null)
+  static function read(?string $filePath = null, ?string $appId = F_APP_ID)
   {
     if (!$filePath) {
-      $filePath = DISCUZ_ROOT . "/source/plugin/$pluginId/Config.php";
+      $filePath = F_APP_ROOT . "/Config.php";
     }
     if (!\file_exists($filePath)) {
       return false;
     }
     include_once($filePath);
     if (isset($Config)) {
-      self::$configs[$pluginId] = Arr::merge(self::$configs, $Config);
+      if (!isset(self::$configs[$appId])) {
+        self::$configs[$appId] = [];
+      }
+      self::$configs[$appId] = Arr::merge(self::$configs[$appId], $Config);
       return self::$configs;
     }
     return false;
@@ -31,22 +35,21 @@ class Config
    * 获取配置项
    *
    * @param string $key 配置项数组路径字符串，用 / 分隔
-   * @param string $pluginId 配置文件应用Id
    * @return array|string|integer|boolean
    */
-  static function get($key, $pluginId = null)
+  static function get(?string $key = null)
   {
     $configs = [];
-    if ($pluginId === null) {
-      $pluginId = GlobalVariables::get("_GG/id");
-    }
 
-    if (!isset(self::$configs[$pluginId])) {
-      if (self::read($pluginId) === false) {
+    if (!isset(self::$configs[F_APP_ID])) {
+      if (self::read() === false) {
         return null;
       }
     }
-    $configs = self::$configs[$pluginId];
+    $configs = self::$configs[F_APP_ID];
+    if (!$key) {
+      return $configs;
+    }
     $key = \explode(",", $key);
     $values = [];
     foreach ($key as $keyItem) {
@@ -54,11 +57,20 @@ class Config
       $value = $configs;
       $lastKey = $keyItem[0];
       foreach ($keyItem as $kkItem) {
-        $value = $value[$kkItem];
+        if (isset($value[$kkItem])) {
+          $value = $value[$kkItem];
+        } else {
+          $lastKey = null;
+          break;
+        }
+
         $lastKey = $kkItem;
       }
-      $values[$lastKey] = $value;
+      if ($lastKey !== null) {
+        $values[$lastKey] = $value;
+      }
     }
+
     if (count($key) === 1) {
       return \array_pop($values);
     }
@@ -68,16 +80,11 @@ class Config
    * 覆盖式设置Config的值
    * 修改后的值只会在当前运行中有效，并不会修改到文件的实际值
    *
-   * @param any $value 新值
-   * @param string $pluginId 应用Id
+   * @param array $value 新值
    * @return void
    */
-  static function set($value, $pluginId = null)
+  static function set(array $value)
   {
-    if ($pluginId === null) {
-      $pluginId = GlobalVariables::get("_GG/id");
-    }
-
-    self::$configs[$pluginId] = Arr::merge(self::$configs[$pluginId], $value);
+    self::$configs[F_APP_ID] = Arr::merge(self::$configs[F_APP_ID], $value);
   }
 }

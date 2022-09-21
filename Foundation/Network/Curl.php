@@ -1,8 +1,9 @@
 <?php
 
-namespace gstudio_kernel\Foundation;
+namespace gstudio_kernel\Foundation\Network;
 
 use CURLFile;
+use gstudio_kernel\Foundation\Data\Arr;
 
 /**
  * 二次封装的CURL类
