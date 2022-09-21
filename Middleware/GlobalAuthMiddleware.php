@@ -3,9 +3,12 @@
 namespace gstudio_kernel\Middleware;
 
 use Error;
+use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Store;
+use gstudio_kernel\Model\LoginsModel;
+use gstudio_kernel\Service\AuthService;
 use ReflectionMethod;
 
 class GlobalAuthMiddleware
@@ -30,7 +33,7 @@ class GlobalAuthMiddleware
     if (empty($token)) {
       return;
     }
-    $ULM = new UserLoginsModel();
+    $ULM = new LoginsModel();
     $token = $ULM->getByToken($token);
     if ($token === null) {
       header("Authorization", "");
@@ -50,7 +53,6 @@ class GlobalAuthMiddleware
       //* 自动刷新token
       $newToken = AuthService::generateToken($token['userId']);
       header("Authorization:" . $newToken['value'] . "/" . $newToken['expirationDate'], true);
-      $ULM = new UserLoginsModel();
       $ULM->deleteByToken($token['token']);
       $newToken['token'] = $newToken['value'];
       $token = $newToken;
@@ -72,7 +74,11 @@ class GlobalAuthMiddleware
       throw new Error("Router controller(" . $router['controller'] . ") not exists");
     }
 
-    if (get_parent_class($router['controller']) === "kernel\Foundation\AuthController") {
+    if (get_parent_class($router['controller']) === "gstudio_kernel\Foundation\Controller\AuthController") {
+
+      //* 验证Formhash
+      $router['controller']::verifyFormhash();
+
       $needCheckAdmin = true;
       $isAdminVerify = false;
       if (is_array($router['controller']::$AdminMethods)) {
@@ -81,6 +87,7 @@ class GlobalAuthMiddleware
           $needCheckAdmin = false;
         }
       }
+
       if ($needCheckAdmin) {
         if (method_exists($router['controller'], "Admin")) {
           $adminMethodRM = new ReflectionMethod($router['controller'], "Admin");

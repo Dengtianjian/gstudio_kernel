@@ -2,12 +2,7 @@
 
 namespace gstudio_kernel\App\Api\Attachments;
 
-use DB;
-use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Controller\AuthController;
-use gstudio_kernel\Foundation\Database\Model;
-use gstudio_kernel\Foundation\File;
-use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Platform\Discuzx\Attachment;
@@ -17,6 +12,23 @@ class GetAttachmentController extends AuthController
   public $body = [
     "aid" => "integer"
   ];
+  // static $Admin = false;
+  // static function Admin()
+  // {
+  //   return true;
+  // }
+  // static function verifyAdmin(){
+  //   return false;
+  // }
+  // static $Auth = false;
+  static function Auth()
+  {
+    return true;
+  }
+  static function verifyAuth(): void
+  {
+    // Response::error()
+  }
   public function get(Request $R)
   {
     $AttachmentId = $R->params("attachmentId");
