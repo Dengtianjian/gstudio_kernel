@@ -10,5 +10,4 @@ if (!defined("IN_DISCUZ")) {
 include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Autoload.php");
 
 $app = new App("gstudio_kernel");
-Output::debug($app);
 $app->init();

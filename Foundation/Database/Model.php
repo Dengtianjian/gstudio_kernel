@@ -17,6 +17,7 @@ class Model
     if ($tableName) {
       $this->tableName = $tableName;
     }
+    $this->tableName = DB::table($this->tableName);
     $this->query = new Query($this->tableName);
   }
   function order(string $field, string $by = "ASC")

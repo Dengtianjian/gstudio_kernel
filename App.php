@@ -18,7 +18,6 @@ function errorHandler()
 error_reporting(\E_ALL);
 \set_error_handler("gstudio_kernel\\errorHandler", 0);
 
-use gstudio_kernel\App\Api as Api;
 use gstudio_kernel\Foundation\Application;
 use gstudio_kernel\Middleware as Middleware;
 use gstudio_kernel\Foundation\Request;
@@ -27,6 +26,7 @@ use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\Exception\ErrorCode;
 use gstudio_kernel\Foundation\Output;
+use gstudio_kernel\Foundation\Store;
 use gstudio_kernel\Middleware\GlobalExtensionsMiddleware;
 use gstudio_kernel\Middleware\GlobalMultipleEncodeMiddleware;
 
@@ -54,9 +54,10 @@ class App extends Application
     //* 初始化配置
     $this->initConfig();
 
+    Output::debug(Store::getApp());
+
     $this->loadLang();
-    ErrorCode::load(F_KERNEL_ROOT . "ErrorCodes.php"); //* 加载错误码
-    Output::debug(ErrorCode::all());
+    ErrorCode::load(F_KERNEL_ROOT . "/ErrorCodes.php"); //* 加载错误码
 
     include_once(F_KERNEL_ROOT . "/Routes.php"); //* 载入kernel路由
     include_once(F_APP_ROOT . "/Routes.php"); //* 载入当前应用路由

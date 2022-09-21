@@ -3,7 +3,7 @@
 namespace gstudio_kernel\Middleware;
 
 use gstudio_kernel\Foundation\Config;
-use gstudio_kernel\Foundation\GlobalVariables;
+use gstudio_kernel\Foundation\Store;
 use gstudio_kernel\Foundation\View;
 
 class GlobalMultipleEncodeMiddleware
@@ -13,7 +13,7 @@ class GlobalMultipleEncodeMiddleware
     if (Config::get("multipleEncode")) {
       $multipleEncodeJSScript = "";
       if (CHARSET === "gbk") {
-        $langJson = \serialize(GlobalVariables::get("_GG/langs"));
+        $langJson = \serialize(Store::getApp("langs"));
         if ($langJson === false) {
           $langJson = \serialize([]);
         }
@@ -24,7 +24,7 @@ class GlobalMultipleEncodeMiddleware
 </script>
     ";
       } else {
-        $langJson = \json_encode(GlobalVariables::get("_GG/langs"));
+        $langJson = \json_encode(Store::getApp("langs"));
         if ($langJson === false) {
           $langJson = \json_encode([]);
         }

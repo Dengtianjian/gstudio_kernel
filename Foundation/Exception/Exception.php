@@ -7,6 +7,7 @@ if (!defined("IN_DISCUZ")) {
 }
 
 use gstudio_kernel\Foundation\Config as Config;
+use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\View;
 

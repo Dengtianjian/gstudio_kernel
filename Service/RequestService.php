@@ -14,7 +14,6 @@ class RequestService extends Service
 {
   static function request(): Request
   {
-    // Output::debug($GLOBALS['App']->request);
     return $GLOBALS['App']->request;
   }
 }

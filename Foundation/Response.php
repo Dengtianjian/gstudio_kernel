@@ -115,6 +115,9 @@ class Response
       if ($statusCode > 299) {
         if (Config::get("mode") === "development") {
           echo "error";
+          if (is_array($details) && count($details) === 0) {
+            $details = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+          }
           Output::debug($message, $statusCode, $code, $data, $details);
         } else {
           $currentUrl = F_BASE_URL;
@@ -123,7 +126,7 @@ class Response
           if ($redirectUrl == $currentUrl || !$redirectUrl) {
             $redirectUrl = F_BASE_URL;
           }
-          \showmessage($message, $redirectUrl, [], [
+          \showmessage($message, null, [], [
             "alert" => "error"
           ]);
           // Output::print($message);

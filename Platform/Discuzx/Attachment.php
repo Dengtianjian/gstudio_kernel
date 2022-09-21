@@ -10,7 +10,7 @@ use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Data\Arr;
 use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
 use gstudio_kernel\Foundation\File;
-use gstudio_kernel\Foundation\GlobalVariables;
+use gstudio_kernel\Foundation\Store;
 
 class Attachment
 {
@@ -90,7 +90,7 @@ class Attachment
         "tableId" => $tableId,
         "tableName" => $tableName,
         "dzAidEncode" => \aidencode($aid, 0, $tid),
-        "downloadEncode" => self::aidencode($aid, "plugin/" . GlobalVariables::getGG('id') . "/attachments")
+        "downloadEncode" => self::aidencode($aid, "plugin/" . Store::getApp('id') . "/attachments")
       ];
       $uploadResult[] = $fileInfo;
       $updateDatas[] = [
