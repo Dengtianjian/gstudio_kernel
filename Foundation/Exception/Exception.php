@@ -10,6 +10,7 @@ use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\View;
+use gstudio_kernel\Service\RequestService;
 
 /**
  * 异常处理类
@@ -32,19 +33,8 @@ class Exception
    */
   public static function handle($code = 0, $message = "", $file = "", $line = null, $trace = "", $traceString = NULL, $previous = null)
   {
-    global $App;
     $traceString = \explode(\PHP_EOL, $traceString);
-    if ($App->router === NULL || $App->router['type'] === "view") {
-      if (Config::get("mode") === "production") {
-        View::kernelPage("error", [
-          "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
-        ]);
-      } else {
-        View::kernelPage("error", [
-          "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
-        ]);
-      }
-    } else {
+    if (RequestService::request()->ajax()) {
       if (Config::get("mode") === "production") {
         Response::error("SERVER_ERROR");
       } else {
@@ -55,6 +45,16 @@ class Exception
           "line" => $line,
           "trace" => $trace,
           "previous" => $previous
+        ]);
+      }
+    } else {
+      if (Config::get("mode") === "production") {
+        View::kernelPage("error", [
+          "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
+        ]);
+      } else {
+        View::kernelPage("error", [
+          "code" => $code, "message" => $message, "file" => $file, "line" => $line, "trace" => $trace, "traceString" => $traceString, "previous" => $previous
         ]);
       }
     }

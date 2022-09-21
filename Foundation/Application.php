@@ -36,7 +36,7 @@ class Application
   }
   protected function executiveController()
   {
-
+    $method = strtolower($this->request->method);
     $controllerParams = $this->router['controller'];
     $executeFunName = null;
     if (is_array($controllerParams)) {
@@ -56,7 +56,7 @@ class Application
 
       if (empty($executeFunName)) {
         if ($this->router['type'] === "async" || $this->request->async()) {
-          if (strtolower($this->request->method) === "get") {
+          if (strtolower($method) === "get") {
             Response::error(500, "500:AsyncControlerNotAllowGetMethodRequest", "禁止Get请求");
           }
           if (!method_exists($instance, "async") && $this->router['type'] === "resource") {
@@ -74,8 +74,8 @@ class Application
           if (!method_exists($instance, $executeFunName)) {
             $executeFunName = "post";
           }
-        } else if (method_exists($instance, $this->request->method)) {
-          $executeFunName = $this->request->method;
+        } else if (method_exists($instance, $method)) {
+          $executeFunName = $method;
         } else {
           if (!method_exists($instance, "data")) {
             throw new Error("执行的控制器缺少data函数");
@@ -100,7 +100,7 @@ class Application
       // }
       // $instance->verifyFormhash();
 
-      $result = $instance->data($this->request);
+      $result = $instance->{$executeFunName}($this->request);
 
       if ($this->request->ajax() === NULL) {
         View::outputFooter();
@@ -173,7 +173,7 @@ class Application
       }
     }
     Store::setApp([
-      "langs"=>Lang::all()
+      "langs" => Lang::all()
     ]);
   }
   /**
@@ -202,13 +202,12 @@ class Application
   protected function setAttachmentPath()
   {
     if (Config::get("attachmentPath") === NULL) {
-      $attachmentRoot = \getglobal("setting/attachdir") . "plugin/" . F_APP_ID;
-      $attachmentUrl = \getglobal("setting/attachurl") . "plugin/" . F_APP_ID;
-      if (!is_dir($attachmentRoot)) {
-        \dmkdir($attachmentRoot);
+      $attachmentDir = File::genPath(\getglobal("setting/attachurl"), "plugin", F_APP_ID);
+      if (!is_dir(DISCUZ_ROOT . $attachmentDir)) {
+        \mkdir(DISCUZ_ROOT . $attachmentDir, 0777, true);
       }
       Config::set([
-        "attachmentPath" => $attachmentUrl
+        "attachmentPath" => $attachmentDir
       ]);
     }
   }

@@ -9,6 +9,11 @@ use gstudio_kernel\App\Api as Api;
 //* 附件相关
 Router::get("_download", Api\Attachments\DownloadAttachmentController::class);
 Router::post("_upload", Api\Attachments\UploadAttachmentController::class);
+Router::delete("_deleteAttachment", Api\Attachments\DeleteAttachmentController::class);
+Router::get([
+  "_attachments",
+  "attachmentId" => "\d+"
+], Api\Attachments\GetAttachmentController::class);
 
 //* 扩展相关
 Router::post("_extension/install", Main\Extensions\InstallExtensionController::class);

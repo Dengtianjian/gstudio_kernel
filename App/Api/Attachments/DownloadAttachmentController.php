@@ -2,7 +2,9 @@
 
 namespace gstudio_kernel\App\Api\Attachments;
 
-use gstudio_kernel\Foundation\AuthController;
+use gstudio_kernel\Foundation\Config;
+use gstudio_kernel\Foundation\Controller\AuthController;
+use gstudio_kernel\Foundation\File;
 
 if (!defined('IN_DISCUZ')) {
   exit('Access Denied');
@@ -168,7 +170,7 @@ class DownloadAttachmentController extends AuthController
       }
       exit();
     }
-    $filename = $_G['setting']['attachdir'] . '/' . $dir . '/' . $attach['attachment'];
+    $filename = File::genPath(Config::get("attachmentPath"), $dir, $attach['attachment']);
     if (!$attach['remote'] && !is_readable($filename)) {
       if (!$requestmode) {
         showmessage('attachment_nonexistence');

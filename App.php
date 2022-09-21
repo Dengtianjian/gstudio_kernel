@@ -15,7 +15,7 @@ function errorHandler()
   }
 }
 
-error_reporting(\E_ALL);
+// error_reporting(\E_ALL);
 \set_error_handler("gstudio_kernel\\errorHandler", 0);
 
 use gstudio_kernel\Foundation\Application;
@@ -26,8 +26,6 @@ use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\Exception\ErrorCode;
 use gstudio_kernel\Foundation\Output;
-use gstudio_kernel\Foundation\Store;
-use gstudio_kernel\Middleware\GlobalExtensionsMiddleware;
 use gstudio_kernel\Middleware\GlobalMultipleEncodeMiddleware;
 
 class App extends Application
@@ -54,8 +52,6 @@ class App extends Application
     //* 初始化配置
     $this->initConfig();
 
-    Output::debug(Store::getApp());
-
     $this->loadLang();
     ErrorCode::load(F_KERNEL_ROOT . "/ErrorCodes.php"); //* 加载错误码
 
@@ -67,7 +63,7 @@ class App extends Application
     global $_G;
     define("F_APP_ID", $this->pluginId);
     define("F_APP_ROOT", DISCUZ_ROOT . "source/plugin/" . $this->pluginId);
-    define("F_KERNEL_ROOT", DISCUZ_ROOT . "source/plugin/gstudio_kernel");
+    define("F_KERNEL_ROOT", "source/plugin/gstudio_kernel");
     define("F_KERNEL", true);
     define("F_CACHE_KEY", time());
 
@@ -82,11 +78,6 @@ class App extends Application
     header('Access-Control-Max-Age:86400');
     header('Access-Control-Allow-Credentials: true');
 
-    $this->setMiddlware(Middleware\GlobalSetsMiddleware::class);
-    if (Config::get("dashboard/use") === true) {
-      $this->setMiddlware(Middleware\GlobalDashboardMiddleware::class);
-    }
-
     $request = $this->request;
 
     //* 设置附件目录
@@ -95,7 +86,6 @@ class App extends Application
     //* 载入扩展
     if (Config::get("extensions")) {
       $this->loadExtensions();
-      $this->setMiddlware(GlobalExtensionsMiddleware::class);
     }
 
     if ($this->request->ajax() === NULL) {
@@ -104,7 +94,7 @@ class App extends Application
 
     $executeMiddlewareResult = $this->executiveMiddleware();
 
-    $router = Router::match($request->uri);
+    $router = Router::match($request);
 
     if (isset($router['params'])) {
       $this->request->setParams($router['params']);

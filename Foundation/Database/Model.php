@@ -6,6 +6,7 @@ use DB;
 use gstudio_kernel\Foundation\Data\Str;
 use gstudio_kernel\Foundation\Database\Query;
 use gstudio_kernel\Foundation\Date;
+use gstudio_kernel\Foundation\Output;
 
 class Model
 {
@@ -93,13 +94,13 @@ class Model
   {
     $sql = $this->query->get()->sql();
     if ($this->returnSql) return $sql;
-    return DB::query($sql);
+    return DB::fetch_all($sql);
   }
   function getOne()
   {
     $sql = $this->query->limit(1)->get()->sql();
     if ($this->returnSql) return $sql;
-    return DB::query($sql);
+    return DB::fetch_first($sql);
   }
   function count($field = "*")
   {

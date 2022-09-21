@@ -19,16 +19,16 @@ class View
    * @param boolean $hook?=false 是否是hook插槽
    * @return void
    */
-  static function render($viewFiles, $viewData = [], $templateId = "", $hook = false)
+  static function render($viewFiles, $viewData = [], $templateId = "", string $templateDir = "", $hook = false)
   {
     if (is_array($viewFiles)) {
       foreach ($viewFiles as $file) {
-        if (!\file_exists($file)) {
+        if (!\file_exists("$templateDir/$file.htm")) {
           Response::error("VIEW_TEMPLATE_NOT_EXIST");
         }
       }
     } else {
-      if (!\file_exists($viewFiles)) {
+      if (!\file_exists("$templateDir/$viewFiles.htm")) {
         Response::error("VIEW_TEMPLATE_NOT_EXIST");
       }
     }
@@ -43,10 +43,10 @@ class View
     self::outputHeader();
     if (\is_array($viewFiles)) {
       foreach ($viewFiles as $file) {
-        include_once "/$file";
+        include_once template($file, $templateId, $templateDir);
       }
     } else {
-      include_once "/$viewFiles";
+      include_once template($viewFiles, $templateId, $templateDir);
     }
 
     foreach ($viewData as $key => $value) {
@@ -59,12 +59,12 @@ class View
   {
     if (is_array($viewFile)) {
       foreach ($viewFile as &$fileItem) {
-        $fileItem = F_APP_ROOT . "/$viewFileBaseDir/$fileItem.php";
+        $fileItem = $viewFileBaseDir / $fileItem;
       }
     } else {
-      $viewFile = F_APP_ROOT . "/$viewFileBaseDir/$viewFile.php";
+      $viewFile = $viewFileBaseDir / $viewFile;
     }
-    return self::render($viewFile, $viewData, $templateId);
+    return self::render($viewFile, $viewData, $templateId, F_APP_ROOT);
   }
   /**
    * 渲染页面
@@ -104,8 +104,7 @@ class View
    */
   static function kernelPage($viewFile, $viewData = [], $templateId = "kernel_page")
   {
-    $viewFile = F_KERNEL_ROOT . "/Views/$viewFile.php";
-    self::render($viewFile, $viewData, $templateId);
+    self::render("Views/$viewFile", $viewData, $templateId, F_KERNEL_ROOT);
     exit;
   }
   /**

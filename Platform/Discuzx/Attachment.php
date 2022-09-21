@@ -10,13 +10,14 @@ use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Data\Arr;
 use gstudio_kernel\Foundation\Database\Model as DatabaseModel;
 use gstudio_kernel\Foundation\File;
+use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Store;
 
 class Attachment
 {
   public static function save($files, $saveDir = "")
   {
-    $savePath = Config::get("attachmentPath") . "/$saveDir";
+    $savePath = File::genPath(Config::get("attachmentPath"), $saveDir);
     if (!is_dir($savePath)) {
       mkdir($savePath, 0777, true);
     }
@@ -40,7 +41,7 @@ class Attachment
       $insertDatas[$tableName] = [];
     }
     foreach ($files as $fileItem) {
-      $path = Config::get("attachmentPath") . "/$saveDir/";
+      $path = Config::get("attachmentPath") . $saveDir;
       $updateResult = File::upload($fileItem, $path);
       $aid = getattachnewaid($uid);
       $width = 0;
@@ -103,12 +104,12 @@ class Attachment
     foreach ($insertDatas as $tableName => $insertData) {
       $attachmenModel = new DatabaseModel($tableName);
       $fieldNames = array_keys($insertData[0]);
-      $attachmenModel->batchInsert($fieldNames, $insertData)->save();
+      $attachmenModel->batchInsert($fieldNames, $insertData);
     }
     $ForumAttachmentModel = new DatabaseModel("forum_attachment");
     $ForumAttachmentModel->batchUpdate([
       "aid", "tableid", "uid"
-    ], $updateDatas)->save();
+    ], $updateDatas);
 
     if ($onlyOne) {
       return $uploadResult[0];
@@ -122,5 +123,21 @@ class Attachment
     $s = !$type ? $aid . '|' . substr(md5($aid . md5($_G['config']['security']['authkey']) . TIMESTAMP . $_G['uid']), 0, 8) . '|' . TIMESTAMP . '|' . $_G['uid'] . '|' . $tid : $aid . '|' . md5($aid . md5($_G['config']['security']['authkey']) . TIMESTAMP) . '|' . TIMESTAMP;
     $s .= "|" . $dir;
     return rawurlencode(base64_encode($s));
+  }
+  public static function getAttachment(string|int $AttachmentId)
+  {
+    $AM = new DatabaseModel("forum_attachment");
+    $attachment = $AM->where("aid", $AttachmentId)->getOne();
+    if (!$attachment) {
+      return null;
+    }
+    $TableId = $attachment['tableid'];
+    $SAM = new DatabaseModel("forum_attachment_$TableId");
+    $attachment = $SAM->where("aid", $AttachmentId)->getOne();
+    if (!$attachment) {
+      return null;
+    }
+
+    return $attachment;
   }
 }

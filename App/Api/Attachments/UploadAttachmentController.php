@@ -2,7 +2,7 @@
 
 namespace gstudio_kernel\App\Api\Attachments;
 
-use gstudio_kernel\Foundation\AuthController;
+use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Platform\Discuzx\Attachment;
 
@@ -15,8 +15,5 @@ class UploadAttachmentController extends AuthController
     }
     $file = $_FILES['file'];
     return Attachment::upload($file);
-    // $uploadResult = AttachmentService::upload($file, "Data/Attachments");
-
-    // return $uploadResult;
   }
 }

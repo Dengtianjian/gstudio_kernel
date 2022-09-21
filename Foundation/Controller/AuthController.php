@@ -1,6 +1,8 @@
 <?php
 
-namespace gstudio_kernel\Foundation;
+namespace gstudio_kernel\Foundation\Controller;
+
+use gstudio_kernel\Foundation\Response;
 
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');

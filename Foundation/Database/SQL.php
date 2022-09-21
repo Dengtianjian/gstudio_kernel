@@ -2,6 +2,8 @@
 
 namespace gstudio_kernel\Foundation\Database;
 
+use gstudio_kernel\Foundation\Output;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
@@ -204,7 +206,7 @@ class SQL
     $sql = "UPDATE `$tableName` SET $data $extraStatement";
     return $sql;
   }
-  // OP 批量更新不应该走batchInsert的replace，应该是多条update
+  // BUG 批量更新不应该走batchInsert的replace，应该是多条update
   static function batchUpdate(string $tableName, array $fields, array $datas, string $extraStatement = "")
   {
     $sql = self::batchInsert($tableName, $fields, $datas, true);

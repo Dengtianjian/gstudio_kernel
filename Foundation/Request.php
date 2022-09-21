@@ -56,7 +56,7 @@ class Request
     $this->method = strtoupper($this->method);
 
     //* 请求的URI
-    $this->uri = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], "?") ?: strlen($_SERVER['REQUEST_URI']));
+    $this->uri = addslashes($_GET['uri']);
   }
   private function serializationBody()
   {
