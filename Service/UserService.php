@@ -6,8 +6,8 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
-use gstudio_kernel\Foundation\Arr;
-use gstudio_kernel\Foundation\Model;
+use gstudio_kernel\Foundation\Data\Arr;
+use gstudio_kernel\Foundation\Database\Model;
 use gstudio_kernel\Foundation\Service;
 
 class UserService extends Service
@@ -21,7 +21,7 @@ class UserService extends Service
     $CMCM = new Model("common_member_count");
     $memberCredit = $CMCM->where([
       "uid" => $userId
-    ])->get();
+    ])->getOne();
     unset($CMCM);
     return $memberCredit;
   }
@@ -33,7 +33,7 @@ class UserService extends Service
     $CUGM = new Model("common_usergroup");
     $memberGroup = $CUGM->where([
       "groupid" => $groupId
-    ])->get();
+    ])->getOne();
     return $memberGroup;
   }
   public static function getUserPrompt($userId = null)
@@ -44,7 +44,7 @@ class UserService extends Service
     $CMNP = new Model("common_member_newprompt");
     $prompts = $CMNP->where([
       "uid" => $userId
-    ])->get();
+    ])->getOne();
     foreach ($prompts as &$promptItem) {
       $promptItem = \array_merge($promptItem, \unserialize($promptItem['data']));
       unset($promptItem['data']);
@@ -59,15 +59,15 @@ class UserService extends Service
     $MM = new Model("common_member");
     $member = $MM->where([
       "uid" => $userId
-    ])->get();
+    ])->getOne();
     if ($detailed) {
       $memberCredit = self::getUserCredit($userId);
-      $memberCredit = Arr::valueToKey($memberCredit, 'uid');
+      $memberCredit = Arr::indexToAssoc($memberCredit, 'uid');
       $memberGroupId = \array_column($member, "groupid");
       $memberGroup = self::getUserGroup($memberGroupId);
-      $memberGroup = Arr::valueToKey($memberGroup, "groupid");
+      $memberGroup = Arr::indexToAssoc($memberGroup, "groupid");
       $memberPrompt = self::getUserPrompt($userId);
-      $memberPrompt = Arr::valueToKey($memberPrompt, "uid");
+      $memberPrompt = Arr::indexToAssoc($memberPrompt, "uid");
       foreach ($member as &$memberItem) {
         $memberItem['group'] = $memberGroup[$memberItem['groupid']];
         $memberItem['credit'] = $memberCredit[$memberItem['uid']];
