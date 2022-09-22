@@ -58,7 +58,7 @@ class ExtensionListViewController extends AuthController
       $EM->batchInsert(array_keys($insertNewData[0]), $insertNewData)->save();
     }
 
-    View::title(Lang::value("extension_list"));
+    View::title(Lang::value("kernel/extension_list"));
     Response::success([
       "extensions" => $extensions,
       "extensionCount" => count($extensions)

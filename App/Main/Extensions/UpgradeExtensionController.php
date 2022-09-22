@@ -26,12 +26,12 @@ class UpgradeExtensionController extends AuthController
     $EM = new ExtensionsModel();
     $extension = $EM->getByExtensionId($extensionId);
     if (empty($extension)) {
-      Response::error(404, 404001, Lang::value("extensionNotExists"));
+      Response::error(404, 404001, Lang::value("kernel/extensionNotExists"));
     }
     $extension = $extension[0];
     $extensionConfig = Extensions::config($extension['extension_id']);
     if (\version_compare($extension['local_version'], $extensionConfig['version']) !== -1) {
-      Response::error(400, 400001, Lang::value("extensionNoNeedToUpgrade"));
+      Response::error(400, 400001, Lang::value("kernel/extensionNoNeedToUpgrade"));
     }
 
     $ext = new ExtensionIuu($extension['plugin_id'], $extension['extension_id'], NULL);

@@ -10,10 +10,11 @@ use gstudio_kernel\Foundation\Data\Arr;
 
 //* 规则参考：https://github.com/yiminghe/async-validator
 
+
 class Validator
 {
   private $errors = [
-    "required" => "请输入 %s %s"
+    "required" => "%s %s"
   ];
   private $rules = [];
   private $data = [];
@@ -25,6 +26,7 @@ class Validator
   {
     $this->rules = $rules;
     $this->data = $data;
+    $this->errors['required'] = Lang::value("kernel/validator/pleaseInput") . " %s %s";
   }
   private function check(array $rules, $data)
   {
@@ -180,11 +182,11 @@ class Validator
       return true;
     }
 
-    $message = "校验失败";
+    $message = Lang::value("kernel/validator/verifyFailed");
     if (isset($checkResult['message'])) {
       $message = $checkResult['message'];
     } else {
-      if(isset($this->errors[$this->errorId])){
+      if (isset($this->errors[$this->errorId])) {
         $message = sprintf($this->errors[$this->errorId], ...$this->errorParams);
       }
     }

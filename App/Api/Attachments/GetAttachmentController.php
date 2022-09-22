@@ -7,6 +7,7 @@ if (!defined('IN_DISCUZ')) {
 }
 
 use gstudio_kernel\Foundation\Controller\AuthController;
+use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Platform\Discuzx\Attachment;
@@ -35,7 +36,7 @@ class GetAttachmentController extends AuthController
 
     $attachment = Attachment::getAttachment($AttachmentId);
     if (!$attachment) {
-      Response::error(403, "403002:AttachmentNotExist", "附件不存在或已删除", [], "附件记录不存在");
+      Response::error(403, "403002:AttachmentNotExist", Lang::value("kernel/attachments/notExist"), [], Lang::value("kernel/attachments/notExistDetails"));
     }
 
     return $attachment;

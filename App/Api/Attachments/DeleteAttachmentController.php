@@ -11,6 +11,7 @@ use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Database\Model;
 use gstudio_kernel\Foundation\File;
+use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Response;
 
@@ -26,13 +27,13 @@ class DeleteAttachmentController extends AuthController
     $AM = new Model("forum_attachment");
     $attachment = $AM->where("aid", $AttachmentId)->getOne();
     if (!$attachment) {
-      Response::error(403, "403001:AttachmentNotExist", "附件不存在或已删除", [], "附件记录不存在");
+      Response::error(403, "403001:AttachmentNotExist", Lang::value("kernel/attachments/notExist"), [], Lang::value("kernel/attachments/notExistDetails"));
     }
     $TableId = $attachment['tableid'];
     $SAM = new Model("forum_attachment_$TableId");
     $attachment = $SAM->where("aid", $AttachmentId)->getOne();
     if (!$attachment) {
-      Response::error(403, "403002:AttachmentNotExist", "附件不存在或已删除", [], "附件记录不存在");
+      Response::error(403, "403002:AttachmentNotExist", Lang::value("kernel/attachments/notExist"), [], Lang::value("kernel/attachments/notExistDetails"));
     }
     $attachmentPath = File::genPath(Config::get("attachmentPath"), $attachment['attachment']);
     if (!file_exists($attachmentPath)) {
@@ -45,7 +46,7 @@ class DeleteAttachmentController extends AuthController
       $AM->where("aid", $AttachmentId)->delete(true);
       $SAM->where("aid", $AttachmentId)->delete(true);
     } else {
-      Response::error(500, "500:DeleteAttachmentFalied", "附件删除失败");
+      Response::error(500, "500:DeleteAttachmentFalied", Lang::value("kernel/attachments/deletedFailed"));
     }
 
     return true;

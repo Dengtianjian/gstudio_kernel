@@ -38,7 +38,7 @@ class Serializer
         $upperLevel = &self::$rules;
       }
       if (isset($upperLevel[$firstName])) {
-        throw new \Error($firstName . " 序列化规则已经存在");
+        throw new \Error($firstName . " " . Lang::value("kernel/serializer/ruleExist"));
       }
       $upperLevel[$firstName] = $rule;
 
@@ -69,7 +69,7 @@ class Serializer
     if (array_key_exists("_serilizer", $data)) return $data;
     $rule = is_array($RuleName) ? $RuleName : self::getRule($RuleName);
     if (!$rule) {
-      throw new Error($RuleName . " 序列化规则不存在");
+      throw new Error($RuleName . " " . Lang::value("kernel/serializer/ruleNotExist"));
     }
     $dataKeys = array_keys($data);
 

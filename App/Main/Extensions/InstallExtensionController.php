@@ -26,11 +26,11 @@ class InstallExtensionController extends AuthController
     $EM = new ExtensionsModel();
     $extension = $EM->getByExtensionId($extensionId);
     if (empty($extension)) {
-      Response::error(404, 404001, Lang::value("extensionNotExists"));
+      Response::error(404, 404001, Lang::value("kernel/extensionNotExists"));
     }
     $extension = $extension[0];
     if ($extension['installed'] && $extension['install_time']) {
-      Response::error(400, 400001, Lang::value("extensionDoNotInstall"));
+      Response::error(400, 400001, Lang::value("kernel/extensionDoNotInstall"));
     }
     $extensionConfig = Extensions::config($extension['extension_id'], $extension['path']);
 

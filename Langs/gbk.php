@@ -105,6 +105,40 @@ $langs = [
       'hu' =>  "匈牙利语",
       "cht" =>  "繁体中文",
       "vie" =>   "越南语",
+    ],
+    "attachments" => [
+      "notExist" => "附件不存在或已删除",
+      "notExistDetails" => "附件记录不存在",
+      "deletedFailed" => "附件删除失败",
+      "pleaseUploadFile" => "请上传文件"
+    ],
+    "request" => [
+      "disallowGetRequests" => "禁止GET请求"
+    ],
+    "controller" => [
+      "asyncMethodIsMissing" => "控制器缺失async函数",
+      "dataOrPostMethodIsMissing" => "控制器缺少data|post函数",
+      "dataMethodIsMissing" => "控制器缺少data函数",
+    ],
+    "file" => [
+      "saveFailed" => "保存文件失败"
+    ],
+    "serializer" => [
+      "ruleExist" => "序列化规则已经存在",
+      "ruleNotExist" => "序列化规则不存在",
+    ],
+    "validator" => [
+      "pleaseInput" => "请输入",
+      "verifyFailed" => "校验失败"
+    ],
+    "auth" => [
+      "needLogin" => "请登录后重试",
+      "emptyToken" => "无TOKEN",
+      "headerTOKENParamError" => "头部的token参数错误",
+      "headerAuthorizationEmpty" => "头部Authorization值是空的",
+      "invalidToken" => "token无效",
+      "expiredToken" => "token失效",
+      "loginExpired" => "登录已过期，请重新登录"
     ]
   ]
 ];

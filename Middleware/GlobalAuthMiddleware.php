@@ -7,6 +7,7 @@ if (!defined('IN_DISCUZ')) {
 }
 
 use Error;
+use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -21,18 +22,18 @@ class GlobalAuthMiddleware
   {
     $token = $request->headers("Authorization") ?: $request->query("Authorization") ?: $request->body("Authorization");
     if ($strongCheck && (empty($token) || !$token)) {
-      Response::error(401, "Auth:40101", "请登录后重试", [], "无TOKEN");
+      Response::error(401, "Auth:40101", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/emptyToken"));
     }
     if (empty($token)) {
       return;
     }
     if (!preg_match("/^Bearer (.+)$/", $token, $token)) {
-      Response::error(401, "Auth:40102", "请登录后重试", [], "头部的token参数错误");
+      Response::error(401, "Auth:40102", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/headerTOKENParamError"));
     }
     $token = $token[1];
     if ($strongCheck) {
       if (empty($token) || !$token)
-        Response::error(401, "Auth:40103", "请登录后重试", [], "头部Authorization值是空的");
+        Response::error(401, "Auth:40103", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/headerAuthorizationEmpty"));
     }
     if (empty($token)) {
       return;
@@ -42,14 +43,14 @@ class GlobalAuthMiddleware
     if ($token === null) {
       header("Authorization", "");
       if ($strongCheck) {
-        Response::error(401, "Auth:40104", "请登录后重试", [], "token无效");
+        Response::error(401, "Auth:40104", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/invalidToken"));
       }
     }
     $expirationDate = $token['createdAt'] + $token['expiration'];
     $diffDay = round((time() - $token['createdAt']) / 86400);
     $expirationDay = round($token['expiration'] / 86400);
     if (time() > $expirationDate || $diffDay > $expirationDay) {
-      Response::error(401, "Auth:40105", "登录已过期，请重新登录", [], "token失效");
+      Response::error(401, "Auth:40105", Lang::value("kernel/auth/loginExpired"), [], Lang::value("kernel/auth/expiredToken"));
     }
     header("Authorization:" . $token['token'] . "/" . $expirationDate, true);
     //* 如果token的有效期剩余20%，就自动刷新token

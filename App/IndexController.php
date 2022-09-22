@@ -8,11 +8,12 @@ if (!defined('IN_DISCUZ')) {
 
 use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\File;
+use gstudio_kernel\Foundation\Lang;
 
 class IndexController extends AuthController
 {
   public function data()
   {
-    return File::genPath(DISCUZ_ROOT, "/aaa/bb", "c", "ddd/we/q/");
+    return Lang::value("kernel/extension_new_technology_tips");
   }
 }

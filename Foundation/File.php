@@ -91,7 +91,7 @@ class File
         $filePath = $fileItem;
         $fileSize = filesize($filePath);
         if (!$fileSize) {
-          Response::error(500, "File:500002", "保存文件失败", [], error_get_last());
+          Response::error(500, "File:500002", Lang::value("kernel/file/saveFailed"), [], error_get_last());
         }
         $fileSourceName = $filePath;
       } else {
@@ -120,7 +120,7 @@ class File
       }
 
       if (!$saveResult) {
-        Response::error(500, "File:500001", "保存文件失败", [], error_get_last());
+        Response::error(500, "File:500001", Lang::value("kernel/file/saveFailed"), [], error_get_last());
       }
       $relativePath = str_replace(\F_APP_ROOT, "", $savePath);
       $fileInfo = [

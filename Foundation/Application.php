@@ -61,13 +61,13 @@ class Application
       if (empty($executeFunName)) {
         if ($this->router['type'] === "async" || $this->request->async()) {
           if (strtolower($method) === "get") {
-            Response::error(500, "500:AsyncControlerNotAllowGetMethodRequest", "禁止Get请求");
+            Response::error(500, "500:AsyncControlerNotAllowGetMethodRequest", Lang::value("kernel/request/disallowGetRequests"));
           }
           if (!method_exists($instance, "async") && $this->router['type'] === "resource") {
-            Response::error(500, "500:ControllerMissingAsyncFunction", "服务器错误", [], "控制器缺失async函数");
+            Response::error(500, "500:ControllerMissingAsyncFunction", Lang::value("kernel/serverError"), [], Lang::value("kernel/controller/asyncMethodIsMissing"));
           } else if (!method_exists($instance, "data") && $this->router['type'] === "async") {
             if (!method_exists($instance, "post")) {
-              Response::error(500, "500:ControllerMissingDataHandlerFunction", "服务器错误", [], "控制器缺少data|post函数");
+              Response::error(500, "500:ControllerMissingDataHandlerFunction", Lang::value("kernel/serverError"), [], Lang::value("kernel/controller/dataOrPostMethodIsMissing"));
             }
           }
         }
@@ -82,7 +82,7 @@ class Application
           $executeFunName = $method;
         } else {
           if (!method_exists($instance, "data")) {
-            throw new Error("执行的控制器缺少data函数");
+            throw new Error(Lang::value("kernel/controller/dataMethodIsMissing"));
           }
           $executeFunName = "data";
         }
@@ -177,11 +177,11 @@ class Application
     foreach ($enabledExtensions as $extensionItem) {
       $mainFilepath = DISCUZ_ROOT . $extensionItem['path'] . "/Main.php";
       if (!\file_exists($mainFilepath)) {
-        Response::error(500, 500, $extensionItem['name'] . " 扩展文件已损坏，请重新安装");
+        Response::error(500, 500, $extensionItem['name'] . " " . Lang::value("extensionFileCorrupted"));
       }
       $namespace = "\\" . $extensionItem['plugin_id'] . "\\Extensions\\" . $extensionItem['extension_id'] . "\\Main";
       if (!\class_exists($namespace)) {
-        Response::error(500, 500, $extensionItem['name'] . " 扩展文件已损坏，请重新安装");
+        Response::error(500, 500, $extensionItem['name'] . " " . Lang::value("extensionFileCorrupted"));
       }
       $MainInstance = new $namespace();
       $MainInstance->handle();
