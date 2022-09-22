@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Database\Model;
 
 if (!defined("IN_DISCUZ")) {

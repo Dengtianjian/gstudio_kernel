@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation\Database;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Output;
 
 class Query
@@ -19,7 +23,7 @@ class Query
   {
     return new Query($tableName);
   }
-  function generateSql(): string
+  function generateSql()
   {
     $this->sql = $sql = "";
     switch ($this->executeType) {
@@ -78,7 +82,7 @@ class Query
     }
     return $sql;
   }
-  function reset(): void
+  function reset()
   {
     $this->options = [];
     $this->executeType = "";
@@ -260,7 +264,7 @@ class Query
     $this->reset();
     return $this;
   }
-  function sql(): string
+  function sql()
   {
     return $this->sql;
   }

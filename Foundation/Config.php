@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Data\Arr;
 
 class Config
@@ -11,7 +15,7 @@ class Config
    * 读取应用Config文件
    *
    * @param string $filePath 应用配置文件所在路径
-   * @return array
+   * @return array|bool
    */
   static function read(?string $filePath = null, ?string $appId = F_APP_ID)
   {

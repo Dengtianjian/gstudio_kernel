@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\App\Api\Attachments;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -20,14 +24,10 @@ class GetAttachmentController extends AuthController
   // static function verifyAdmin(){
   //   return false;
   // }
-  // static $Auth = false;
+  static $Auth = false;
   static function Auth()
   {
     return true;
-  }
-  static function verifyAuth(): void
-  {
-    // Response::error()
   }
   public function get(Request $R)
   {

@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Middleware;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Store;
 use gstudio_kernel\Foundation\View;

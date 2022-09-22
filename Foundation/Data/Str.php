@@ -8,7 +8,7 @@ if (!defined("IN_DISCUZ")) {
 
 class Str
 {
-  static function unescape(string $str): string
+  static function unescape(string $str)
   {
     $str = rawurldecode($str);
     preg_match_all("/%u.{4}|&#x.{4};|&#\d+;|.+/U", $str, $r);
@@ -24,7 +24,7 @@ class Str
     }
     return join("", $ar);
   }
-  static function replaceParams($string, $params = []): string
+  static function replaceParams($string, $params = [])
   {
     \preg_match_all("/(?<=\{)\w+(?=\})/i", $string, $paramKeys);
     if (count($paramKeys) > 0) {
@@ -36,7 +36,7 @@ class Str
     }
     return $string;
   }
-  static function generateRandomString(int $stringLength = 5): string
+  static function generateRandomString(int $stringLength = 5)
   {
     $charts = array(
       'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',

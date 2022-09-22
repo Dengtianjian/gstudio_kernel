@@ -12,7 +12,7 @@ use gstudio_kernel\Foundation\Service;
 
 class RequestService extends Service
 {
-  static function request(): Request
+  static function request()
   {
     return $GLOBALS['App']->request;
   }

@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation\Controller;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Data\Arr;
 use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
@@ -110,7 +114,7 @@ class BaseController
 
     return $data;
   }
-  protected function pipeFill(array $pipes, mixed $data): void
+  protected function pipeFill(array $pipes, mixed $data)
   {
     $result = null;
     foreach ($pipes as $pipeName) {

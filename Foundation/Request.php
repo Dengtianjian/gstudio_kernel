@@ -138,7 +138,7 @@ class Request
    *
    * @return bool|string
    */
-  public function ajax(): bool|string|null
+  public function ajax()
   {
     if (isset($_GET['isAjax'])) {
       return true;
@@ -150,7 +150,7 @@ class Request
    *
    * @return bool|string
    */
-  public function async(): bool|string|null
+  public function async()
   {
     if (isset($_GET['isAsync'])) {
       return true;
@@ -172,7 +172,7 @@ class Request
     }
     return $this->getArrayData($this->paramsData, $key);
   }
-  public function pagination(string $key = null): int|array
+  public function pagination(string $key = null)
   {
     if ($key) {
       return $this->paginationParams[$key];

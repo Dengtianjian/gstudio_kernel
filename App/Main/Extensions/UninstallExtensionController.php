@@ -6,15 +6,15 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Request;
-use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Model\ExtensionsModel;
 
 /**
  * 卸载扩展API
  */
-class UninstallExtensionController extends Controller
+class UninstallExtensionController extends AuthController
 {
   protected $Admin = 1;
   public function data(Request $request)

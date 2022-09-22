@@ -6,8 +6,8 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Request;
-use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Model\ExtensionsModel;
@@ -15,7 +15,7 @@ use gstudio_kernel\Model\ExtensionsModel;
 /**
  * 开启和关闭扩展API
  */
-class OpenCloseExtensionController extends Controller
+class OpenCloseExtensionController extends AuthController
 {
   protected $Admin = 1;
   public function data(Request $request)

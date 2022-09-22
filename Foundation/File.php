@@ -4,7 +4,7 @@ namespace gstudio_kernel\Foundation;
 
 use gstudio_kernel\Foundation\Data\Arr;
 
-if (!defined("F_KERNEL")) {
+if (!defined('IN_DISCUZ')) {
   exit('Access Denied');
 }
 
@@ -204,7 +204,7 @@ class File
    * @param string $path 目录
    * @return boolean 删除结果
    */
-  public static function deleteDirectory($path): bool
+  public static function deleteDirectory($path)
   {
     if (is_dir($path)) {
       $directorys = @\scandir($path);
@@ -233,7 +233,7 @@ class File
    * @param string $baseDir 基目录，也就是基于该目录创建文件夹
    * @return bool
    */
-  public static function mkdir(array $dirs, $baseDir = "", int $permissions = 0757): bool
+  public static function mkdir(array $dirs, $baseDir = "", int $permissions = 0757)
   {
     return mkdir(self::genPath($baseDir, ...$dirs), $permissions, true);
   }
@@ -243,11 +243,14 @@ class File
    * @param string ...$els 路径项
    * @return string 生成后的路径
    */
-  public static function genPath(...$els): string
+  public static function genPath(...$els)
   {
     return implode(DIRECTORY_SEPARATOR, array_map(function ($item) {
       if (str_ends_with($item, "/") || str_ends_with($item, "\\")) {
         $item = substr($item, 0, strlen($item) - 1);
+      }
+      if (str_starts_with($item, "/") || str_starts_with($item, "\\")) {
+        $item = substr($item, 1, strlen($item));
       }
       return $item;
     }, array_filter($els, function ($item) {
@@ -262,7 +265,7 @@ class File
    * @param mixed $context
    * @return array|false 扫描成功的话就返回扫描的数组，否则返回false
    */
-  public static function scandir(string $targetPath, ?int $sorting_order = 0, $context = null): array|false
+  public static function scandir(string $targetPath, ?int $sorting_order = 0, $context = null)
   {
     $dirs = scandir($targetPath, $sorting_order, $context);
     if (!$dirs) return false;
@@ -277,7 +280,7 @@ class File
    * @param array $whiteList 清除是跳过的白名单。数组的元素必须是完整的目录，也就是包含$destPath，例如 $destPath = "a/b" 那么白名单的元素就是 a/b/c/d 就会跳过路径是 /a/b/c/d 的文件或者目录
    * @return boolean 清除成功？
    */
-  public static function clearFolder(string $targetPath, array $whiteList = []): bool
+  public static function clearFolder(string $targetPath, array $whiteList = [])
   {
     if (!is_dir($targetPath)) return false;
 
@@ -306,7 +309,7 @@ class File
    * @param array $whiteList 路径白名单，会跳过数组里面的白名单。数组的元素必须是完整的目录，也就是包含$destPath，例如 $destPath = "a/b" 那么白名单的元素就是 a/b/c/d 就会跳过路径是 /a/b/c/d 的文件或者目录
    * @return boolean 复制成功？
    */
-  public static function copyFolder(string $targetPath, string $destPath, array $whiteList = []): bool
+  public static function copyFolder(string $targetPath, string $destPath, array $whiteList = [])
   {
     if (!is_dir($targetPath)) {
       return false;
@@ -354,7 +357,7 @@ class File
    * @param string $sourcePath 目录2
    * @return boolean 是否相等
    */
-  public static function compareDirectories(string $targetPath, $sourcePath): bool
+  public static function compareDirectories(string $targetPath, $sourcePath)
   {
     //* 如果任意一个路径是文件夹，而另外一个是文件，就返回false
     if (!is_dir($targetPath) && is_dir($sourcePath) || !is_dir($sourcePath) && is_dir($targetPath)) {

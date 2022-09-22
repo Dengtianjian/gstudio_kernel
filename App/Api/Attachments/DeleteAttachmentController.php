@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\App\Api\Attachments;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use DB;
 use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Controller\AuthController;

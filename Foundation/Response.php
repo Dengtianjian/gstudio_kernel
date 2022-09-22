@@ -25,7 +25,7 @@ class Response
       "replace" => $replace
     ]);
   }
-  static function intercept(callable $callback, ?string $responseType = null, $statusCode = null, $responseCode = null): callable
+  static function intercept(callable $callback, ?string $responseType = null, $statusCode = null, $responseCode = null)
   {
     $key = microtime();
     self::$responseInterceptors[$key] = [
@@ -217,7 +217,7 @@ class Response
       exit();
     }
   }
-  static function text(string|null $content, bool $format = false): void
+  static function text(string|null $content, bool $format = false)
   {
     if ($format) {
       Output::format($content);

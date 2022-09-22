@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use Error;
 use gstudio_kernel\Foundation\Data\Arr;
 

@@ -2,7 +2,11 @@
 
 namespace gstudio_kernel\App\Main\Extensions;
 
-use gstudio_kernel\Foundation\AuthController;
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
+use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Data\Arr;
 use gstudio_kernel\Foundation\Extension\Extensions;
 use gstudio_kernel\Foundation\Lang;

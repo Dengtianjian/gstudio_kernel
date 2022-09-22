@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use Error;
 use gstudio_kernel\Model\ExtensionsModel;
 
@@ -83,22 +87,6 @@ class Application
           $executeFunName = "data";
         }
       }
-
-      // if ($instance->Auth === true) {
-      //   if (Auth::isVerified() === false) {
-      //     Auth::check();
-      //   }
-      // }
-      // if ($instance->Admin !== false) {
-      //   $adminId = $instance->Admin;
-      //   if (Auth::isVerified() == false) {
-      //     Auth::check();
-      //   }
-      //   if (Auth::isVerifiedAdmin() == false) {
-      //     Auth::checkAdmin($adminId);
-      //   }
-      // }
-      // $instance->verifyFormhash();
 
       $result = $instance->{$executeFunName}($this->request);
 

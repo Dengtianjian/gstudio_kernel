@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\App\Api\Attachments;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Platform\Discuzx\Attachment;

@@ -6,8 +6,8 @@ if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
+use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Request;
-use gstudio_kernel\Foundation\Controller;
 use gstudio_kernel\Foundation\Extension\ExtensionIuu;
 use gstudio_kernel\Foundation\Extension\Extensions;
 use gstudio_kernel\Foundation\Lang;
@@ -17,7 +17,7 @@ use gstudio_kernel\Model\ExtensionsModel;
 /**
  * 安装扩展API
  */
-class InstallExtensionController extends Controller
+class InstallExtensionController extends AuthController
 {
   protected $Admin = true;
   public function data(Request $request)

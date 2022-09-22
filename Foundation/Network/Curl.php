@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation\Network;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use CURLFile;
 use gstudio_kernel\Foundation\Data\Arr;
 

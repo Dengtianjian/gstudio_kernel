@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Middleware;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use Error;
 use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Request;
@@ -13,7 +17,7 @@ use ReflectionMethod;
 
 class GlobalAuthMiddleware
 {
-  private function verifyToken(Request $request, bool $strongCheck = true): void
+  private function verifyToken(Request $request, bool $strongCheck = true)
   {
     $token = $request->headers("Authorization") ?: $request->query("Authorization") ?: $request->body("Authorization");
     if ($strongCheck && (empty($token) || !$token)) {

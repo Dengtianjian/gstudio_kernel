@@ -2,6 +2,10 @@
 
 namespace gstudio_kernel\Foundation\Extension;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Foundation\Iuu;

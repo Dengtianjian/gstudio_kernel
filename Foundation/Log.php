@@ -2,9 +2,13 @@
 
 namespace gstudio_kernel\Foundation;
 
+if (!defined('IN_DISCUZ')) {
+  exit('Access Denied');
+}
+
 class Log
 {
-  static private function genLogPath(...$path): string
+  static private function genLogPath(...$path)
   {
     return File::genPath(F_APP_ROOT, "Data", "Logs", ...$path);
   }
@@ -43,7 +47,7 @@ EOT;
     if ($month === null) {
       $month = date("m");
       if ($day === null) {
-        $directoryPath = self::genLogPath($year,$month);
+        $directoryPath = self::genLogPath($year, $month);
         if (!is_dir($directoryPath)) {
           return [];
         }
