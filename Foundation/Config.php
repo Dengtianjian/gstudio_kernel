@@ -17,7 +17,7 @@ class Config
    * @param string $filePath 应用配置文件所在路径
    * @return array|bool
    */
-  static function read(?string $filePath = null, ?string $appId = F_APP_ID)
+  static function read($filePath = null, $appId = null)
   {
     if (!$filePath) {
       $filePath = F_APP_ROOT . "/Config.php";
@@ -39,18 +39,19 @@ class Config
    * 获取配置项
    *
    * @param string $key 配置项数组路径字符串，用 / 分隔
+   * @param string $appId 读取指定APP的配置。为空即为读取当前APP的配置
    * @return array|string|integer|boolean
    */
-  static function get(?string $key = null)
+  static function get($key = null, $appId = null)
   {
     $configs = [];
 
-    if (!isset(self::$configs[F_APP_ID])) {
+    if (!isset(self::$configs[$appId])) {
       if (self::read() === false) {
         return null;
       }
     }
-    $configs = self::$configs[F_APP_ID];
+    $configs = self::$configs[$appId];
     if (!$key) {
       return $configs;
     }

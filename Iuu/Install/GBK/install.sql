@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `pre_gstudio_kernel_extensions`;
 CREATE TABLE IF NOT EXISTS `pre_gstudio_kernel_extensions` (
   `id` int(12) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `install_time` int(13) DEFAULT NULL COMMENT '安装时间',
@@ -15,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `pre_gstudio_kernel_extensions` (
   UNIQUE KEY `extension_id` (`extension_id`),
   KEY `plugin_id` (`plugin_id`),
   KEY `parent_id` (`parent_id`)
-) COMMENT = '扩展表'
+) COMMENT = '扩展表';
 
 -- ----------------------------
 -- Table structure for pre_gstudio_kernel_logins

@@ -8,12 +8,17 @@ if (!defined('IN_DISCUZ')) {
 
 use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\File;
+use gstudio_kernel\Foundation\Iuu;
 use gstudio_kernel\Foundation\Lang;
 
 class IndexController extends AuthController
 {
   public function data()
   {
-    return Lang::value("kernel/extension_new_technology_tips");
+    define("IN_ADMINCP", true);
+    include_once libfile("function/plugin");
+    // $Iuu = new Iuu("gstudio_kernel", "0.4.9");
+    // $Iuu->install();
+    return 1;
   }
 }

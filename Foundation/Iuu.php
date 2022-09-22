@@ -21,10 +21,17 @@ class Iuu
     $this->fromVersion = $fromVersion;
     $this->latestVersion = \getglobal("setting/plugins/version/$pluginId");
     $this->Charset = \strtoupper(\CHARSET);
+
+    if (!defined("F_APP_ID")) {
+      define("F_APP_ID", $this->pluginId);
+    }
+    if (!defined("F_APP_ROOT")) {
+      define("F_APP_ROOT", $this->pluginPath);
+    }
   }
   public function install()
   {
-    $installFile = \DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install/install.php";
+    $installFile =  $this->pluginPath . "/Iuu/Install/install.php";
     if (\file_exists($installFile)) {
       include_once($installFile);
       $className = "\\" . $this->pluginId . "\Iuu\Install\Install";
@@ -35,8 +42,8 @@ class Iuu
   }
   public function runInstallSql()
   {
-    $multipleEncode = Config::get("multipleEncode", $this->pluginId);
-    $sqlPath = DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install";
+    $multipleEncode = Config::get("multipleEncode");
+    $sqlPath =  $this->pluginPath . "/Iuu/Install";
     if ($multipleEncode) {
       $sqlPath .= "/" . $this->Charset . "/install.sql";
       if (!\file_exists($sqlPath)) {
@@ -44,7 +51,7 @@ class Iuu
       }
     }
     if (!\file_exists($sqlPath)) {
-      $sqlPath = DISCUZ_ROOT . "/source/plugin/" . $this->pluginId . "/Iuu/Install/install.sql";
+      $sqlPath =  $this->pluginPath . "/Iuu/Install/install.sql";
     }
 
     if (!\file_exists($sqlPath)) {
@@ -92,7 +99,7 @@ class Iuu
   public function runUpgradeSql()
   {
     $sqlFileDirPath = $this->pluginPath . "/Iuu/Upgrade";
-    $multipleEncode = Config::get("multipleEncode", $this->pluginId);
+    $multipleEncode = Config::get("multipleEncode");
     if ($multipleEncode) {
       $sqlFileDirPath .= "/" . $this->Charset;
     } else {
@@ -111,6 +118,10 @@ class Iuu
       \runquery($sqlContent);
     });
     return $this;
+  }
+  public function uninstall()
+  {
+    File::deleteDirectory(File::genPath(\getglobal("setting/attachurl"), "plugin/gstudio_kernel"));
   }
   public function clean()
   {
