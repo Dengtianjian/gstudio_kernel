@@ -9,7 +9,7 @@ if (!defined("IN_DISCUZ")) {
 
 function loader($className)
 {
-  if (strpos($className, "Upgrade")) {
+  if (strpos($className, "Iuu/Upgrade")) {
     $className = Iuu::upgradeFileHandle($className);
   }
   $className = str_replace("\\", "/", $className);
