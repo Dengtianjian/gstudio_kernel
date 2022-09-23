@@ -217,10 +217,8 @@ class Application
       "addon" => [ //* 当前运行中的应用信息
         "id" => $this->pluginId,
         "root" => F_APP_ROOT,
-        "assets" => File::genPath(F_APP_ROOT, "Assets"),
-        "views" => File::genPath(F_APP_ROOT, "Views"),
-        "assetsUrl" => File::genPath(F_APP_URL, "Assets"),
-        "viewsUrl" => File::genPath(F_APP_URL, "Views"),
+        "assets" => File::genPath(F_APP_URL, "Assets"),
+        "views" => File::genPath(F_APP_URL, "Views")
       ]
     ];
     Store::setApp($__App);
