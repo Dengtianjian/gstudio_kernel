@@ -8,8 +8,8 @@ if (!defined("IN_DISCUZ") || !defined('IN_ADMINCP')) {
 
 class Install
 {
-  public function handle()
+  public function __construct()
   {
-
+    
   }
 }

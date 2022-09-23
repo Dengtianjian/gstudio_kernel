@@ -33,10 +33,9 @@ class Iuu
   {
     $installFile =  $this->pluginPath . "/Iuu/Install/install.php";
     if (\file_exists($installFile)) {
-      include_once($installFile);
+      // include_once($installFile);
       $className = "\\" . $this->pluginId . "\Iuu\Install\Install";
-      $installInstance = new $className();
-      $installInstance->handle();
+      new $className();
     }
     return $this;
   }
@@ -45,10 +44,7 @@ class Iuu
     $multipleEncode = Config::get("multipleEncode");
     $sqlPath =  $this->pluginPath . "/Iuu/Install";
     if ($multipleEncode) {
-      $sqlPath .= "/" . $this->Charset . "/install.sql";
-      if (!\file_exists($sqlPath)) {
-        $sqlPath .= "/" . $this->Charset . ".sql";
-      }
+      $sqlPath .= "/" . $this->Charset . ".sql";
     }
     if (!\file_exists($sqlPath)) {
       $sqlPath =  $this->pluginPath . "/Iuu/Install/install.sql";
