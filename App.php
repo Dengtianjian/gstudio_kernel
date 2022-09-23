@@ -25,6 +25,7 @@ use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\Config as Config;
 use gstudio_kernel\Foundation\Exception\ErrorCode;
+use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Middleware\GlobalMultipleEncodeMiddleware;
 
@@ -62,7 +63,8 @@ class App extends Application
   {
     global $_G;
     define("F_APP_ID", $this->pluginId);
-    define("F_APP_ROOT", DISCUZ_ROOT . "source/plugin/" . $this->pluginId);
+    define("F_APP_ROOT", "/" . File::genPath(DISCUZ_ROOT, "source/plugin", $this->pluginId));
+    define("F_APP_URL", File::genPath("source/plugin", $this->pluginId));
     define("F_KERNEL_ROOT", "source/plugin/gstudio_kernel");
     define("F_KERNEL", true);
     define("F_CACHE_KEY", time());

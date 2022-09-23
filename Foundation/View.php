@@ -47,7 +47,7 @@ class View
     }
     $GLOBALS["View"] = self::class;
     global $View;
-    global $_Store;
+    global $_STORE;
     global $_G;
 
     self::outputHeader();

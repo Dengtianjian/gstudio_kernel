@@ -17,7 +17,7 @@ class Iuu
   public function __construct($pluginId, $fromVersion)
   {
     $this->pluginId = $pluginId;
-    $this->pluginPath = File::genPath("source/plugin/$pluginId");
+    $this->pluginPath = "source/plugin/$pluginId";
     $this->fromVersion = $fromVersion;
     $this->latestVersion = \getglobal("setting/plugins/version/$pluginId");
     $this->Charset = \strtoupper(\CHARSET);

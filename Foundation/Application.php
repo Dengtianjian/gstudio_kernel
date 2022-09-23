@@ -207,12 +207,20 @@ class Application
       "rewriteURL" => [], //* 重写的URL
       "mode" => Config::get("mode", F_APP_ID), //* 当前运行模式
       "langs" => [], //* 字典
-      "kernel" => [], //* 内核
+      "kernel" => [
+        "root" => F_KERNEL_ROOT,
+        "assets" => File::genPath(F_KERNEL_ROOT, "Assets"),
+        "views" => File::genPath(F_KERNEL_ROOT, "Views"),
+        "assetsUrl" => File::genPath(F_KERNEL_ROOT, "Assets"),
+        "viewsUrl" => File::genPath(F_KERNEL_ROOT, "Views"),
+      ], //* 内核
       "addon" => [ //* 当前运行中的应用信息
         "id" => $this->pluginId,
         "root" => F_APP_ROOT,
-        "assets" => F_APP_ROOT . "/Assets",
-        "views" => F_APP_ROOT . "/Views"
+        "assets" => File::genPath(F_APP_ROOT, "Assets"),
+        "views" => File::genPath(F_APP_ROOT, "Views"),
+        "assetsUrl" => File::genPath(F_APP_URL, "Assets"),
+        "viewsUrl" => File::genPath(F_APP_URL, "Views"),
       ]
     ];
     Store::setApp($__App);
