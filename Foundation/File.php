@@ -246,10 +246,11 @@ class File
   public static function genPath(...$els)
   {
     return implode(DIRECTORY_SEPARATOR, array_map(function ($item) {
-      if (str_ends_with($item, "/") || str_ends_with($item, "\\")) {
+      $lastText = $item[strlen($item) - 1];
+      if ($lastText === "/" || $lastText === "\\") {
         $item = substr($item, 0, strlen($item) - 1);
       }
-      if (str_starts_with($item, "/") || str_starts_with($item, "\\")) {
+      if ($item[0] === "/" || $item[0] === "\\") {
         $item = substr($item, 1, strlen($item));
       }
       return $item;
