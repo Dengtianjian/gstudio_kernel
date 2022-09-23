@@ -33,7 +33,9 @@ class Request
       unset($_POST["_pipes"]);
     }
     unset($_REQUEST["_pipes"]);
-    $this->pipes = array_map(fn ($item) => addslashes($item), $this->pipes);
+    $this->pipes = array_map(function ($item) {
+      return addslashes($item);
+    }, $this->pipes);
 
     //* 分页参数
     $this->paginationParams = [
@@ -129,6 +131,9 @@ class Request
       $this->headers = $headers;
     }
     if ($key) {
+      if (!isset($this->headers[$key])) {
+        return null;
+      }
       return $this->headers[$key];
     }
     return $this->headers;

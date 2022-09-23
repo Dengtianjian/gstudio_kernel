@@ -54,7 +54,7 @@ class Serializer
       return self::addRule($name, $rule, $upperLevel[$firstName]);
     }
   }
-  static function use($RuleName, $data, $serializerName = "temp")
+  static function serialization($RuleName, $data, $serializerName = "temp")
   {
     if ($data === null || count($data) === 0) return $data;
     if (!Arr::isAssoc($data)) {
@@ -62,7 +62,7 @@ class Serializer
         if (array_key_exists("_serilizer", $dataItem)) {
           continue;
         }
-        $dataItem = self::use($RuleName, $dataItem, $serializerName);
+        $dataItem = self::serialization($RuleName, $dataItem, $serializerName);
       }
       return $data;
     }
@@ -89,7 +89,7 @@ class Serializer
       }
       if (array_key_exists($fieldName, $data)) {
         if ($ruleItem === Serializer::class && self::$ruleName) {
-          $data[$fieldName] = self::use(self::$ruleName, $data[$fieldName]);
+          $data[$fieldName] = self::serialization(self::$ruleName, $data[$fieldName]);
           self::$ruleName = null;
         } else if ($ruleItem === "json") {
           if ($data[$fieldName] && is_string($data[$fieldName])) {

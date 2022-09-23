@@ -99,7 +99,7 @@ class Application
             Serializer::addRule($ruleName, $instance->serialization);
             $instance->serialization = $ruleName;
           }
-          $result = Serializer::use($instance->serialization, $result);
+          $result = Serializer::serialization($instance->serialization, $result);
         }
       }
 

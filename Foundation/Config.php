@@ -47,6 +47,7 @@ class Config
     $configs = [];
 
     if (!isset(self::$configs[$appId])) {
+      self::$configs[$appId] = [];
       if (self::read() === false) {
         return null;
       }
@@ -90,6 +91,9 @@ class Config
    */
   static function set($value)
   {
+    if (!isset(self::$configs[F_APP_ID])) {
+      self::$configs[F_APP_ID] = [];
+    }
     self::$configs[F_APP_ID] = Arr::merge(self::$configs[F_APP_ID], $value);
   }
 }

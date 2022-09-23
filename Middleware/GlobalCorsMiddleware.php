@@ -28,9 +28,9 @@ class GlobalCorsMiddleware
       Response::header("Access-Control-Allow-Origin", "");
     }
 
-    Response::header("Access-Control-Allow-Headers", implode(",", Config::get("cors/allowHeaders") ?? []));
-    Response::header("Access-Control-Expose-Headers", implode(",", Config::get("cors/exposeHeaders") ?? []));
-    Response::header("Access-Control-Max-Age", Config::get("cors/maxAge") ?? 86400);
+    Response::header("Access-Control-Allow-Headers", implode(",", Config::get("cors/allowHeaders") ?: []));
+    Response::header("Access-Control-Expose-Headers", implode(",", Config::get("cors/exposeHeaders") ?: []));
+    Response::header("Access-Control-Max-Age", Config::get("cors/maxAge") ?: 86400);
     $next();
   }
 }

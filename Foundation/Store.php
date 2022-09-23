@@ -84,7 +84,7 @@ class Store
     $paths = explode("/", $path);
     $last = $GLOBALS['_STORE'];
     foreach ($paths as $pathItem) {
-      $last = $last[$pathItem] ?? null;
+      $last = $last[$pathItem] ?: null;
       if (!$last) {
         break;
       }

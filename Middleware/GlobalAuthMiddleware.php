@@ -87,7 +87,9 @@ class GlobalAuthMiddleware
       $needCheckAdmin = true;
       $isAdminVerify = false;
       if (is_array($router['controller']::$AdminMethods)) {
-        $methods = array_map(fn ($item) => strtolower($item), $router['controller']::$AdminMethods);
+        $methods = array_map(function ($item) {
+          return strtolower($item);
+        }, $router['controller']::$AdminMethods);
         if (count($methods) && !in_array(strtolower($request->method), $methods)) {
           $needCheckAdmin = false;
         }
@@ -111,7 +113,9 @@ class GlobalAuthMiddleware
       if ($isAdminVerify === false) {
         $needCheckAuth = true;
         if (is_array($router['controller']::$AuthMethods)) {
-          $methods = array_map(fn ($item) => strtolower($item), $router['controller']::$AuthMethods);
+          $methods = array_map(function ($item) {
+            return strtolower($item);
+          }, $router['controller']::$AuthMethods);
           if (count($methods) && !in_array(strtolower($request->method), $methods)) {
             $needCheckAuth = false;
           }
