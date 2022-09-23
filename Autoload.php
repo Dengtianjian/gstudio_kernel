@@ -1,11 +1,17 @@
 <?php
 
+use gstudio_kernel\Foundation\Iuu;
+use gstudio_kernel\Foundation\Output;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
 
 function loader($className)
 {
+  if (strpos($className, "Upgrade")) {
+    $className = Iuu::upgradeFileHandle($className);
+  }
   $className = str_replace("\\", "/", $className);
   $filePath = DISCUZ_ROOT . "/source/plugin/$className.php";
   if (file_exists($filePath)) {

@@ -16,9 +16,9 @@ class IndexController extends AuthController
   public function data()
   {
     define("IN_ADMINCP", true);
-    include_once libfile("function/plugin");
-    // $Iuu = new Iuu("gstudio_kernel", "0.4.9");
-    // $Iuu->install();
+    // include_once libfile("function/plugin");
+    $Iuu = new Iuu("gstudio_kernel", "0.4.9");
+    $Iuu->upgrade();
     return 1;
   }
 }

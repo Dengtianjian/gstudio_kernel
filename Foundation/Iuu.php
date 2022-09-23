@@ -17,7 +17,7 @@ class Iuu
   public function __construct($pluginId, $fromVersion)
   {
     $this->pluginId = $pluginId;
-    $this->pluginPath = DISCUZ_ROOT . "/source/plugin/$pluginId";
+    $this->pluginPath = File::genPath("source/plugin/$pluginId");
     $this->fromVersion = $fromVersion;
     $this->latestVersion = \getglobal("setting/plugins/version/$pluginId");
     $this->Charset = \strtoupper(\CHARSET);
@@ -72,29 +72,39 @@ class Iuu
       if ($dirItem === "." || $dirItem === "..") {
         continue;
       }
-      $fileName = \substr($dirItem, 0, \strrpos($dirItem, "."));
-      if (\strpos($fileName, "_")) {
-        $version = \substr($fileName, \strpos($fileName, "_") + 1);
-        $version = \implode(".", explode("_", $version));
-      } else {
-        $version = $fileName;
+      if (!is_dir(File::genPath($upgradeRealtedFileDir, $dirItem))) {
+        continue;
       }
-      if (version_compare($this->fromVersion, $version, "<") === true) {
-        $callBack($version, $fileName);
+
+      if (version_compare($this->fromVersion, $dirItem, "<") === true) {
+        $callBack($dirItem);
       }
     }
   }
   public function upgrade()
   {
-    $this->scanDirAndVersionCompare($this->pluginPath . "/Iuu/Upgrade/Files", function ($version, $fileName) {
-      $filePath = $this->pluginPath . "/Iuu/Upgrade/Files/$fileName.php";
-      if (\file_exists($filePath)) {
-        $className = $this->pluginId . "\Iuu\Upgrade\Files\\$fileName";
-        $upgradeItemInstance = new $className();
-        $upgradeItemInstance->handle();
+    $upgradeDir = File::genPath($this->pluginPath, "Iuu/Upgrade");
+    $this->scanDirAndVersionCompare($upgradeDir, function ($version) use ($upgradeDir) {
+      $versionDir = "$upgradeDir/$version";
+      if (\is_dir($versionDir)) {
+        $namespace = "\\" . F_APP_ID . "\Iuu\Upgrade\\Upgrade_" . implode("_", explode(".", $version));
+        new $namespace();
       }
     });
     return $this;
+  }
+  public static function upgradeFileHandle($className)
+  {
+    $classNameNamespace = substr($className, 0, strrpos($className, "\\"));
+    $className = substr($className, strrpos($className, "\\") + 1, strlen($className));
+    $version = substr($className, strpos($className, "_") + 1, strlen($className));
+    $versionDir = implode(".", explode("_", $version));
+
+    return implode("\\", [
+      $classNameNamespace,
+      $versionDir,
+      $className
+    ]);
   }
   public function runUpgradeSql()
   {
@@ -121,7 +131,7 @@ class Iuu
   }
   public function uninstall()
   {
-    File::deleteDirectory(File::genPath(\getglobal("setting/attachurl"), "plugin/gstudio_kernel"));
+    File::deleteDirectory(File::genPath(\getglobal("setting/attachurl"), "plugin/" . F_APP_ID));
   }
   public function clean()
   {

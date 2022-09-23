@@ -6,16 +6,10 @@ if (!defined("IN_DISCUZ") || !defined('IN_ADMINCP')) {
   exit('Access Denied');
 }
 
-if (!file_exists(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Autoload.php")) {
-  showmessage("Need to install The Core Plugin", null, [], [
-    "alert" => "error"
-  ]);
-  exit;
-}
-
 include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Autoload.php");
 
+// TODO 更新优化
 $Iuu = new Iuu("gstudio_kernel", $_GET['fromversion']);
-$Iuu->upgrade()->runUpgradeSql()->clean();
+$Iuu->upgrade()->clean();
 
 $finish = TRUE;
