@@ -27,12 +27,14 @@ class View
   {
     if (is_array($viewFiles)) {
       foreach ($viewFiles as $file) {
-        if (!\file_exists("$templateDir/$file.htm")) {
+        $filePath = File::genPath($templateDir, "$file.htm");
+        if (!\file_exists($filePath)) {
           Response::error("VIEW_TEMPLATE_NOT_EXIST");
         }
       }
     } else {
-      if (!\file_exists("$templateDir/$viewFiles.htm")) {
+      $filePath = File::genPath($templateDir, "$viewFiles.htm");
+      if (!\file_exists($filePath)) {
         Response::error("VIEW_TEMPLATE_NOT_EXIST");
       }
     }
@@ -43,6 +45,10 @@ class View
       $GLOBALS[$key] = $value;
       global ${$key};
     }
+    $GLOBALS["View"] = self::class;
+    global $View;
+    global $_Store;
+    global $_G;
 
     self::outputHeader();
     if (\is_array($viewFiles)) {
@@ -63,17 +69,18 @@ class View
   {
     if (is_array($viewFile)) {
       foreach ($viewFile as &$fileItem) {
-        $fileItem = $viewFileBaseDir / $fileItem;
+        $fileItem = "$viewFileBaseDir/$fileItem";
       }
     } else {
-      $viewFile = $viewFileBaseDir / $viewFile;
+      $viewFile = "$viewFileBaseDir/$viewFile";
     }
-    return self::render($viewFile, $viewData, $templateId, F_APP_ROOT);
+
+    return self::render($viewFile, $viewData, $templateId, File::genPath("source/plugin", F_APP_ID));
   }
   /**
    * 渲染页面
    *
-   * @param [type] $viewFile $viewFile 模板的文件名称。可数组或单一字符串
+   * @param string $viewFile $viewFile 模板的文件名称。可数组或单一字符串
    * @param array $viewData? 渲染的数据
    * @param string $templateId? 模板Id
    * @return void
