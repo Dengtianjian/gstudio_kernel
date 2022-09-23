@@ -30,7 +30,7 @@ class GetAttachmentController extends AuthController
   {
     return true;
   }
-  public function get(Request $R)
+  public function get($R)
   {
     $AttachmentId = $R->params("attachmentId");
 

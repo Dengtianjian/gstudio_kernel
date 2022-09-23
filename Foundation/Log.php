@@ -80,7 +80,7 @@ EOT;
     return \yaml_parse(file_get_contents($directoryPath));
   }
   //* 待确认需求
-  static function readRange(int $start, int $end = null)
+  static function readRange($start,  $end = null)
   {
     if ($end === null) {
       $end = time();

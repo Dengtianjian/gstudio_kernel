@@ -13,7 +13,7 @@ class Serializer
 {
   static $rules = [];
   private static $ruleName = "";
-  static function getRule(string $name, $upperLevel = null)
+  static function getRule($name, $upperLevel = null)
   {
     if (!$upperLevel) $upperLevel = self::$rules;
     $names = explode(".", $name);
@@ -23,12 +23,12 @@ class Serializer
     $name = substr($name, strlen($names[0]) + 1);
     return self::getRule($name, $rule);
   }
-  static function useRule(string $name)
+  static function useRule($name)
   {
     self::$ruleName = $name;
     return self::class;
   }
-  static function addRule(string $name, $rule = [], &$upperLevel = null)
+  static function addRule($name, $rule = [], &$upperLevel = null)
   {
     $names = explode(".", $name);
     $firstName = $names[0];
@@ -54,7 +54,7 @@ class Serializer
       return self::addRule($name, $rule, $upperLevel[$firstName]);
     }
   }
-  static function use(string|array $RuleName, $data, $serializerName = "temp")
+  static function use($RuleName, $data, $serializerName = "temp")
   {
     if ($data === null || count($data) === 0) return $data;
     if (!Arr::isAssoc($data)) {

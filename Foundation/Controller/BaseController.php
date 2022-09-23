@@ -21,7 +21,7 @@ class BaseController
   public $body = [];
   public $serialization = [];
   public $rules = [];
-  function __construct(Request $R)
+  function __construct($R)
   {
     $this->queryInit($R->query());
     $this->body = $this->recursionGetBody($this->body, $R->body());

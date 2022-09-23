@@ -17,7 +17,7 @@ use gstudio_kernel\Model\ExtensionsModel;
 class UninstallExtensionController extends AuthController
 {
   protected $Admin = 1;
-  public function data(Request $request)
+  public function data($request)
   {
     $extensionId = \addslashes($request->params("extension_id"));
     $EM = new ExtensionsModel();

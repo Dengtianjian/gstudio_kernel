@@ -47,7 +47,7 @@ class Store
    * @param string $path 字符串数组路径，/分隔。例如： a/b/c。
    * @return void
    */
-  static function remove(string $path = "")
+  static function remove($path = "")
   {
     if (empty($path)) {
       $GLOBALS['_STORE'] = [];
@@ -65,7 +65,7 @@ class Store
       $last = &$last[$pathItem];
     }
   }
-  static function removeApp(string $path = "")
+  static function removeApp($path = "")
   {
     $path = empty($path) ? "__App" : "__App/$path";
     return self::remove($path);
@@ -76,7 +76,7 @@ class Store
    * @param string|null $path 数组路径字符串，用/分隔。
    * @return array|string|integer|boolean 获取到的值
    */
-  static function get(string $path = "")
+  static function get($path = "")
   {
     if (empty($path)) {
       return $GLOBALS['_STORE'];
@@ -91,7 +91,7 @@ class Store
     }
     return $last;
   }
-  static function getApp(string $path = "")
+  static function getApp($path = "")
   {
     $path = empty($path) ? "__App" : "__App/$path";
     return self::get($path);

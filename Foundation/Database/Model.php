@@ -15,9 +15,9 @@ use gstudio_kernel\Foundation\Output;
 class Model
 {
   public $tableName = "";
-  private Query $query;
+  private  $query;
   private $returnSql = false;
-  function __construct(string $tableName = null)
+  function __construct($tableName = null)
   {
     if ($tableName) {
       $this->tableName = $tableName;
@@ -25,7 +25,7 @@ class Model
     $this->tableName = DB::table($this->tableName);
     $this->query = new Query($this->tableName);
   }
-  function order(string $field, string $by = "ASC")
+  function order($field,  $by = "ASC")
   {
     $this->query->order($field, $by);
     return $this;
@@ -35,12 +35,12 @@ class Model
     $this->query->field($fieldNames);
     return $this;
   }
-  function limit(int $startOrNumber, int $number = null)
+  function limit($startOrNumber,  $number = null)
   {
     $this->query->limit($startOrNumber, $number);
     return $this;
   }
-  function page(int $pages, int $pageLimit = 110)
+  function page($pages,  $pageLimit = 110)
   {
     $this->query->page($pages, $pageLimit);
     return $this;
@@ -60,7 +60,7 @@ class Model
     $this->returnSql = $yes;
     return $this;
   }
-  function insert(array $data, bool $isReplaceInto = false)
+  function insert($data,  $isReplaceInto = false)
   {
     $sql = $this->query->insert($data, $isReplaceInto)->sql();
     if ($this->returnSql) return $sql;
@@ -70,25 +70,25 @@ class Model
   {
     return DB::insert_id();
   }
-  function batchInsert(array $fieldNames, array $values, bool $isReplaceInto = false)
+  function batchInsert($fieldNames,  $values,  $isReplaceInto = false)
   {
     $sql = $this->query->batchInsert($fieldNames, $values, $isReplaceInto)->sql();
     if ($this->returnSql) return $sql;
     return DB::query($sql);
   }
-  function update(array $data)
+  function update($data)
   {
     $sql = $this->query->update($data)->sql();
     if ($this->returnSql) return $sql;
     return DB::query($sql);
   }
-  function batchUpdate(array $fieldNames, array $values)
+  function batchUpdate($fieldNames,  $values)
   {
     $sql = $this->query->batchUpdate($fieldNames, $values)->sql();
     if ($this->returnSql) return $sql;
     return DB::query($sql);
   }
-  function delete(bool $directly = false)
+  function delete($directly = false)
   {
     $sql = $this->query->delete($directly)->sql();
     if ($this->returnSql) return $sql;

@@ -49,7 +49,7 @@ class Router
   {
     self::register("resource", "resource", $uri, $controllerNameOfFunction, $middlewareName);
   }
-  static private function matchDynamicRoute(Request $R, $routes)
+  static private function matchDynamicRoute($R, $routes)
   {
     $uri = $R->uri;
 
@@ -71,7 +71,7 @@ class Router
 
     return $matchRoute;
   }
-  static function match(Request $R)
+  static function match($R)
   {
     $method = \strtolower($R->method);
     $uri = $R->uri;
@@ -161,7 +161,7 @@ class Router
     ];
     return self::$staticRoutes;
   }
-  static function dispatch(string $uri, array $data = [], array $headers = [], int $timeout = 1)
+  static function dispatch($uri,  $data = [],  $headers = [],  $timeout = 1)
   {
     $C = new Curl();
     $url = F_BASE_URL . $uri;

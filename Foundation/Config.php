@@ -88,7 +88,7 @@ class Config
    * @param array $value 新值
    * @return void
    */
-  static function set(array $value)
+  static function set($value)
   {
     self::$configs[F_APP_ID] = Arr::merge(self::$configs[F_APP_ID], $value);
   }

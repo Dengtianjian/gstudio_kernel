@@ -22,7 +22,7 @@ use gstudio_kernel\Model\ExtensionsModel;
 class ExtensionListViewController extends AuthController
 {
   protected $Admin = true;
-  public function data(Request $request)
+  public function data($request)
   {
     $extensions = Extensions::scanDir("source/plugin/" . Store::getApp("id"));
     $extensionIds = array_keys($extensions);

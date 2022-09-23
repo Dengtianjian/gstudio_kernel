@@ -18,7 +18,7 @@ use ReflectionMethod;
 
 class GlobalAuthMiddleware
 {
-  private function verifyToken(Request $request, bool $strongCheck = true)
+  private function verifyToken($request,  $strongCheck = true)
   {
     $token = $request->headers("Authorization") ?: $request->query("Authorization") ?: $request->body("Authorization");
     if ($strongCheck && (empty($token) || !$token)) {
@@ -66,7 +66,7 @@ class GlobalAuthMiddleware
       "auth" => $token
     ]);
   }
-  public function handle($next, Request $request)
+  public function handle($next, $request)
   {
     $router = $request->router;
     $isAdminVerify = false;

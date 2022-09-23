@@ -17,7 +17,7 @@ class Response
   private static $headers = []; //* 响应头
   private static $responseInterceptors = []; //* 响应拦截回调函数
   private static $statusCode = null; //* 响应状态码
-  static function header(string $key, string $value, bool $replace = true)
+  static function header($key,  $value,  $replace = true)
   {
     array_push(self::$headers, [
       "key" => $key,
@@ -25,7 +25,7 @@ class Response
       "replace" => $replace
     ]);
   }
-  static function intercept(callable $callback, ?string $responseType = null, $statusCode = null, $responseCode = null)
+  static function intercept($callback, $responseType = null, $statusCode = null, $responseCode = null)
   {
     $key = microtime();
     self::$responseInterceptors[$key] = [
@@ -64,7 +64,7 @@ class Response
   {
     self::$statusCode = $statusCode;
   }
-  static function result($statusCode = 200, $code = 200000,  $data = null, string|null $message = "", $details = [], string $type = "success")
+  static function result($statusCode = 200, $code = 200000,  $data = null, $message = "", $details = [], $type = "success")
   {
     $interceptResult = true;
     if (count(self::$responseInterceptors) > 0) {
@@ -167,17 +167,17 @@ class Response
     }
     exit();
   }
-  static function addData(array $data)
+  static function addData($data)
   {
     self::$resultData = \array_merge(self::$resultData, $data);
     return self::$resultData;
   }
-  static function add(array $data)
+  static function add($data)
   {
     self::$responseData = \array_merge(self::$responseData, $data);
     return self::$responseData;
   }
-  static function download(string $filePath, string $fileName, $fileSize)
+  static function download($filePath,  $fileName, $fileSize)
   {
     $fileinfo = pathinfo($filePath);
 
@@ -217,7 +217,7 @@ class Response
       exit();
     }
   }
-  static function text(string|null $content, bool $format = false)
+  static function text($content, $format = false)
   {
     if ($format) {
       Output::format($content);

@@ -22,13 +22,13 @@ class Validator
   private $errorType = "";
   private $errorId = "";
   private $errorParams = [];
-  function __construct(array $rules, $data)
+  function __construct($rules, $data)
   {
     $this->rules = $rules;
     $this->data = $data;
     $this->errors['required'] = Lang::value("kernel/validator/pleaseInput") . " %s %s";
   }
-  private function check(array $rules, $data)
+  private function check($rules, $data)
   {
     $result = true;
     foreach ($rules as $fieldName => $ruleItem) {
