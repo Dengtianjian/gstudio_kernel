@@ -13,7 +13,16 @@ use gstudio_kernel\Foundation\Service;
 class AuthService extends Service
 {
   protected static $tableName = "gstudio_kernel_logins";
-  static function generateToken($userId,  $tokenSalt = [],  $expiration = 30,  $extraFields = [])
+
+  /**
+   * 生成TOKEN哈希值
+   *
+   * @param int $userId 会员ID
+   * @param array $tokenSalt 盐值
+   * @param integer $expiration 有效期（天）
+   * @return array value=哈希值 expirationDate=过期时间 expiration=有效期
+   */
+  static function generateToken($userId,  $tokenSalt = [],  $expiration = 30)
   {
     array_push($tokenSalt, $userId);
     $hashString = time() . ":" . implode(":", $tokenSalt);
@@ -26,8 +35,7 @@ class AuthService extends Service
       "expiration" => $expiration,
       "userId" => $userId,
       "createdAt" => $nowTime,
-      "updatedAt" => $nowTime,
-      ...$extraFields
+      "updatedAt" => $nowTime
     ]);
     $expirationDate = $nowTime + $expiration;
     Response::header("Authorization", $hashString . "/" . $expirationDate, true);

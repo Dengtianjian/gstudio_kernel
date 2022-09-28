@@ -28,6 +28,9 @@ class Iuu
     if (!defined("F_APP_ROOT")) {
       define("F_APP_ROOT", $this->pluginPath);
     }
+    if (!defined("F_APP_DATA")) {
+      define("F_APP_DATA", File::genPath(DISCUZ_ROOT, "data", "plugindata", $this->pluginId));
+    }
   }
   public function install()
   {
@@ -36,6 +39,9 @@ class Iuu
       // include_once($installFile);
       $className = "\\" . $this->pluginId . "\Iuu\Install\Install";
       new $className();
+    }
+    if (!is_dir(F_APP_DATA)) {
+      mkdir(F_APP_DATA, 0777, true);
     }
     return $this;
   }
@@ -128,6 +134,7 @@ class Iuu
   public function uninstall()
   {
     File::deleteDirectory(File::genPath(\getglobal("setting/attachurl"), "plugin/" . F_APP_ID));
+    File::deleteDirectory(F_APP_DATA);
   }
   public function clean()
   {

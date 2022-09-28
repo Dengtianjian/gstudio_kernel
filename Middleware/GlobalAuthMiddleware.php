@@ -13,6 +13,7 @@ use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Store;
 use gstudio_kernel\Model\LoginsModel;
+use gstudio_kernel\Platform\Discuzx\Member;
 use gstudio_kernel\Service\AuthService;
 use ReflectionMethod;
 
@@ -36,7 +37,7 @@ class GlobalAuthMiddleware
         Response::error(401, "Auth:40103", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/headerAuthorizationEmpty"));
     }
     if (empty($token)) {
-      return;
+      return null;
     }
     $ULM = new LoginsModel();
     $token = $ULM->getByToken($token);
@@ -45,6 +46,9 @@ class GlobalAuthMiddleware
       if ($strongCheck) {
         Response::error(401, "Auth:40104", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/invalidToken"));
       }
+    }
+    if (!$token) {
+      return null;
     }
     $expirationDate = $token['createdAt'] + $token['expiration'];
     $diffDay = round((time() - $token['createdAt']) / 86400);
@@ -62,6 +66,7 @@ class GlobalAuthMiddleware
       $newToken['token'] = $newToken['value'];
       $token = $newToken;
     }
+
     Store::setApp([
       "auth" => $token
     ]);
@@ -143,6 +148,18 @@ class GlobalAuthMiddleware
         $this->verifyToken($request);
       }
     }
+
+    $Auth = Store::getApp("auth");
+    $UserInfo = null;
+    if ($Auth) {
+      $UserInfo = Member::get($Auth['userId']);
+      include_once libfile("function/member");
+      \setloginstatus($UserInfo, 0);
+    }
+    Store::setApp([
+      "member" => $UserInfo
+    ]);
+
 
     $next();
   }
