@@ -2,18 +2,31 @@
 
 namespace gstudio_kernel\Platform\WechatMiniprogram;
 
-use gstudio_kernel\Foundation\Network\Curl;
-use gstudio_kernel\Foundation\Output;
+if (!defined("IN_DISCUZ")) {
+  exit('Access Denied');
+}
 
-class AccessToken
+use gstudio_kernel\Foundation\Network\Curl;
+
+/**
+ * AccessToken类
+ */
+class AccessToken extends WechatMiniProgram
 {
-  static function get($appId, $secret)
+  /**
+   * 获取accessToken
+   *
+   * @param string $appId appId
+   * @param string $secret secret
+   * @return array
+   */
+  function getAccessToken()
   {
     $CURL = new Curl();
     $request = $CURL->url("https://api.weixin.qq.com/cgi-bin/token", [
       "grant_type" => "client_credential",
-      "appid" => $appId,
-      "secret" => $secret
+      "appid" => $this->AppId,
+      "secret" => $this->AppSecret
     ]);
     return $request->get()->getData();
   }
