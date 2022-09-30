@@ -1,6 +1,6 @@
 <?php
 
-namespace gstudio_kernel\Platform\WechatMiniprogram;
+namespace gstudio_kernel\Platform\Wechat\Miniprogram;
 
 use gstudio_kernel\Foundation\Network\Curl;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace gstudio_kernel\Platform\WechatMiniprogram;
+namespace gstudio_kernel\Platform\Wechat\Miniprogram;
 
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
