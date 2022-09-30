@@ -12,11 +12,29 @@ if (!defined("IN_DISCUZ")) {
 class WechatUsersModel extends Model
 {
   public $tableName = "gstudio_kernel_wechat_users";
-  public function add($memberId, $openId, $unionId = null, $phone = null)
+  public function bound($memberId, $openId)
+  {
+    return $this->where([
+      "memberId" => $memberId,
+      "openId" => $openId
+    ])->exist();
+  }
+  public function bind($memberId, $openId, $unionId = null, $phone = null)
   {
     $now = time();
     return $this->insert([
       "memberId" => $memberId,
+      "openId" => $openId,
+      "unionId" => $unionId ?: "",
+      "phone" => $phone ?: "",
+      "createdAt" => $now,
+      "updatedAt" => $now,
+    ]);
+  }
+  public function register($openId, $unionId = null, $phone = null)
+  {
+    $now = time();
+    return $this->insert([
       "openId" => $openId,
       "unionId" => $unionId ?: "",
       "phone" => $phone ?: "",
