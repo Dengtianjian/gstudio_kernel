@@ -37,10 +37,9 @@ CREATE TABLE `pre_gstudio_kernel_logins` (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic COMMENT = '用户TOKEN表';
 
 DROP TABLE IF EXISTS `pre_gstudio_kernel_wechat_users`;
-
-CREATE TABLE `pre_gstudio_kernel_wechat_users` (
+CREATE TABLE `pre_gstudio_kernel_wechat_users`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `memberId` bigint(20) NOT NULL COMMENT '被绑定的会员ID',
+  `memberId` bigint(20) NULL DEFAULT NULL COMMENT '被绑定的会员ID',
   `openId` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'openId',
   `unionId` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'unionId',
   `phone` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
@@ -52,4 +51,4 @@ CREATE TABLE `pre_gstudio_kernel_wechat_users` (
   INDEX `unionId`(`unionId`) USING BTREE COMMENT 'UnionId索引',
   INDEX `openId`(`openId`) USING BTREE COMMENT 'OpenId索引',
   INDEX `phone`(`phone`) USING BTREE COMMENT '手机号索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic COMMENT = '微信用户表';
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '微信用户表' ROW_FORMAT = Dynamic;
