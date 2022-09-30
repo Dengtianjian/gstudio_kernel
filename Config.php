@@ -1,6 +1,6 @@
 <?php
 
-namespace gstudio_sitenav_bak;
+namespace gstudio_kernel;
 
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
@@ -10,5 +10,5 @@ $Config = [
   "mode" => "production", //* production development
   "multipleEncode" => true,
   "extensions" => true,
-  "version" => "0.2.50"
+  "version" => "0.2.52"
 ];
