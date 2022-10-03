@@ -2,6 +2,8 @@
 
 namespace gstudio_kernel\Foundation\Data;
 
+use gstudio_kernel\Foundation\Output;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
@@ -120,11 +122,32 @@ class Arr
     unset($previous);
     return $result;
   }
+  /**
+   * 从数组中抽取指定字段的值
+   *
+   * @param array $target 目标数组
+   * @param array $keys 要抽取的key值
+   * @return array
+   */
   static function partial(array $target, array $keys)
   {
     $result = [];
     foreach ($keys as $key) {
       $result[$key] = $target[$key];
+    }
+    return $result;
+  }
+  static function group(array $target, string $byKey)
+  {
+    $result = [];
+    foreach ($target as $item) {
+      if (!isset($item[$byKey])) {
+        continue;
+      }
+      if (!isset($result[$item[$byKey]])) {
+        $result[$item[$byKey]] = [];
+      }
+      array_push($result[$item[$byKey]], $item);
     }
     return $result;
   }
