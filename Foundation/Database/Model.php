@@ -129,6 +129,6 @@ class Model
     if (empty($exist)) {
       return 0;
     }
-    return intval($exist[0]["1"]);
+    return intval($exist->num_rows);
   }
 }
