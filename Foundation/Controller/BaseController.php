@@ -69,22 +69,25 @@ class BaseController
       if (is_numeric($key)) {
         if (isset($requestBody[$type])) {
           $body[$type] = $this->convertDataType($requestBody[$type], "any");
-        } else {
-          $body[$type] = null;
-        }
+        } 
+        // else {
+        //   $body[$type] = null;
+        // }
       } else {
         if (is_array($needBody[$key])) {
           if (is_array($requestBody[$key])) {
             $body[$key] = $this->recursionGetBody($needBody[$key], $requestBody[$key]);
-          } else {
-            $body[$key] = null;
-          }
+          } 
+          // else {
+          //   $body[$key] = null;
+          // }
         } else {
           if (isset($requestBody[$key])) {
             $body[$key] = $this->convertDataType($requestBody[$key], $type);
-          } else {
-            $body[$key] = null;
-          }
+          } 
+          // else {
+          //   $body[$key] = null;
+          // }
         }
       }
     }
