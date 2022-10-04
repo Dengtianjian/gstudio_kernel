@@ -15,7 +15,7 @@ use gstudio_kernel\Foundation\Output;
 class Model
 {
   public $tableName = "";
-  private  $query;
+  private $query;
   private $returnSql = false;
   function __construct($tableName = null)
   {
@@ -24,6 +24,17 @@ class Model
     }
     $this->tableName = DB::table($this->tableName);
     $this->query = new Query($this->tableName);
+  }
+  /**
+   * 快速实例化
+   *
+   * @param string $tableName 表名称
+   * @return Model
+   */
+  static function ins($tableName = null)
+  {
+    $class = get_called_class();
+    return new $class($tableName);
   }
   function order($field,  $by = "ASC")
   {
