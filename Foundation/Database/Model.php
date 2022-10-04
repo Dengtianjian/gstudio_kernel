@@ -121,11 +121,7 @@ class Model
   {
     $sql = $this->query->count($field)->sql();
     if ($this->returnSql) return $sql;
-    $countResult = DB::query($sql);
-    if (!empty($countResult)) {
-      return (int)$countResult['0']["COUNT('$field')"];
-    }
-    return null;
+    return (int)DB::result(DB::query($sql));
   }
   function genId($prefix = "", $suffix = "")
   {
