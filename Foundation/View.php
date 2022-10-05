@@ -23,7 +23,7 @@ class View
    * @param boolean $hook?=false 是否是hook插槽
    * @return void
    */
-  static function render($viewFiles, $viewData = [], $templateId = "", string $templateDir = "", $hook = false)
+  static function render($viewFiles, $viewData = [], $templateId = "",  $templateDir = "")
   {
     if (is_array($viewFiles)) {
       foreach ($viewFiles as $file) {
