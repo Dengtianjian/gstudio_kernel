@@ -138,7 +138,9 @@ $langs = [
       "headerAuthorizationEmpty" => "头部Authorization值是空的",
       "invalidToken" => "token无效",
       "expiredToken" => "token失效",
-      "loginExpired" => "登录已过期，请重新登录"
+      "loginExpired" => "登录已过期，请重新登录",
+      "noAccess" => "无权访问",
+      "insufficientPermissions" => "权限不足"
     ]
   ]
 ];

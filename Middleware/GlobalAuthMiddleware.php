@@ -7,6 +7,7 @@ if (!defined('IN_DISCUZ')) {
 }
 
 use Error;
+use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Output;
 use gstudio_kernel\Foundation\Request;
@@ -71,7 +72,44 @@ class GlobalAuthMiddleware
       "auth" => $token
     ]);
   }
-  public function handle($next, $request)
+  public function verifyViewControllerAdmin($controller)
+  {
+    $Member = getglobal("member");
+    if ((int)$Member['uid'] === 0) {
+      Response::error(401, "Auth:40101", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/emptyToken"));
+    }
+    if (is_array($controller::$Admin)) {
+      if (!in_array($Member['adminid'], $controller::$Admin)) {
+        Response::error(403, "Auth:40301", Lang::value("kernel/auth/noAccess"), [], Lang::value("kernel/auth/insufficientPermissions"));
+      }
+    } else if (is_bool($controller::$Admin)) {
+      if ((int)$Member['adminid'] !== 1) {
+        Response::error(403, "Auth:40302", Lang::value("kernel/auth/noAccess"), [], Lang::value("kernel/auth/insufficientPermissions"));
+      }
+    } else if (is_numeric($controller::$Admin) || is_string($controller::$Admin)) {
+      if ((int)$Member['adminid'] !== (int)$controller::$Admin) {
+        Response::error(403, "Auth:40302", Lang::value("kernel/auth/noAccess"), [], Lang::value("kernel/auth/insufficientPermissions"));
+      }
+    }
+  }
+  public function verifyViewControllerAuth($controller)
+  {
+    $Member = getglobal("member");
+    // Output::debug($Member);
+    if ((int)$Member['uid'] === 0) {
+      Response::error(401, "Auth:40101", Lang::value("kernel/auth/needLogin"), [], Lang::value("kernel/auth/emptyToken"));
+    }
+    if (is_array($controller::$Auth)) {
+      if (!in_array($Member['groupid'], $controller::$Auth)) {
+        Response::error(403, "Auth:40301", Lang::value("kernel/auth/noAccess"), [], Lang::value("kernel/auth/insufficientPermissions"));
+      }
+    } else if (is_numeric($controller::$Auth) || is_string($controller::$Auth)) {
+      if ((int)$Member['groupid'] !== (int)$controller::$Auth) {
+        Response::error(403, "Auth:40302", Lang::value("kernel/auth/noAccess"), [], Lang::value("kernel/auth/insufficientPermissions"));
+      }
+    }
+  }
+  public function handle($next, Request $request)
   {
     $router = $request->router;
     $isAdminVerify = false;
@@ -105,12 +143,20 @@ class GlobalAuthMiddleware
           $adminMethodRM = new ReflectionMethod($router['controller'], "Admin");
           if ($adminMethodRM->isStatic() && $router['controller']::Admin()) {
             $isAdminVerify = true;
-            $this->verifyToken($request);
+            if ($request->ajax()) {
+              $this->verifyToken($request);
+            } else {
+              $this->verifyViewControllerAdmin($router['controller']);
+            }
             $router['controller']::verifyAdmin();
           }
         } else if ($router['controller']::$Admin) {
           $isAdminVerify = true;
-          $this->verifyToken($request);
+          if ($request->ajax()) {
+            $this->verifyToken($request);
+          } else {
+            $this->verifyViewControllerAdmin($router['controller']);
+          }
           $router['controller']::verifyAdmin();
         }
       }
@@ -130,36 +176,59 @@ class GlobalAuthMiddleware
           if (method_exists($router['controller'], "Auth")) {
             $authMethodRM = new ReflectionMethod($router['controller'], "Auth");
             if ($authMethodRM->isStatic() && $router['controller']::Auth()) {
-              $this->verifyToken($request);
+              if ($request->ajax()) {
+                $this->verifyToken($request);
+              } else {
+                $this->verifyViewControllerAuth($router['controller']);
+              }
               $router['controller']::verifyAuth();
             }
           } else if ($router['controller']::$Auth) {
-            $this->verifyToken($request);
+            if ($request->ajax()) {
+              $this->verifyToken($request);
+            } else {
+              $this->verifyViewControllerAuth($router['controller']);
+            }
             $router['controller']::verifyAuth();
           } else {
-            $this->verifyToken($request, false);
+            if ($request->ajax()) {
+              $this->verifyToken($request, false);
+            } else {
+              $this->verifyViewControllerAuth($router['controller']);
+            }
           }
         } else {
-          $this->verifyToken($request, false);
+          if ($request->ajax()) {
+            $this->verifyToken($request, false);
+          } else {
+            $this->verifyViewControllerAuth($router['controller']);
+          }
         }
       }
     } else {
       if ($request->headers("Authorization")) {
         $this->verifyToken($request);
+      } else if (!$request->ajax()) {
+        $this->verifyViewControllerAuth($router['controller']);
       }
     }
 
-    $Auth = Store::getApp("auth");
-    $UserInfo = null;
-    if ($Auth) {
-      $UserInfo = Member::get($Auth['userId']);
-      include_once libfile("function/member");
-      \setloginstatus($UserInfo, 0);
+    if ($request->ajax()) {
+      $Auth = Store::getApp("auth");
+      $UserInfo = null;
+      if ($Auth) {
+        $UserInfo = Member::get($Auth['userId']);
+        include_once libfile("function/member");
+        \setloginstatus($UserInfo, 0);
+      }
+      Store::setApp([
+        "member" => $UserInfo
+      ]);
+    } else {
+      Store::setApp([
+        "member" => getglobal("member")
+      ]);
     }
-    Store::setApp([
-      "member" => $UserInfo
-    ]);
-
 
     $next();
   }
