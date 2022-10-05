@@ -49,7 +49,7 @@ class Router
   {
     self::register("resource", "resource", $uri, $controllerNameOfFunction, $middlewareName);
   }
-  static private function matchDynamicRoute($R, $routes)
+  static private function matchDynamicRoute(Request $R, $routes)
   {
     $uri = $R->uri;
 
@@ -71,7 +71,7 @@ class Router
 
     return $matchRoute;
   }
-  static function match($R)
+  static function match(Request $R)
   {
     $method = \strtolower($R->method);
     $uri = $R->uri;

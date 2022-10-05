@@ -124,7 +124,7 @@ class Attachment
     $s .= "|" . $dir;
     return rawurlencode(base64_encode($s));
   }
-  public static function getAttachment(string|int $AttachmentId)
+  public static function getAttachment($AttachmentId)
   {
     $AM = new DatabaseModel("forum_attachment");
     $attachment = $AM->where("aid", $AttachmentId)->getOne();

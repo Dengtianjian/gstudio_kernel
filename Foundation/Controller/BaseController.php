@@ -69,7 +69,7 @@ class BaseController
       if (is_numeric($key)) {
         if (isset($requestBody[$type])) {
           $body[$type] = $this->convertDataType($requestBody[$type], "any");
-        } 
+        }
         // else {
         //   $body[$type] = null;
         // }
@@ -77,14 +77,14 @@ class BaseController
         if (is_array($needBody[$key])) {
           if (is_array($requestBody[$key])) {
             $body[$key] = $this->recursionGetBody($needBody[$key], $requestBody[$key]);
-          } 
+          }
           // else {
           //   $body[$key] = null;
           // }
         } else {
           if (isset($requestBody[$key])) {
             $body[$key] = $this->convertDataType($requestBody[$key], $type);
-          } 
+          }
           // else {
           //   $body[$key] = null;
           // }
@@ -93,7 +93,7 @@ class BaseController
     }
     return $body;
   }
-  private function convertDataType($data, string $type)
+  private function convertDataType($data,  $type)
   {
     if ($type !== "array" && $type !== "object" && $type !== null && !is_array($data) && !is_object($data)) {
       $data = trim($data);
@@ -117,7 +117,7 @@ class BaseController
 
     return $data;
   }
-  protected function pipeFill(array $pipes, mixed $data)
+  protected function pipeFill($pipes,  $data)
   {
     $result = null;
     foreach ($pipes as $pipeName) {

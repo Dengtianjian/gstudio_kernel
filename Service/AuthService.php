@@ -22,7 +22,7 @@ class AuthService extends Service
    * @param integer $expiration 有效期（天）
    * @return array value=哈希值 expirationDate=过期时间 expiration=有效期
    */
-  static function generateToken($userId,  $tokenSalt = [],  $expiration = 30)
+  static function generateToken($userId, $tokenSalt = [], $expiration = 30)
   {
     array_push($tokenSalt, $userId);
     $hashString = time() . ":" . implode(":", $tokenSalt);

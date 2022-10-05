@@ -233,7 +233,7 @@ class File
    * @param string $baseDir 基目录，也就是基于该目录创建文件夹
    * @return bool
    */
-  public static function mkdir($dirs, $baseDir = "",  $permissions = 0757)
+  public static function mkdir($dirs, $baseDir = "", $permissions = 0757)
   {
     return mkdir(self::genPath($baseDir, ...$dirs), $permissions, true);
   }
@@ -281,7 +281,7 @@ class File
    * @param array $whiteList 清除是跳过的白名单。数组的元素必须是完整的目录，也就是包含$destPath，例如 $destPath = "a/b" 那么白名单的元素就是 a/b/c/d 就会跳过路径是 /a/b/c/d 的文件或者目录
    * @return boolean 清除成功？
    */
-  public static function clearFolder($targetPath,  $whiteList = [])
+  public static function clearFolder($targetPath, $whiteList = [])
   {
     if (!is_dir($targetPath)) return false;
 
@@ -310,7 +310,7 @@ class File
    * @param array $whiteList 路径白名单，会跳过数组里面的白名单。数组的元素必须是完整的目录，也就是包含$destPath，例如 $destPath = "a/b" 那么白名单的元素就是 a/b/c/d 就会跳过路径是 /a/b/c/d 的文件或者目录
    * @return boolean 复制成功？
    */
-  public static function copyFolder($targetPath,  $destPath,  $whiteList = [])
+  public static function copyFolder($targetPath, $destPath, $whiteList = [])
   {
     if (!is_dir($targetPath)) {
       return false;

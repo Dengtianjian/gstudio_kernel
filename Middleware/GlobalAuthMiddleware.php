@@ -20,7 +20,7 @@ use ReflectionMethod;
 
 class GlobalAuthMiddleware
 {
-  private function verifyToken($request,  $strongCheck = true)
+  private function verifyToken($request, $strongCheck = true)
   {
     $token = $request->headers("Authorization") ?: $request->query("Authorization") ?: $request->body("Authorization");
     if ($strongCheck && (empty($token) || !$token)) {

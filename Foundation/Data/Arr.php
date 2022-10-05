@@ -129,7 +129,7 @@ class Arr
    * @param array $keys 要抽取的key值
    * @return array
    */
-  static function partial(array $target, array $keys)
+  static function partial($target,  $keys)
   {
     $result = [];
     foreach ($keys as $key) {
@@ -139,7 +139,7 @@ class Arr
     }
     return $result;
   }
-  static function group(array $target, string $byKey)
+  static function group($target,  $byKey)
   {
     $result = [];
     foreach ($target as $item) {

@@ -31,7 +31,7 @@ $time: $content\n
 EOT;
     error_log($content, 3, $logFilePath);
   }
-  static function read(int $day = null, int $month = null, int $year = null)
+  static function read($day = null, $month = null, $year = null)
   {
     if ($year === null) {
       $year = date("Y");
@@ -80,7 +80,7 @@ EOT;
     return \yaml_parse(file_get_contents($directoryPath));
   }
   //* 待确认需求
-  static function readRange($start,  $end = null)
+  static function readRange($start, $end = null)
   {
     if ($end === null) {
       $end = time();

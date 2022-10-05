@@ -88,7 +88,7 @@ class Query
     $this->executeType = "";
     $this->conditions = [];
   }
-  function order($field,  $by = "ASC")
+  function order($field, $by = "ASC")
   {
     if (!isset($this->options['order'])) {
       $this->options['order'] = [
@@ -114,7 +114,7 @@ class Query
     }
     return $this;
   }
-  function limit($startOrNumber,  $number = null)
+  function limit($startOrNumber, $number = null)
   {
     $data = [];
     if ($number === null) {
@@ -131,7 +131,7 @@ class Query
 
     return $this;
   }
-  function page($page,  $pageLimt = 10)
+  function page($page, $pageLimt = 10)
   {
     $start = $page * $pageLimt - $pageLimt;
     $this->limit($start, $pageLimt);

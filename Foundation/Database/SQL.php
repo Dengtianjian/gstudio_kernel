@@ -18,7 +18,7 @@ class SQL
    * @param boolean $addQuote 是否跳过添加引号
    * @return string[] 优化后的字符串
    */
-  static function addQuote($strings,  $quote = "`",  $addQuote = true)
+  static function addQuote($strings,  $quote = "`", $addQuote = true)
   {
     foreach ($strings as &$item) {
       if (empty($item)) {
@@ -195,7 +195,7 @@ class SQL
   {
     return "DELETE FROM `$tableName` $condition";
   }
-  static function update($tableName,  $data,  $extraStatement = "")
+  static function update($tableName, $data, $extraStatement = "")
   {
     $data = self::addQuote($data, "'", true);
     foreach ($data as $field => &$value) {
