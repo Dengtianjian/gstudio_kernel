@@ -136,6 +136,6 @@ class Model
     if (empty($exist)) {
       return 0;
     }
-    return intval($exist->num_rows);
+    return boolval($exist->num_rows);
   }
 }
