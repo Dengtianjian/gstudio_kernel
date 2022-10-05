@@ -139,6 +139,13 @@ class Arr
     }
     return $result;
   }
+  /**
+   * 根据指定的key分组
+   *
+   * @param array $target 目标数组。需要时二维数组，每个二维数组里面都有一个共同的key
+   * @param string $byKey 每个数组共同的key，就是根据这个key来分组
+   * @return array
+   */
   static function group($target,  $byKey)
   {
     $result = [];
