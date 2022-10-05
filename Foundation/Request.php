@@ -177,14 +177,14 @@ class Request
     }
     return $this->getArrayData($this->paramsData, $key);
   }
-  public function pagination(string $key = null)
+  public function pagination($key = null)
   {
     if ($key) {
       return $this->paginationParams[$key];
     }
     return $this->paginationParams;
   }
-  public function set(string $uri, string $method)
+  public function set($uri,  $method)
   {
     $this->uri = $uri;
     $this->method = $method;
