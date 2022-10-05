@@ -133,7 +133,9 @@ class Arr
   {
     $result = [];
     foreach ($keys as $key) {
-      $result[$key] = $target[$key];
+      if (isset($target[$key])) {
+        $result[$key] = $target[$key];
+      }
     }
     return $result;
   }
