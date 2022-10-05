@@ -109,6 +109,28 @@ class GlobalAuthMiddleware
       }
     }
   }
+  public function verify(Request $request, $controller, $viewVerifyType)
+  {
+    //* 如果是同源，那么来源就是视图页面发起的ajax请求，无需token，用verifyViewControllerAdmin和verifyViewControllerAuth去验证
+    $SameOrigin = $request->headers("Sec-Fetch-Site") === "same-origin";
+    if ($request->ajax()) {
+      if ($SameOrigin) {
+        if ($viewVerifyType === "admin") {
+          $this->verifyViewControllerAdmin($controller);
+        } else {
+          $this->verifyViewControllerAuth($controller);
+        }
+      } else {
+        $this->verifyToken($request);
+      }
+    } else {
+      if ($viewVerifyType === "admin") {
+        $this->verifyViewControllerAdmin($controller);
+      } else {
+        $this->verifyViewControllerAuth($controller);
+      }
+    }
+  }
   public function handle($next, Request $request)
   {
     $router = $request->router;
@@ -143,20 +165,12 @@ class GlobalAuthMiddleware
           $adminMethodRM = new ReflectionMethod($router['controller'], "Admin");
           if ($adminMethodRM->isStatic() && $router['controller']::Admin()) {
             $isAdminVerify = true;
-            if ($request->ajax()) {
-              $this->verifyToken($request);
-            } else {
-              $this->verifyViewControllerAdmin($router['controller']);
-            }
+            $this->verify($request, $router['controller'], "admin");
             $router['controller']::verifyAdmin();
           }
         } else if ($router['controller']::$Admin) {
           $isAdminVerify = true;
-          if ($request->ajax()) {
-            $this->verifyToken($request);
-          } else {
-            $this->verifyViewControllerAdmin($router['controller']);
-          }
+          $this->verify($request, $router['controller'], "admin");
           $router['controller']::verifyAdmin();
         }
       }
@@ -176,40 +190,22 @@ class GlobalAuthMiddleware
           if (method_exists($router['controller'], "Auth")) {
             $authMethodRM = new ReflectionMethod($router['controller'], "Auth");
             if ($authMethodRM->isStatic() && $router['controller']::Auth()) {
-              if ($request->ajax()) {
-                $this->verifyToken($request);
-              } else {
-                $this->verifyViewControllerAuth($router['controller']);
-              }
+              $this->verify($request, $router['controller'], "auth");
               $router['controller']::verifyAuth();
             }
           } else if ($router['controller']::$Auth) {
-            if ($request->ajax()) {
-              $this->verifyToken($request);
-            } else {
-              $this->verifyViewControllerAuth($router['controller']);
-            }
+            $this->verify($request, $router['controller'], "auth");
             $router['controller']::verifyAuth();
           } else {
-            if ($request->ajax()) {
-              $this->verifyToken($request, false);
-            } else {
-              $this->verifyViewControllerAuth($router['controller']);
-            }
+            $this->verify($request, $router['controller'], "auth");
           }
         } else {
-          if ($request->ajax()) {
-            $this->verifyToken($request, false);
-          } else {
-            $this->verifyViewControllerAuth($router['controller']);
-          }
+          $this->verify($request, $router['controller'], "auth");
         }
       }
     } else {
       if ($request->headers("Authorization")) {
         $this->verifyToken($request);
-      } else if (!$request->ajax()) {
-        $this->verifyViewControllerAuth($router['controller']);
       }
     }
 
