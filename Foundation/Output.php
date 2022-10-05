@@ -18,7 +18,7 @@ class Output
     $stack = debug_backtrace($options, $limit);
     self::debug($stack);
   }
-  static function print($outputString, ...$value)
+  static function printContent($outputString, ...$value)
   {
     if (is_string($outputString)) {
       printf($outputString, ...$value);

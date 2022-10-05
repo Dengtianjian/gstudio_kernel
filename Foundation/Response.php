@@ -222,19 +222,18 @@ class Response
     if ($format) {
       Output::format($content);
     } else {
-      Output::print($content);
+      Output::printContent($content);
     }
     exit();
   }
   static function pagination($mainData, Request $R, $total, $extraData = [])
   {
-    return self::success([
+    $pagination = $R->pagination();
+    $pagination['total'] = $total;
+    $responseData = array_merge([
       "list" => $mainData,
-      "pagination" => [
-        ...$R->pagination(),
-        "total" => $total
-      ],
-      ...$extraData
-    ]);
+      "pagination" => $pagination
+    ], $extraData);
+    return self::success($responseData);
   }
 }
