@@ -222,7 +222,7 @@ class GlobalAuthMiddleware
         "member" => $memberInfo
       ]);
     } else {
-      $memberInfo = Member::get($_G['uid']);
+      $memberInfo = Member::get(getglobal("uid"));
       Store::setApp([
         "member" => $memberInfo
       ]);
