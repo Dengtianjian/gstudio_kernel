@@ -134,6 +134,7 @@ class GlobalAuthMiddleware
   public function handle($next, Request $request)
   {
     $router = $request->router;
+    $SameOrigin = $request->headers("Sec-Fetch-Site") === "same-origin";
     $isAdminVerify = false;
     if (!$router) {
       $next();
@@ -209,20 +210,21 @@ class GlobalAuthMiddleware
       }
     }
 
-    if ($request->ajax()) {
+    $memberInfo = null;
+    if ($request->ajax() && !$SameOrigin) {
       $Auth = Store::getApp("auth");
-      $UserInfo = null;
       if ($Auth) {
-        $UserInfo = Member::get($Auth['userId']);
+        $memberInfo = Member::get($Auth['userId']);
         include_once libfile("function/member");
-        \setloginstatus($UserInfo, 0);
+        \setloginstatus($memberInfo, 0);
       }
       Store::setApp([
-        "member" => $UserInfo
+        "member" => $memberInfo
       ]);
     } else {
+      $memberInfo = Member::get($_G['uid']);
       Store::setApp([
-        "member" => getglobal("member")
+        "member" => $memberInfo
       ]);
     }
 
