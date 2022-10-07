@@ -17,7 +17,7 @@
 			<item id="modules"><![CDATA[a:0:{}]]></item>
 			<item id="version"><![CDATA[0.2.54]]></item>
 		</item>
-		<item id="version"><![CDATA[X3.5]]></item>
+		<item id="version"><![CDATA[X3.4,X3.5]]></item>
 		<item id="installfile"><![CDATA[install.php]]></item>
 		<item id="uninstallfile"><![CDATA[uninstall.php]]></item>
 		<item id="upgradefile"><![CDATA[upgrade.php]]></item>
