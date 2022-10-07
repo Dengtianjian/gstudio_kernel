@@ -10,5 +10,5 @@ $Config = [
   "mode" => "production", //* production development
   "multipleEncode" => true,
   "extensions" => true,
-  "version" => "0.2.53"
+  "version" => "0.2.54"
 ];
