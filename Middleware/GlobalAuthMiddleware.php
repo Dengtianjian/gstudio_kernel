@@ -109,7 +109,7 @@ class GlobalAuthMiddleware
       }
     }
   }
-  public function verify(Request $request, $controller, $viewVerifyType)
+  public function verify(Request $request, $controller, $viewVerifyType, $strongCheck = false)
   {
     //* 如果是同源，那么来源就是视图页面发起的ajax请求，无需token，用verifyViewControllerAdmin和verifyViewControllerAuth去验证
     $SameOrigin = $request->headers("Sec-Fetch-Site") === "same-origin";
@@ -121,7 +121,7 @@ class GlobalAuthMiddleware
           $this->verifyViewControllerAuth($controller);
         }
       } else {
-        $this->verifyToken($request);
+        $this->verifyToken($request, $strongCheck);
       }
     } else {
       if ($viewVerifyType === "admin") {
@@ -171,12 +171,12 @@ class GlobalAuthMiddleware
           $adminMethodRM = new ReflectionMethod($router['controller'], "Admin");
           if ($adminMethodRM->isStatic() && $router['controller']::Admin()) {
             $isAdminVerify = true;
-            $this->verify($request, $router['controller'], "admin");
+            $this->verify($request, $router['controller'], "admin", true);
             $router['controller']::verifyAdmin();
           }
         } else if ($router['controller']::$Admin || $strongCheckAdmin) {
           $isAdminVerify = true;
-          $this->verify($request, $router['controller'], "admin");
+          $this->verify($request, $router['controller'], "admin", true);
           $router['controller']::verifyAdmin();
         }
       }
@@ -201,14 +201,12 @@ class GlobalAuthMiddleware
           if (method_exists($router['controller'], "Auth")) {
             $authMethodRM = new ReflectionMethod($router['controller'], "Auth");
             if ($authMethodRM->isStatic() && $router['controller']::Auth()) {
-              $this->verify($request, $router['controller'], "auth");
+              $this->verify($request, $router['controller'], "auth", true);
               $router['controller']::verifyAuth();
             }
           } else if ($router['controller']::$Auth || $strongCheckAuth) {
-            $this->verify($request, $router['controller'], "auth");
+            $this->verify($request, $router['controller'], "auth", true);
             $router['controller']::verifyAuth();
-          } else {
-            $this->verify($request, $router['controller'], "auth");
           }
         } else {
           $this->verify($request, $router['controller'], "auth");
