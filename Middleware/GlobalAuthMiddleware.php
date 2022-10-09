@@ -152,12 +152,17 @@ class GlobalAuthMiddleware
 
       $needCheckAdmin = true;
       $isAdminVerify = false;
+      $strongCheckAdmin = false;
       if (is_array($router['controller']::$AdminMethods)) {
         $methods = array_map(function ($item) {
           return strtolower($item);
         }, $router['controller']::$AdminMethods);
-        if (count($methods) && !in_array(strtolower($request->method), $methods)) {
-          $needCheckAdmin = false;
+        if (count($methods)) {
+          if (in_array(strtolower($request->method), $methods)) {
+            $strongCheckAdmin = true;
+          } else {
+            $needCheckAdmin = false;
+          }
         }
       }
 
@@ -169,7 +174,7 @@ class GlobalAuthMiddleware
             $this->verify($request, $router['controller'], "admin");
             $router['controller']::verifyAdmin();
           }
-        } else if ($router['controller']::$Admin) {
+        } else if ($router['controller']::$Admin || $strongCheckAdmin) {
           $isAdminVerify = true;
           $this->verify($request, $router['controller'], "admin");
           $router['controller']::verifyAdmin();
@@ -178,12 +183,17 @@ class GlobalAuthMiddleware
 
       if ($isAdminVerify === false) {
         $needCheckAuth = true;
+        $strongCheckAuth = false;
         if (is_array($router['controller']::$AuthMethods)) {
           $methods = array_map(function ($item) {
             return strtolower($item);
           }, $router['controller']::$AuthMethods);
-          if (count($methods) && !in_array(strtolower($request->method), $methods)) {
-            $needCheckAuth = false;
+          if (count($methods)) {
+            if (in_array(strtolower($request->method), $methods)) {
+              $strongCheckAuth = true;
+            } else {
+              $needCheckAuth = false;
+            }
           }
         }
 
@@ -194,7 +204,7 @@ class GlobalAuthMiddleware
               $this->verify($request, $router['controller'], "auth");
               $router['controller']::verifyAuth();
             }
-          } else if ($router['controller']::$Auth) {
+          } else if ($router['controller']::$Auth || $strongCheckAuth) {
             $this->verify($request, $router['controller'], "auth");
             $router['controller']::verifyAuth();
           } else {
