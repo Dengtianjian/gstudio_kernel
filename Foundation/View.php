@@ -20,10 +20,11 @@ class View
    * @param string|array $viewFiles 模板的文件名称。可数组或单一字符串
    * @param array $viewData? 渲染的数据
    * @param string $templateId? 模板唯一标识符
-   * @param boolean $hook?=false 是否是hook插槽
+   * @param string $templateDir? 模板所在目录
+   * @param boolean|string $hook?=false 传入字符串就是hook模板返回的变量名称，否则就不是hook
    * @return void
    */
-  static function render($viewFiles, $viewData = [], $templateId = "",  $templateDir = "")
+  static function render($viewFiles, $viewData = [], $templateId = "",  $templateDir = "", $hookName = false)
   {
     if (is_array($viewFiles)) {
       foreach ($viewFiles as $file) {
@@ -63,9 +64,12 @@ class View
       unset($GLOBALS[$key]);
     }
 
+    if ($hookName) {
+      return ${$hookName};
+    }
     return true;
   }
-  static private function renderAppPage($viewFile, $viewFileBaseDir = "", $viewData = [], $templateId = "page")
+  static private function renderAppPage($viewFile, $viewFileBaseDir = "", $viewData = [], $templateId = "page", $hookName = false)
   {
     if (is_array($viewFile)) {
       foreach ($viewFile as &$fileItem) {
@@ -75,7 +79,7 @@ class View
       $viewFile = "$viewFileBaseDir/$viewFile";
     }
 
-    return self::render($viewFile, $viewData, $templateId, File::genPath("source/plugin", F_APP_ID));
+    return self::render($viewFile, $viewData, $templateId, File::genPath("source/plugin", F_APP_ID), $hookName);
   }
   /**
    * 渲染页面
@@ -248,5 +252,9 @@ class View
       self::$outputFooterHTML = [];
       print_r($outputFooter);
     }
+  }
+  static function hook($viewFile, $viewData = [], $hookName = "return")
+  {
+    return self::renderAppPage($viewFile, "Views", $viewData, "hook", $hookName);
   }
 }

@@ -221,7 +221,7 @@ class GlobalAuthMiddleware
     $memberInfo = null;
     if ($request->ajax() && !$SameOrigin) {
       $Auth = Store::getApp("auth");
-      if ($Auth) {
+      if ($Auth && isset($Auth['userId'])) {
         $memberInfo = Member::get($Auth['userId']);
         include_once libfile("function/member");
         \setloginstatus($memberInfo, 0);

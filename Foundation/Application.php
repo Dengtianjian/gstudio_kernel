@@ -16,6 +16,7 @@ class Application
   protected $globalMiddlware = []; //*全局中间件
   protected $router = null; //* 路由相关
   public $request = null; //* 请求相关
+  protected $Hook = null; //* hook钩子模式
   private function __clone()
   {
   }

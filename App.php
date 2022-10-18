@@ -36,10 +36,11 @@ class App extends Application
    *
    * @param string $pluginId 应用id
    */
-  function __construct($pluginId = null)
+  function __construct($pluginId = null, $hook = false)
   {
     $GLOBALS['App'] = $this;
     $this->request = new Request();
+    $this->Hook = $hook;
 
     $this->pluginId = $pluginId;
     $this->uri = \addslashes($_GET['uri']);
@@ -57,13 +58,13 @@ class App extends Application
     ErrorCode::load(F_KERNEL_ROOT . "/ErrorCodes.php"); //* 加载错误码
 
     include_once(F_KERNEL_ROOT . "/Routes.php"); //* 载入kernel路由
-    include_once(F_APP_ROOT . "/Routes.php"); //* 载入当前应用路由
+    include_once(F_APP_URL . "/Routes.php"); //* 载入当前应用路由
   }
   function defineConstants()
   {
     global $_G;
     define("F_APP_ID", $this->pluginId);
-    define("F_APP_ROOT", "/" . File::genPath(DISCUZ_ROOT, "source/plugin", $this->pluginId));
+    define("F_APP_ROOT", File::genPath(DISCUZ_ROOT, "source/plugin", $this->pluginId));
     define("F_APP_URL", File::genPath("source/plugin", $this->pluginId));
     define("F_APP_DATA", File::genPath("data/plugindata", $this->pluginId));
     define("F_KERNEL_ROOT", "source/plugin/gstudio_kernel");
@@ -117,8 +118,8 @@ class App extends Application
     $result = $this->executiveController();
     Response::success($result);
   }
-  public static function hook($pluginId)
+  public function hook($uri)
   {
-    // self::initGlobalVariables($pluginId);
+    $this->request->set($uri, "get");
   }
 }
