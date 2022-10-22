@@ -24,6 +24,7 @@ use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Router;
 use gstudio_kernel\Foundation\Config as Config;
+use gstudio_kernel\Foundation\Date;
 use gstudio_kernel\Foundation\Exception\ErrorCode;
 use gstudio_kernel\Foundation\File;
 use gstudio_kernel\Foundation\Output;
@@ -38,6 +39,18 @@ class App extends Application
    */
   function __construct($pluginId = null, $hook = false)
   {
+    $lifeTimes = [
+      "start" => Date::milliseconds()
+    ];
+    Response::intercept(function () use ($lifeTimes) {
+      $lifeTimes['end'] = Date::milliseconds();
+      $lifeTimes['timeUsed'] = $lifeTimes['end'] - $lifeTimes['start'];
+      $lifeTimes['unit'] = "毫秒";
+      Response::add([
+        "lifeTimes" => $lifeTimes,
+      ]);
+    });
+
     $GLOBALS['App'] = $this;
     $this->request = new Request();
     $this->Hook = $hook;
