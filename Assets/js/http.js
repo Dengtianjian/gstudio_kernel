@@ -18,6 +18,7 @@ class CDZXHTTP {
       }
       let headers = new Headers();
       headers.append("x-ajax", "fetch");
+      headers.append("x-client", "520");
       config["headers"] = headers;
       if (typeof FORMHASH != "undefined") {
         url += "&formhash=" + FORMHASH;
