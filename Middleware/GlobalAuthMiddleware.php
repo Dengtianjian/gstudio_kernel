@@ -141,6 +141,11 @@ class GlobalAuthMiddleware
       return;
     }
 
+    if (is_callable($router['controller'])) {
+      $next();
+      return;
+    }
+
     if (!class_exists($router['controller'])) {
       throw new Error("Router controller(" . $router['controller'] . ") not exists");
     }
