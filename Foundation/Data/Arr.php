@@ -62,9 +62,10 @@ class Arr
           $arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys][$arrItem[$dataPrimaryKey]] = $arrItem;
           $arrItem['reference'] = &$arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys][$arrItem[$dataPrimaryKey]];
         }
+        $arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys] = array_values($arr[$arrItem[$relatedParentKey]]['reference'][$childArrayKeys]);
       }
     }
-    return $result;
+    return array_values($result);
   }
   /**
    * 合并数组。支持多维数组合并
