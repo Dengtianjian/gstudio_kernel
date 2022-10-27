@@ -20,7 +20,7 @@ class Config
   static function read($filePath = null, $appId = F_APP_ID)
   {
     if (!$filePath) {
-      $filePath = F_APP_ROOT . "/Config.php";
+      $filePath = F_APP_BASE . "/Config.php";
     }
     if (!\file_exists($filePath)) {
       return false;

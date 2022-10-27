@@ -154,9 +154,9 @@ class Application
   {
     $charset = strtoupper(CHARSET);
     include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Langs/$charset.php");
-    $langDirPath = F_APP_ROOT . "/Langs/";
+    $langDirPath = F_APP_BASE . "/Langs/";
     if (\file_exists($langDirPath)) {
-      $langFilePath = F_APP_ROOT . "/Langs/$charset.php";
+      $langFilePath = F_APP_BASE . "/Langs/$charset.php";
       if (\file_exists($langFilePath)) {
         include_once($langFilePath);
       }
@@ -217,7 +217,7 @@ class Application
       ], //* 内核
       "addon" => [ //* 当前运行中的应用信息
         "id" => $this->pluginId,
-        "root" => F_APP_ROOT,
+        "root" => F_APP_BASE,
         "assets" => File::genPath(F_APP_URL, "Assets"),
         "views" => File::genPath(F_APP_URL, "Views")
       ]
@@ -226,8 +226,8 @@ class Application
   }
   protected function initConfig()
   {
-    $fileBase = F_APP_ROOT;
-    $configFilePath = F_APP_ROOT . "/Config.php";
+    $fileBase = F_APP_BASE;
+    $configFilePath = F_APP_BASE . "/Config.php";
     if (!file_exists($configFilePath)) {
       $fileBase .= "/Configs";
       $configFilePath = "$fileBase/Config.php";

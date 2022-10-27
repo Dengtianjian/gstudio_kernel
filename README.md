@@ -143,7 +143,7 @@ class Upgrade_0_2_1
 {
   public function __construct()
   {
-    $sql = file_get_contents(File::genPath(F_APP_ROOT,"Iuu/Upgrade/Upgrade_0_2_1",CHARSET.".sql"));
+    $sql = file_get_contents(File::genPath(F_APP_BASE,"Iuu/Upgrade/Upgrade_0_2_1",CHARSET.".sql"));
     
     \runquery($sql);
   }

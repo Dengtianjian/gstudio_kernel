@@ -122,7 +122,7 @@ class File
       if (!$saveResult) {
         Response::error(500, "File:500001", Lang::value("kernel/file/saveFailed"), [], error_get_last());
       }
-      $relativePath = str_replace(\F_APP_ROOT, "", $savePath);
+      $relativePath = str_replace(\F_APP_BASE, "", $savePath);
       $fileInfo = [
         "path" => $savePath,
         "extension" => $fileExtension,

@@ -25,8 +25,8 @@ class Iuu
     if (!defined("F_APP_ID")) {
       define("F_APP_ID", $this->pluginId);
     }
-    if (!defined("F_APP_ROOT")) {
-      define("F_APP_ROOT", $this->pluginPath);
+    if (!defined("F_APP_BASE")) {
+      define("F_APP_BASE", $this->pluginPath);
     }
     if (!defined("F_APP_DATA")) {
       define("F_APP_DATA", File::genPath(DISCUZ_ROOT, "data", "plugindata", $this->pluginId));
