@@ -132,10 +132,10 @@ class Model
   {
     $sql = $this->query->exist()->sql();
     if ($this->returnSql) return $sql;
-    $exist = DB::query($sql);
-    if (empty($exist)) {
-      return 0;
-    }
-    return boolval($exist->num_rows);
+    $exist = DB::result(DB::query($sql));
+    // if (empty($exist)) {
+    //   return 0;
+    // }
+    return boolval($exist);
   }
 }
