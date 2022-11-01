@@ -15,19 +15,19 @@ class AliyunSignature extends Aliyun
   public function generate($parameters = [], $method = "GET")
   {
     date_default_timezone_set("GMT");
-    $parameters = [
-      // 公共参数
-      'Format' => 'json',
-      'Version' => '2019-12-30',
-      'AccessKeyId' => "LTAI5tCotimM5YZ9mUs7AdAr",
-      'SignatureVersion' => '1.0',
-      'SignatureMethod' => 'HMAC-SHA1',
-      'SignatureNonce' => uniqid(),
-      'Timestamp' => date('Y-m-d\TH:i:s\Z'),
-      "Action" => "SegmentCommonImage",
-      "ImageURL" => "http://discuz.cooocc.com/bonsai/1.jpg"
-    ];
-    $accessKeySecret = "DgMk11hOKLwvXtPFkRBslgACzi9nGN";
+    // $parameters = [
+    //   // 公共参数
+    //   'Format' => 'json',
+    //   'Version' => '2019-12-30',
+    //   'AccessKeyId' => "LTAI5tL1j5jK42PbbCd5mgT2",
+    //   'SignatureVersion' => '1.0',
+    //   'SignatureMethod' => 'HMAC-SHA1',
+    //   'SignatureNonce' => uniqid(),
+    //   'Timestamp' => date('Y-m-d\TH:i:s\Z'),
+    //   "Action" => "SegmentCommonImage",
+    //   "ImageURL" => "https://1000pen.oss-cn-shanghai.aliyuncs.com/pic/20221031/1667216706095497_623.jpg"
+    // ];
+    $accessKeySecret = "n0vLa2pB3vuwvq9imbEKnYdlQQcwjI";
     // 将参数Key按字典顺序排序
     ksort($parameters);
     // 生成规范化请求字符串
@@ -37,27 +37,8 @@ class AliyunSignature extends Aliyun
         . '=' . $this->percentEncode($value);
     }
     // 生成用于计算签名的字符串 stringToSign
-    $stringToSign = 'GET&%2F&' . $this->percentencode(substr($canonicalizedQueryString, 1));
+    $stringToSign = $method . '&%2F&' . $this->percentencode(substr($canonicalizedQueryString, 1));
     // 计算签名，注意accessKeySecret后面要加上字符'&'
-    $signature = base64_encode(hash_hmac('sha1', $stringToSign, $accessKeySecret . '&', true));
-
-    $parameters['Signature'] = $signature;
-    return $parameters;
-
-    // //* LTAI5tCotimM5YZ9mUs7AdAr DgMk11hOKLwvXtPFkRBslgACzi9nGN
-    // ksort($params);
-    // $stringToSign = strtoupper($method) . '&' . $this->percentEncode('/') . '&';
-    // // $stringToSign = strtoupper($method) . '&' . $this->percentEncode('/') . '&';
-    // $tmp = "";
-    // foreach ($params as $key => $val) {
-    //   // $tmp .= '&' . $key . '=' . $val;
-    //   $tmp .= '&' . $this->percentEncode($key) . '=' . $this->percentEncode($val);
-    // }
-    // $tmp = trim($tmp, '&');
-    // $stringToSign = $stringToSign . $this->percentEncode($tmp);
-    // $key = $this->AppSecret . '&';
-    // // return $stringToSign;
-    // $hmac = hash_hmac("sha1", $stringToSign, $key, true);
-    // return base64_encode($hmac);
+    return base64_encode(hash_hmac('sha1', $stringToSign, $this->AppSecret . '&', true));
   }
 }
