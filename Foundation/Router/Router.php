@@ -133,6 +133,10 @@ class Router extends RouterPrefix
     }
 
     if (is_array($uri)) {
+      $uri = array_map(function ($item) {
+        return str_replace("/", "\/", trim($item));
+      }, $uri);
+
       $regexp = "";
       $params = [];
       $uriParts = $uri;
@@ -174,6 +178,7 @@ class Router extends RouterPrefix
         "rawUri" => $uri,
         "params" => $params
       ];
+
       return self::$staticRoutes;
     }
 
