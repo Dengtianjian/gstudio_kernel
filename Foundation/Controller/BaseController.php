@@ -119,12 +119,12 @@ class BaseController
   }
   protected function pipeFill($pipes,  $data)
   {
-    $result = null;
+    $result = $data;
     foreach ($pipes as $pipeName) {
       if (!method_exists($this, $pipeName)) {
         continue;
       }
-      $result = call_user_func([$this, $pipeName], $data);
+      $result = call_user_func([$this, $pipeName], $result);
     }
     Response::add([
       "data" => $result
