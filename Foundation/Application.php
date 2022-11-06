@@ -109,7 +109,7 @@ class Application
   }
   protected function executiveMiddleware()
   {
-    $middlewares = array_reverse($this->globalMiddlware);
+    $middlewares = $this->globalMiddlware;
     if (isset($this->router['middleware']) && $this->router['middleware']) {
       if (\is_array($this->router['middleware'])) {
         $middlewares = \array_merge($this->router['middleware']);
