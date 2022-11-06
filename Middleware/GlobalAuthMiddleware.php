@@ -23,16 +23,19 @@ class GlobalAuthMiddleware
 {
   private function sameOrigin(Request $request)
   {
-    if (Config::get("mode") === 'development') {
+    if ($request->headers("Sec-Fetch-Site")) {
+      return $request->headers("Sec-Fetch-Site") === "same-origin";
+    } else {
       $Origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : null;
-      if (Config::get("cors/sameOrigin")) {
+      if (Config::get("cors/sameOrigin") && Config::get("mode") === 'development') {
         if (is_array(Config::get("cors/sameOrigin"))) {
           return in_array($Origin, Config::get("cors/sameOrigin"));
         }
         return Config::get("cors/sameOrigin") === $Origin;
+      } else {
+        return F_BASE_URL === $Origin;
       }
     }
-    return $request->headers("Sec-Fetch-Site") === "same-origin";
   }
   private function verifyToken($request, $strongCheck = true)
   {
