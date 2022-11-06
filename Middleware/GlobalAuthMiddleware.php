@@ -7,6 +7,7 @@ if (!defined('IN_DISCUZ')) {
 }
 
 use Error;
+use gstudio_kernel\Foundation\Config;
 use gstudio_kernel\Foundation\Controller\AuthController;
 use gstudio_kernel\Foundation\Lang;
 use gstudio_kernel\Foundation\Output;
@@ -20,6 +21,17 @@ use ReflectionMethod;
 
 class GlobalAuthMiddleware
 {
+  private function sameOrigin(Request $request)
+  {
+    $Origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : null;
+    if (Config::get("cors/sameOrigin")) {
+      if (is_array(Config::get("cors/sameOrigin"))) {
+        return in_array($Origin, Config::get("cors/sameOrigin"));
+      }
+      return Config::get("cors/sameOrigin") === $Origin;
+    }
+    return $request->headers("Sec-Fetch-Site") === "same-origin";
+  }
   private function verifyToken($request, $strongCheck = true)
   {
     $token = $request->headers("Authorization") ?: $request->query("Authorization") ?: $request->body("Authorization");
@@ -112,7 +124,7 @@ class GlobalAuthMiddleware
   public function verify(Request $request, $controller, $viewVerifyType, $strongCheck = false)
   {
     //* 如果是同源，那么来源就是视图页面发起的ajax请求，无需token，用verifyViewControllerAdmin和verifyViewControllerAuth去验证
-    $SameOrigin = $request->headers("Sec-Fetch-Site") === "same-origin";
+    $SameOrigin = $this->sameOrigin($request);
     if ($request->ajax()) {
       if ($SameOrigin) {
         if ($viewVerifyType === "admin") {
@@ -134,7 +146,7 @@ class GlobalAuthMiddleware
   public function handle($next, Request $request)
   {
     $router = $request->router;
-    $SameOrigin = $request->headers("Sec-Fetch-Site") === "same-origin";
+    $SameOrigin = $this->sameOrigin($request);
     $isAdminVerify = false;
     if (!$router) {
       $next();
