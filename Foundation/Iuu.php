@@ -2,6 +2,8 @@
 
 namespace gstudio_kernel\Foundation;
 
+use GuzzleHttp\Promise\Is;
+
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
 }
@@ -52,7 +54,7 @@ class Iuu
     if ($multipleEncode) {
       $sqlPath .= "/" . $this->Charset . ".sql";
     }
-    if (!\file_exists($sqlPath)) {
+    if (!\file_exists($sqlPath) || is_dir($sqlPath)) {
       $sqlPath =  $this->pluginPath . "/Iuu/Install/install.sql";
     }
 

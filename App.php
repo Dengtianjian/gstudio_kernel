@@ -86,7 +86,11 @@ class App extends Application
     define("F_CACHE_KEY", time());
 
     //* 获取URL地址
-    define("F_BASE_URL", $_G['siteurl']);
+    $baseUrl = $_G['siteurl'];
+    if ($baseUrl[strlen($baseUrl) - 1] === "/") {
+      $baseUrl = substr($baseUrl, 0, strlen($baseUrl) - 1);
+    }
+    define("F_BASE_URL", $baseUrl);
   }
   function init()
   {
