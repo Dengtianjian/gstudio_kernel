@@ -122,7 +122,7 @@ class App extends Application
       $this->request->setParams($router['params']);
     }
     $this->request->router = $router;
-    $executeMiddlewareResult = $this->executiveMiddleware();
+    // $executeMiddlewareResult = $this->executiveMiddleware();
     $this->router = $router;
     if (!$router) {
       Response::error("ROUTE_DOES_NOT_EXIST");
