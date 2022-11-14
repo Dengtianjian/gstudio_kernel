@@ -1,6 +1,6 @@
 <?php
 
-namespace gstudio_kernel\Platform\Wechat\Miniprogram;
+namespace gstudio_kernel\Platform\Wechat;
 
 if (!defined("IN_DISCUZ")) {
   exit('Access Denied');
@@ -11,7 +11,7 @@ use gstudio_kernel\Foundation\Network\Curl;
 /**
  * AccessToken类
  */
-class AccessToken extends WechatMiniProgram
+class AccessToken extends Wechat
 {
   /**
    * 获取accessToken
@@ -27,7 +27,7 @@ class AccessToken extends WechatMiniProgram
       "grant_type" => "client_credential",
       "appid" => $this->AppId,
       "secret" => $this->AppSecret
-    ]);
+    ])->https(false);
     return $request->get()->getData();
   }
 }

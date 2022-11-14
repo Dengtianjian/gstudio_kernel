@@ -23,14 +23,16 @@ class AccessTokenModel extends Model
     }
     return $query->delete(true);
   }
-  public function add($accessToken, $platform, $expires)
+  public function add($accessToken, $platform, $expiresIn, $appId = null)
   {
-    $expiredAt = time() + $expires;
+    $expiredAt = time() + $expiresIn - 300; //* 提前5分钟过期
     return $this->insert([
       "accessToken" => $accessToken,
       "platform" => $platform,
-      "expires" => $expires,
-      "expiredAt" => $expiredAt
+      "expires" => $expiresIn,
+      "expiredAt" => $expiredAt,
+      "appId" => $appId,
+      "createdAt" => time()
     ]);
   }
 }
