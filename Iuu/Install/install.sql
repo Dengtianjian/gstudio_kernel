@@ -2,9 +2,10 @@
 -- Table structure for pre_gstudio_kernel_access_token
 -- ----------------------------
 DROP TABLE IF EXISTS `pre_gstudio_kernel_access_token`;
-CREATE TABLE `pre_gstudio_kernel_access_token`  (
+
+CREATE TABLE `pre_gstudio_kernel_access_token` (
   `accessToken` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'access_token',
-  `platform` enum('wechatOffiacount','dingtalk') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '所属第三方平台',
+  `platform` enum('wechatOffiacount', 'dingtalk') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '所属第三方平台',
   `createdAt` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间',
   `expiredAt` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '过期时间',
   `expires` varchar(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '有效期',
@@ -15,7 +16,8 @@ CREATE TABLE `pre_gstudio_kernel_access_token`  (
 -- Table structure for pre_gstudio_kernel_extensions
 -- ----------------------------
 DROP TABLE IF EXISTS `pre_gstudio_kernel_extensions`;
-CREATE TABLE `pre_gstudio_kernel_extensions`  (
+
+CREATE TABLE `pre_gstudio_kernel_extensions` (
   `id` int(12) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `install_time` int(13) NULL DEFAULT NULL COMMENT '安装时间',
   `upgrade_time` int(13) NULL DEFAULT NULL COMMENT '更新时间',
@@ -38,7 +40,8 @@ CREATE TABLE `pre_gstudio_kernel_extensions`  (
 -- Table structure for pre_gstudio_kernel_logins
 -- ----------------------------
 DROP TABLE IF EXISTS `pre_gstudio_kernel_logins`;
-CREATE TABLE `pre_gstudio_kernel_logins`  (
+
+CREATE TABLE `pre_gstudio_kernel_logins` (
   `id` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'id',
   `token` varchar(260) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'token值',
   `expiration` varchar(22) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '有效期至',
@@ -54,7 +57,8 @@ CREATE TABLE `pre_gstudio_kernel_logins`  (
 -- Table structure for pre_gstudio_kernel_wechat_users
 -- ----------------------------
 DROP TABLE IF EXISTS `pre_gstudio_kernel_wechat_users`;
-CREATE TABLE `pre_gstudio_kernel_wechat_users`  (
+
+CREATE TABLE `pre_gstudio_kernel_wechat_users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `memberId` bigint(20) NULL DEFAULT NULL COMMENT '被绑定的会员ID',
   `openId` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'openId',
