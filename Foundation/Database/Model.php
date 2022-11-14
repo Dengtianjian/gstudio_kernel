@@ -115,7 +115,9 @@ class Model
   {
     $sql = $this->query->limit(1)->get()->sql();
     if ($this->returnSql) return $sql;
-    return DB::fetch_first($sql);
+    $res = DB::fetch_all($sql);
+    if (empty($res)) return null;
+    return $res[0];
   }
   function count($field = "*")
   {
