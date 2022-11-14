@@ -4,10 +4,11 @@
 DROP TABLE IF EXISTS `pre_gstudio_kernel_access_token`;
 CREATE TABLE `pre_gstudio_kernel_access_token`  (
   `accessToken` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'access_token',
-  `platform` enum('wechatOffiacount','dingtalk') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '所属第三方平台',
+  `platform` enum('wechatOfficialAccount','dingtalk') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '所属第三方平台',
   `createdAt` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间',
   `expiredAt` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '过期时间',
   `expires` varchar(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '有效期',
+  `appId` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '第三方平台的appid',
   PRIMARY KEY (`accessToken`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '第三方平台的AccessToken' ROW_FORMAT = Dynamic;
 
