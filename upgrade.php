@@ -9,6 +9,6 @@ if (!defined("IN_DISCUZ") || !defined('IN_ADMINCP')) {
 include_once(DISCUZ_ROOT . "source/plugin/gstudio_kernel/Autoload.php");
 
 $Iuu = new Iuu("gstudio_kernel", $_GET['fromversion']);
-$Iuu->upgrade()->clean();
+$Iuu->upgrade();
 
 $finish = TRUE;
