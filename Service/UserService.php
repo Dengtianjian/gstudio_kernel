@@ -63,21 +63,19 @@ class UserService extends Service
     if ($detailed) {
       $memberCredit = self::getUserCredit($userId);
       $memberCredit = Arr::indexToAssoc($memberCredit, 'uid');
-      $memberGroupId = \array_column($member, "groupid");
+      $memberGroupId = $member['groupid'];
       $memberGroup = self::getUserGroup($memberGroupId);
       $memberGroup = Arr::indexToAssoc($memberGroup, "groupid");
       $memberPrompt = self::getUserPrompt($userId);
       $memberPrompt = Arr::indexToAssoc($memberPrompt, "uid");
-      foreach ($member as &$memberItem) {
-        $memberItem['group'] = $memberGroup[$memberItem['groupid']];
-        $memberItem['credit'] = $memberCredit[$memberItem['uid']];
-        $memberItem['prompts'] = $memberPrompt[$memberItem['uid']];
-        \ksort($memberItem);
-      }
+      $member['group'] = $memberGroup[$member['groupid']];
+      $member['credit'] = $memberCredit[$member['uid']];
+      $member['prompts'] = $memberPrompt[$member['uid']];
+      \ksort($member);
     }
-    if (!\is_array($userId)) {
-      $member = $member[0];
-    }
+    // if (!\is_array($userId)) {
+    //   $member = $member[0];
+    // }
 
     return $member;
   }
