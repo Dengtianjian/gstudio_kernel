@@ -10,7 +10,7 @@ class Log
 {
   static private function genLogPath(...$path)
   {
-    return File::genPath(F_APP_BASE, "Data", "Logs", ...$path);
+    return File::genPath(F_APP_DATA, "Logs", ...$path);
   }
   static function record($content)
   {
