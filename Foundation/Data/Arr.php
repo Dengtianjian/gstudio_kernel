@@ -161,4 +161,44 @@ class Arr
     }
     return $result;
   }
+  /**
+   * 数组转换为XML字符串
+   *
+   * @param array $target 目标数组
+   * @param boolean $root 是否需要根标签
+   * @return string
+   */
+  static function toXML($target, $root = true)
+  {
+    $res = "";
+    if ($root) {
+      $res .= "<xml>";
+    }
+
+    foreach ($target as $key => $value) {
+      if (is_string($value)) {
+        $res .= "<$key><![CDATA[$value]]></$key>";
+      } else if (is_array($value)) {
+        if (self::isAssoc($value)) {
+          $res .= "<$key>" . self::toXML($value, false) . "</$key>";
+        } else {
+          $itemStr = "";
+          foreach ($value as $item) {
+            $itemStr .= "<$key>";
+            $itemStr .= self::toXML($item, false);
+            $itemStr .= "</$key>";
+          }
+          $res .= $itemStr;
+        }
+      } else {
+        $res .= "<$key>$value</$key>";
+      }
+    }
+
+    if ($root) {
+      $res .= "</xml>";
+    }
+
+    return $res;
+  }
 }
