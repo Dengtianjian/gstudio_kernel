@@ -36,6 +36,12 @@ class Str
     }
     return $string;
   }
+  /**
+   * 生成随机字符串
+   *
+   * @param integer $stringLength 生成的字符串长度
+   * @return string
+   */
   static function generateRandomString($stringLength = 5)
   {
     $charts = array(
@@ -54,5 +60,19 @@ class Str
       }
     }
     return $string;
+  }
+  /**
+   * 以微妙为单位的种子生成随机数字
+   *
+   * @param integer $min 可选的、返回的最小值（默认：0）
+   * @param integer $max 可选的、返回的最大值（默认：mt_getrandmax()）
+   * @return integer
+   */
+  static function generateRandomNumbers($min = 0, $max)
+  {
+    list($usec, $sec) = explode(' ', microtime());
+    $seed = $sec + $usec * 1000000;
+    mt_srand($seed);
+    return mt_rand($min, $max);
   }
 }
