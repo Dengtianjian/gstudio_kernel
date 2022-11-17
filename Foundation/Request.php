@@ -18,6 +18,7 @@ class Request
   public $uri = "";
   public $router = null;
   public $method = "";
+  public $client = "user";
   public function __construct()
   {
     $this->serializationBody();
@@ -59,6 +60,9 @@ class Request
 
     //* 请求的URI
     $this->uri = addslashes($_GET['uri']);
+
+    //* 客户端标识符
+    $this->client = $this->headers("X-Client");
   }
   private function serializationBody()
   {
