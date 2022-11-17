@@ -168,35 +168,39 @@ class Arr
    * @param boolean $root 是否需要根标签
    * @return string
    */
-  static function toXML($target, $root = true)
+  static function toXML($target, $root = true, $rootName = "xml")
   {
     $res = "";
     if ($root) {
-      $res .= "<xml>";
+      $res .= "<$rootName>";
     }
 
-    foreach ($target as $key => $value) {
-      if (is_string($value)) {
-        $res .= "<$key><![CDATA[$value]]></$key>";
-      } else if (is_array($value)) {
-        if (self::isAssoc($value)) {
-          $res .= "<$key>" . self::toXML($value, false) . "</$key>";
-        } else {
-          $itemStr = "";
-          foreach ($value as $item) {
-            $itemStr .= "<$key>";
-            $itemStr .= self::toXML($item, false);
-            $itemStr .= "</$key>";
+    if (is_array($target)) {
+      foreach ($target as $key => $value) {
+        if (is_string($value)) {
+          $res .= "<$key><![CDATA[$value]]></$key>";
+        } else if (is_array($value)) {
+          if (self::isAssoc($value)) {
+            $res .= "<$key>" . self::toXML($value, false) . "</$key>";
+          } else {
+            $itemStr = "";
+            foreach ($value as $item) {
+              $itemStr .= "<$key>";
+              $itemStr .= self::toXML($item, false);
+              $itemStr .= "</$key>";
+            }
+            $res .= $itemStr;
           }
-          $res .= $itemStr;
+        } else {
+          $res .= "<$key>$value</$key>";
         }
-      } else {
-        $res .= "<$key>$value</$key>";
       }
+    } else {
+      $res .= $target;
     }
 
     if ($root) {
-      $res .= "</xml>";
+      $res .= "</$rootName>";
     }
 
     return $res;
