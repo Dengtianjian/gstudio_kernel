@@ -59,7 +59,7 @@ class Wechat
     }
     $CURL = new Curl();
     $request = $CURL->url("https://api.weixin.qq.com/" . $uri, $query);
-    return $request->get();
+    return $request->https(false)->get();
   }
   /**
    * 发送POST请求
@@ -84,6 +84,6 @@ class Wechat
     $CURL = new Curl();
     $request = $CURL->url("https://api.weixin.qq.com/" . $uri, $query);
     $request->data($body);
-    return $request->post();
+    return $request->https(false)->post();
   }
 }
