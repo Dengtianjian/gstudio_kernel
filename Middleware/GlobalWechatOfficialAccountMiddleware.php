@@ -3,6 +3,7 @@
 namespace gstudio_kernel\Middleware;
 
 use gstudio_kernel\Foundation\Request;
+use gstudio_kernel\Foundation\Response;
 use gstudio_kernel\Foundation\Store;
 use gstudio_kernel\Model\AccessTokenModel;
 use gstudio_kernel\Platform\Wechat\AccessToken;
@@ -21,6 +22,9 @@ class GlobalWechatOfficialAccountMiddleware
     if (!$LatestAccountToken) {
       $AT = new AccessToken(null, $AppId, $AppSecret);
       $res = $AT->getAccessToken();
+      if ($res['errcode']) {
+        Response::error(500, "500:ServerError", "服务器错误", null, $res);
+      }
       $ATM->add($res['access_token'], $Platform, $res['expires_in'], $AppId);
 
       $LatestAccountToken = $ATM->where("platform", $Platform)->where("appId", $AppId)->where("expiredAt", time(), ">")->getOne();
