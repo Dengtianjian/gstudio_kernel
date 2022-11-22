@@ -2,6 +2,7 @@
 
 namespace gstudio_kernel\Middleware;
 
+use gstudio_kernel\Foundation\Request;
 use gstudio_kernel\Foundation\Store;
 use gstudio_kernel\Model\AccessTokenModel;
 use gstudio_kernel\Platform\Wechat\AccessToken;
@@ -9,11 +10,11 @@ use gstudio_kernel\Platform\Wechat\OfficialAccount\WechatOfficialAccount;
 
 class GlobalWechatOfficialAccountMiddleware
 {
-  public function handle($next)
+  public function handle($next, Request $R, $params)
   {
     $ATM = new AccessTokenModel();
-    $AppId = "wx85f47bac55437af2";
-    $AppSecret = "dd32a80e1cb3132dee3ea60ca0e3f695";
+    $AppId = $params['appId'];
+    $AppSecret = $params['appSecret'];
     $Platform = "wechatOfficialAccount";
 
     $LatestAccountToken = $ATM->where("platform", $Platform)->where("appId", $AppId)->where("expiredAt", time(), ">")->getOne();

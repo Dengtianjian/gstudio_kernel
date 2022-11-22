@@ -35,9 +35,12 @@ class Application
   {
     return $GLOBALS['app'];
   }
-  function setMiddlware($middlwareNameOfFunction)
+  function setMiddlware($middlwareNameOfFunction, $params = [])
   {
-    array_push($this->globalMiddlware, $middlwareNameOfFunction);
+    array_push($this->globalMiddlware, [
+      "function" => $middlwareNameOfFunction,
+      "params" => $params
+    ]);
   }
   protected function executiveController()
   {
@@ -125,16 +128,18 @@ class Application
     $executeCount = 0;
 
     foreach ($middlewares as $middlewareItem) {
-      if (\is_callable($middlewareItem)) {
-        $middlewareItem(function () use (&$executeCount) {
+      $middlewareFunction = $middlewareItem['function'];
+      $middlewareFunctionParams = $middlewareItem['params'];
+      if (\is_callable($middlewareFunction)) {
+        $middlewareFunction(function () use (&$executeCount) {
           $executeCount++;
-        }, $this->request);
+        }, $this->request, $middlewareFunctionParams);
       } else {
-        $middlewareInstance = new $middlewareItem();
+        $middlewareInstance = new $middlewareFunction();
         $isNext = false;
         $middlewareInstance->handle(function () use (&$isNext) {
           $isNext = true;
-        }, $this->request);
+        }, $this->request, $middlewareFunctionParams);
         if ($isNext == false) {
           break;
         } else {
