@@ -7,6 +7,7 @@ use gstudio_kernel\Foundation\Database\Model;
 class AccessTokenModel extends Model
 {
   public $tableName = "gstudio_kernel_access_token";
+  public static $Timestamps = false;
   public function getPlatformLast($platform)
   {
     return $this->where("platform", $platform)->order("createdAt", "DESC")->getOne();

@@ -28,7 +28,7 @@ class GlobalAuthMiddleware
     } else {
       $Origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : null;
       if (!$Origin) {
-        $Referer = $_SERVER['HTTP_REFERER'];
+        $Referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
         if ($Referer) {
           $parsed = parse_url($Referer);
           $Origin = implode("", [

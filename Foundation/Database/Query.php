@@ -44,12 +44,6 @@ class Query
       case "delete":
         $sql = SQL::delete($this->tableName, $this->sql);
         break;
-        // DONE 软删除实现
-      case "softDelete":
-        $sql = SQL::update($this->tableName, [
-          "deletedAt" => time()
-        ]);
-        break;
       case "get":
         $sql = SQL::select($this->tableName, isset($this->options['fields']) ? $this->options['fields'] : "*", $this->sql);
         break;
@@ -229,13 +223,9 @@ class Query
     $this->reset();
     return $this;
   }
-  function delete($directly = false)
+  function delete()
   {
-    if ($directly) {
-      $this->executeType = "delete";
-    } else {
-      $this->executeType = "softDelete";
-    }
+    $this->executeType = "delete";
     $this->sql = $this->generateSql();
     $this->reset();
     return $this;

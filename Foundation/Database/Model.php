@@ -17,6 +17,13 @@ class Model
   public $tableName = "";
   private $query;
   private $returnSql = false;
+
+  public static $Timestamps = true;
+  public static $CreatedAt = "createdAt";
+  public static $UpdatedAt = "updatedAt";
+  public static $DeletedAt = "deletedAt";
+  public static $TimestampFields = [];
+
   function __construct($tableName = null)
   {
     if ($tableName) {
@@ -73,6 +80,22 @@ class Model
   }
   function insert($data,  $isReplaceInto = false)
   {
+    $Call = get_class($this);
+    if ($Call::$Timestamps) {
+      $now = time();
+      if ($Call::$CreatedAt) {
+        $data[$Call::$CreatedAt] = $now;
+      }
+      if ($Call::$UpdatedAt) {
+        $data[$Call::$UpdatedAt] = $now;
+      }
+
+      if ($Call::$TimestampFields && count($Call::$TimestampFields)) {
+        foreach ($Call::$TimestampFields as $item) {
+          $data[$item] = $now;
+        }
+      }
+    }
     $sql = $this->query->insert($data, $isReplaceInto)->sql();
     if ($this->returnSql) return $sql;
     return DB::query($sql);
@@ -89,6 +112,19 @@ class Model
   }
   function update($data)
   {
+    $Call = get_class($this);
+    if ($Call::$Timestamps) {
+      $now = time();
+      if ($Call::$UpdatedAt) {
+        $data[$Call::$UpdatedAt] = $now;
+      }
+
+      if ($Call::$TimestampFields && count($Call::$TimestampFields)) {
+        foreach ($Call::$TimestampFields as $item) {
+          $data[$item] = $now;
+        }
+      }
+    }
     $sql = $this->query->update($data)->sql();
     if ($this->returnSql) return $sql;
     return DB::query($sql);
@@ -101,7 +137,29 @@ class Model
   }
   function delete($directly = false)
   {
-    $sql = $this->query->delete($directly)->sql();
+    if ($directly) {
+      $sql = $this->query->delete()->sql();
+    } else {
+      $data = [];
+      $Call = get_class($this);
+      if ($Call::$Timestamps) {
+        $now = time();
+        if ($Call::$UpdatedAt) {
+          $data[$Call::$UpdatedAt] = $now;
+        }
+        if ($Call::$DeletedAt) {
+          $data[$Call::$DeletedAt] = $now;
+        }
+
+        if ($Call::$TimestampFields && count($Call::$TimestampFields)) {
+          foreach ($Call::$TimestampFields as $item) {
+            $data[$item] = $now;
+          }
+        }
+      }
+      $sql = $this->query->update($data)->sql();
+    }
+
     if ($this->returnSql) return $sql;
     return DB::query($sql);
   }
