@@ -11,7 +11,7 @@ use gstudio_kernel\Platform\Wechat\OfficialAccount\WechatOfficialAccount;
 
 class GlobalWechatOfficialAccountMiddleware
 {
-  public function handle($next, Request $R, $params)
+  public function handle($next, $R, $params)
   {
     $ATM = new AccessTokenModel();
     $AppId = $params['appId'];
