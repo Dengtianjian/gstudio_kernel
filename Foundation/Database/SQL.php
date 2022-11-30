@@ -21,10 +21,8 @@ class SQL
   static function addQuote($strings,  $quote = "`", $addQuote = true)
   {
     foreach ($strings as &$item) {
-      if (empty($item)) {
-        // if ($item === null) {
-        //   continue;
-        // }
+      if ($item === null) {
+        continue;
       }
       if (\is_bool($item)) {
         $item = $item ? 1 : 0;
