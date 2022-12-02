@@ -18,11 +18,13 @@ class GlobalWechatOfficialAccountMiddleware
     $AppSecret = $params['appSecret'];
     $Platform = "wechatOfficialAccount";
 
+    $ATM->where("expiredAt", time(), "<")->delete(true);
+
     $LatestAccountToken = $ATM->where("platform", $Platform)->where("appId", $AppId)->where("expiredAt", time(), ">")->getOne();
     if (!$LatestAccountToken) {
       $AT = new AccessToken(null, $AppId, $AppSecret);
       $res = $AT->getAccessToken();
-      if ($res['errcode']) {
+      if (isset($res['errcode'])) {
         Response::error(500, "500:ServerError", "服务器错误", null, $res);
       }
       $ATM->add($res['access_token'], $Platform, $res['expires_in'], $AppId);
