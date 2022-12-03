@@ -20,26 +20,28 @@ class GlobalWechatOfficialAccountMiddleware
 
     $ATM->where("expiredAt", time(), "<")->delete(true);
 
-    $LatestAccountToken = $ATM->where("platform", $Platform)->where("appId", $AppId)->where("expiredAt", time(), ">")->getOne();
-    if (!$LatestAccountToken) {
-      $AT = new AccessToken(null, $AppId, $AppSecret);
-      $res = $AT->getAccessToken();
-      if (isset($res['errcode'])) {
-        Response::error(500, "500:ServerError", "服务器错误", null, $res);
-      }
-      $ATM->add($res['access_token'], $Platform, $res['expires_in'], $AppId);
-
+    if ($AppId && $AppSecret) {
       $LatestAccountToken = $ATM->where("platform", $Platform)->where("appId", $AppId)->where("expiredAt", time(), ">")->getOne();
-    }
+      if (!$LatestAccountToken) {
+        $AT = new AccessToken(null, $AppId, $AppSecret);
+        $res = $AT->getAccessToken();
+        if (isset($res['errcode'])) {
+          Response::error(500, "500:ServerError", "服务器错误", null, $res);
+        }
+        $ATM->add($res['access_token'], $Platform, $res['expires_in'], $AppId);
 
-    Store::setApp([
-      "Wechat" => [
-        "OfficialAccount" => [
-          "AccessToken" => $LatestAccountToken['accessToken'],
-          "AppId" => $LatestAccountToken['appId']
+        $LatestAccountToken = $ATM->where("platform", $Platform)->where("appId", $AppId)->where("expiredAt", time(), ">")->getOne();
+      }
+
+      Store::setApp([
+        "Wechat" => [
+          "OfficialAccount" => [
+            "AccessToken" => $LatestAccountToken['accessToken'],
+            "AppId" => $LatestAccountToken['appId']
+          ]
         ]
-      ]
-    ]);
+      ]);
+    }
 
     $next();
   }
