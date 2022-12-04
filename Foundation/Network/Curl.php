@@ -295,7 +295,7 @@ class Curl
     }
     if ($this->isJson) {
       $defaultHeaders['Content-type'] = "Application/json";
-      $sendDatas = \json_encode($sendDatas);
+      $sendDatas = \json_encode($sendDatas, JSON_UNESCAPED_UNICODE);
       if ($this->curlMethod === "get") {
         $sendDatas = \urlencode($sendDatas);
       }
