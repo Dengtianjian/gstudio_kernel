@@ -7,7 +7,7 @@ if (!defined("IN_DISCUZ")) {
 }
 
 $Config = [
-  "mode" => "production", //* production development
+  "mode" => "development", //* production development
   "multipleEncode" => true,
   "extensions" => true,
   "version" => "0.2.57.20221114"
